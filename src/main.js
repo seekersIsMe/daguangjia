@@ -12,3 +12,6 @@ new Vue({
   router,
   render: h => h(App)
 })
+router.beforeEach((to, form, next) => {
+  document.title = to.meta.title || '大积分管家'
+})
