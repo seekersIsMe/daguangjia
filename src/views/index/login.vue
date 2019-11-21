@@ -36,7 +36,7 @@ export default {
   }
 }
 </script>
-<style>
+<style lang="scss">
   .getCode{
     color: red
   }
