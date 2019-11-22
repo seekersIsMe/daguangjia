@@ -35,13 +35,13 @@ export default {
         width: 6px;
         background-color: #00AEFF;
         border-radius: 3px;
-        margin-left: rem(6)
       }
       .title{
         font-size: 14px;
         font-weight:bold;
         color:rgba(51,51,51,1);
         line-height: 36px;
+        margin-left: 5px;
       }
     }
   }

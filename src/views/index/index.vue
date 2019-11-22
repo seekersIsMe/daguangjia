@@ -9,6 +9,7 @@
           </span>
         </div>
         <div class="search">
+          <form action="/">
           <van-search
             v-model="searchVal"
             placeholder="搜索商品名称"
@@ -16,6 +17,7 @@
             shape="round"
             @search="onSearch"
           />
+          </form>
         </div>
       </div>
       <div class="swipeWrap">
@@ -72,6 +74,19 @@
             </btn>
           </template>
         </myTitle>
+        <van-row>
+          <van-col span="6" gutter="10" v-for="(item, index) in seckillData" :key="index">
+            <div class="img">
+              {{item.img}}
+            </div>
+            <div class="killText">
+                 秒杀价{{ item.price_ }}积分
+            </div>
+            <div class="originPrice">
+              原价：{{ item.price }}积分
+            </div>
+          </van-col>
+      </van-row>
       </div>
     </div>
   </div>
@@ -94,13 +109,47 @@ export default {
         'https://img.yzcdn.cn/vant/apple-2.jpg'
       ],
       time: 30 * 3600 * 1000,
-      seckillTitle: '秒杀专区'
+      seckillTitle: '秒杀专区',
+      seckillData: [
+        {
+          img: 1,
+          price: '1千',
+          price_: 500
+        },
+        {
+          img: 2,
+          price: '1万',
+          price_: '5千'
+        },
+        {
+          img: 3,
+          price: '1千',
+          price_: 500
+        },
+        {
+          img: 4,
+          price: '1千',
+          price_: 500
+        }
+      ]
     }
   },
   created() {
     // this.code()
   },
   methods: {
+    // 超过一万，一千，十万
+    changNum (val) {
+      if (val > 1000 && val < 10000) {
+        return (val / 1000).toFixed(2) + '千'
+      }
+      if (val > 10000 && val < 100000) {
+        return Math.round(val / 100) / 100 + '万'
+      }
+      if (val > 100000 && val < 1000000) {
+        return Math.round(val / 1000) / 100 + '十万万'
+      }
+    },
     getQueryString(name) {
       var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i')
       var r = window.location.search.substr(1).match(reg)
@@ -132,6 +181,7 @@ export default {
         })
     },
     onSearch(val) {
+      alert(val)
       console.log(val)
     }
   }
@@ -143,7 +193,7 @@ export default {
     height: rem(110);
     background: linear-gradient(#0078ff, #00aeff);
     background-size: 100% 100%;
-    padding: 0 rem(10);
+    padding: 0 10px;
   }
   .searchWrap {
     display: flex;
@@ -189,7 +239,7 @@ export default {
     }
   }
   .recommendWrap {
-    padding: rem(10);
+    padding: 10px;
     font-size: 12px;
     .van-col {
       flex: 1;
@@ -231,10 +281,25 @@ export default {
   }
   .hotWrap {
     background-color: #f7f7f7;
-    padding: 0 rem(10);
+    padding: 0 10px;
     .seckillWrap {
       .myTitle{
         padding: 10px 0;
+      }
+      .img{
+        width: 80px;
+        height: 80px;
+      }
+      .killText{
+        color: #E40D0D;
+        font-size:12px;
+        text-align: center;
+      }
+      .originPrice{
+        font-size: 12px;
+        color: #999999;
+        text-decoration:line-through;
+        text-align: center;
       }
     }
   }
