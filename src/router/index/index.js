@@ -29,6 +29,22 @@ const index = [
     meta: {
       title: '大积分管家'
     }
+  },
+  {
+    path: '/proList',
+    name: 'proList',
+    component: () => import('@/views/index/proList'),
+    meta: {
+      title: '商品列表'
+    }
+  },
+  {
+    path: '/proDetail',
+    name: 'proDetail',
+    component: () => import('@/views/index/proDetail'),
+    meta: {
+      title: '商品详情'
+    }
   }
 ]
 export default index

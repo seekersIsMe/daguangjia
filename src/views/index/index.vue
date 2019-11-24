@@ -1,106 +1,109 @@
 <template>
   <div class="indexWrap">
-    <div class="bgBlue">
-      <div class="searchWrap">
-        <div class="addressWrap">
-          <van-icon name="location-o" />
-          <span>
-            {{ address }}
-          </span>
+    <van-list
+      v-model="loading"
+      :finished="finished"
+      finished-text="没有更多了"
+      @load="scrollToEnd">
+      <div class="bgBlue">
+        <div class="searchWrap">
+          <div class="addressWrap">
+            <van-icon name="location-o" />
+            <span>{{ address }}</span>
+          </div>
+          <div class="search">
+            <form action="/">
+              <van-search
+                v-model="searchVal"
+                placeholder="搜索商品名称"
+                clearable
+                shape="round"
+                @search="onSearch"
+              >
+              </van-search>
+            </form>
+          </div>
         </div>
-        <div class="search">
-          <form action="/">
-          <van-search
-            v-model="searchVal"
-            placeholder="搜索商品名称"
-            clearable
-            shape="round"
-            @search="onSearch"
-          />
-          </form>
+        <div class="swipeWrap">
+          <van-swipe :autoplay="3000">
+            <van-swipe-item v-for="(image, index) in images" :key="index">
+              <img class="swipeImg" :src="image" />
+            </van-swipe-item>
+          </van-swipe>
         </div>
       </div>
-      <div class="swipeWrap">
-        <van-swipe :autoplay="3000">
-          <van-swipe-item v-for="(image, index) in images" :key="index">
-            <img class="swipeImg" :src="image" />
-          </van-swipe-item>
-        </van-swipe>
-      </div>
-    </div>
-    <div class="addKong"></div>
-    <div class="recommendWrap">
-      <van-row type="flex" justify="space-between">
-        <van-col>
-          <div class="icon1"></div>
-          <div>
-            母婴用品
-          </div>
-        </van-col>
-        <van-col>
-          <div class="icon2"></div>
-          <div>
-            食品
-          </div>
-        </van-col>
-        <van-col>
-          <div class="icon3"></div>
-          <div>
-            护肤彩妆
-          </div>
-        </van-col>
-        <van-col>
-          <div class="icon4"></div>
-          <div>
-            数码电器
-          </div>
-        </van-col>
-        <van-col>
-          <div class="icon5"></div>
-          <div>
-            生活日用
-          </div>
-        </van-col>
-      </van-row>
-    </div>
-    <div class="hotWrap">
-      <div class="seckillWrap">
-        <myTitle :titleVal="seckillTitle" class="myTitle">
-          <template v-slot:right>
-            <btn :myTitle="'剩余时间'">
-              <template v-slot:right>
-                <van-count-down :time="time" />
-              </template>
-            </btn>
-          </template>
-        </myTitle>
-        <van-row>
-          <van-col span="6" gutter="10" v-for="(item, index) in seckillData" :key="index">
-            <div class="img">
-              {{item.img}}
-            </div>
-            <div class="killText">
-                 秒杀价{{ item.price_ }}积分
-            </div>
-            <div class="originPrice">
-              原价：{{ item.price }}积分
-            </div>
+      <div class="addKong"></div>
+      <div class="recommendWrap">
+        <van-row type="flex" justify="space-between">
+          <van-col>
+            <div class="icon1"></div>
+            <div>母婴用品</div>
           </van-col>
-      </van-row>
+          <van-col>
+            <div class="icon2"></div>
+            <div>食品</div>
+          </van-col>
+          <van-col>
+            <div class="icon3"></div>
+            <div>护肤彩妆</div>
+          </van-col>
+          <van-col>
+            <div class="icon4"></div>
+            <div>数码电器</div>
+          </van-col>
+          <van-col>
+            <div class="icon5"></div>
+            <div>生活日用</div>
+          </van-col>
+        </van-row>
       </div>
-    </div>
+      <div class="hotWrap">
+        <div class="seckillWrap">
+          <myTitle :titleVal="seckillTitle" class="myTitle">
+            <template v-slot:right>
+              <btn :myTitle="'剩余时间'">
+                <template v-slot:right>
+                  <van-count-down :time="time" />
+                </template>
+              </btn>
+            </template>
+          </myTitle>
+          <van-row>
+            <van-col span="6" gutter="10" v-for="(item, index) in seckillData" :key="index">
+              <div class="img">{{item.img}}</div>
+              <div class="killText">秒杀价{{ item.price_ }}积分</div>
+              <div class="originPrice">原价：{{ item.price }}积分</div>
+            </van-col>
+          </van-row>
+        </div>
+        <div class="newProduct">
+          <div class="newWrap">
+            <myTitle :titleVal="'新品精选'" class="myTitle"></myTitle>
+          </div>
+          <div class="itemWrap">
+            <div v-for="(item,index) in itemCount" :key="index" class="item">
+               <listItem :key="index" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </van-list>
   </div>
 </template>
 <script>
 import axios from 'axios'
 import myTitle from '@/components/myTitle'
 import btn from '@/components/btn'
+import listItem from '@/components/listItem'
+import scroll from '@/components/scroll'
 export default {
   components: {
     myTitle,
-    btn
+    btn,
+    listItem,
+    scroll
   },
-  data() {
+  data () {
     return {
       address: '广州',
       searchVal: '',
@@ -131,10 +134,16 @@ export default {
           price: '1千',
           price_: 500
         }
+      ],
+      error: false,
+      loading: false,
+      finished: false,
+      itemCount: [
+        1, 2, 3, 4, 5, 6
       ]
     }
   },
-  created() {
+  created () {
     // this.code()
   },
   methods: {
@@ -150,13 +159,13 @@ export default {
         return Math.round(val / 1000) / 100 + '十万万'
       }
     },
-    getQueryString(name) {
+    getQueryString (name) {
       var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i')
       var r = window.location.search.substr(1).match(reg)
       if (r != null) return unescape(r[2])
       return null
     },
-    code() {
+    code () {
       let url =
         'https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxd991d12dffbcb838&secret=92d933d92116b498f6dd51e10a240cda'
       // let a = https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
@@ -180,32 +189,46 @@ export default {
           console.log('授权成功', res)
         })
     },
-    onSearch(val) {
-      alert(val)
+    onSearch (val) {
       console.log(val)
+      this.$router.push({
+        path: 'proList'
+      })
+    },
+    scrollToEnd () {
+      console.log('到达底部了')
+      setTimeout(() => {
+        for (let i = 0; i < 10; i++) {
+          this.itemCount.push(this.itemCount.length + 1)
+        }
+        this.loading = false
+      }, 500)
     }
   }
 }
 </script>
 <style lang="scss" scoped>
 .indexWrap {
+  .van-list{
+    padding-bottom: 70px;
+  }
   .bgBlue {
     height: rem(110);
     background: linear-gradient(#0078ff, #00aeff);
     background-size: 100% 100%;
-    padding: 0 10px;
+    padding: 0 10px 0 10px;
   }
   .searchWrap {
     display: flex;
     justify-content: start;
     align-items: center;
     .addressWrap {
-      font-size:14px;
+      font-size: 14px;
       color: white;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      span{
+      span {
         margin-left: 5px;
       }
     }
@@ -283,23 +306,36 @@ export default {
     background-color: #f7f7f7;
     padding: 0 10px;
     .seckillWrap {
-      .myTitle{
+      .myTitle {
         padding: 10px 0;
       }
-      .img{
+      .img {
         width: 80px;
         height: 80px;
+        margin: auto;
       }
-      .killText{
-        color: #E40D0D;
-        font-size:12px;
+      .killText {
+        color: #e40d0d;
+        font-size: 12px;
         text-align: center;
       }
-      .originPrice{
+      .originPrice {
         font-size: 12px;
         color: #999999;
-        text-decoration:line-through;
+        text-decoration: line-through;
         text-align: center;
+      }
+    }
+    .newProduct {
+      .newWrap {
+        padding: 10px 0;
+      }
+      .itemWrap {
+        display: flex;
+        flex-wrap: wrap;
+        .item:nth-of-type(2n) {
+        margin-left: 10px;
+      }
       }
     }
   }

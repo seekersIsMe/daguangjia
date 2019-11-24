@@ -1,5 +1,5 @@
 <template>
-  <div class="titleWrpa">
+  <div class="titleWrap">
     <div class="left">
       <div class="strip"></div>
       <span class="title">
@@ -20,7 +20,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  .titleWrpa{
+  .titleWrap{
     display: flex;
     justify-content: space-between;
     align-items: center;

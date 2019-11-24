@@ -1,0 +1,201 @@
+<template>
+  <div class="proDetail">
+    <div class="swipeWrap">
+      <div class="goBack">
+        <van-icon name="arrow-left" />
+      </div>
+      <van-swipe :autoplay="3000" indicator-color="white">
+        <van-swipe-item v-for="(item,index) in imgList" :key="index">
+          <img :src="item.src" alt />
+        </van-swipe-item>
+      </van-swipe>
+    </div>
+    <div class="describe">
+      <p class="price">
+        {{describe.price}}
+        <span class="jf">积分</span>
+      </p>
+      <p class="describeText">{{describe.describeText}}</p>
+    </div>
+    <div class="count">
+      <span>销量：{{sales}}</span>
+      <span>库存：{{inventory}}</span>
+    </div>
+    <div class="detailBody">
+      <myTitle :titleVal="'商品详情'" />
+      <div class="probablyImg">
+        <van-grid :column-num="2">
+          <van-grid-item v-for="(item,index) in probablyImg" :key="index">
+            <img :src="item.src" />
+          </van-grid-item>
+        </van-grid>
+      </div>
+      <van-divider dashed>细节展示图</van-divider>
+      <div class="detailImg">
+        <van-image
+          width="calc(100vw - 20px)"
+          height="calc(50vw - 10px)"
+          src="https://img.yzcdn.cn/vant/cat.jpeg"
+        >
+          <template v-slot:error>加载失败</template>
+        </van-image>
+      </div>
+    </div>
+    <div class="btnGroup">
+      <van-row gutter="15">
+        <van-col span="12">
+          <van-button color="#23A85E">加入购物车</van-button>
+        </van-col>
+        <van-col span="12">
+          <van-button color="#00AEFF">立即兑换</van-button>
+        </van-col>
+      </van-row>
+      <!-- <van-button color="#23A85E">加入购物车</van-button>
+      <van-button color="#00AEFF">立即兑换</van-button>-->
+    </div>
+  </div>
+</template>
+<script>
+import myTitle from '@/components/myTitle'
+export default {
+  components: {
+    myTitle
+  },
+  data () {
+    return {
+      imgList: [
+        {
+          src:
+            'http://img3.imgtn.bdimg.com/it/u=3588968057,985090052&fm=11&gp=0.jpg'
+        },
+        {
+          src:
+            'http://img3.imgtn.bdimg.com/it/u=3588968057,985090052&fm=11&gp=0.jpg'
+        },
+        {
+          src:
+            'http://img3.imgtn.bdimg.com/it/u=3588968057,985090052&fm=11&gp=0.jpg'
+        },
+        {
+          src:
+            'http://img3.imgtn.bdimg.com/it/u=3588968057,985090052&fm=11&gp=0.jpg'
+        }
+      ],
+      describe: {
+        price: 3000,
+        describeText:
+          'Nike耐克男包女包2019秋季新款学生书包旅游包双肩背包BA5879-682 '
+      },
+      sales: 300, // 销量
+      inventory: 1000, // 库存
+      probablyImg: [
+        {
+          src:
+            'http://img4.imgtn.bdimg.com/it/u=3276179142,1686381254&fm=26&gp=0.jpg'
+        },
+        {
+          src:
+            'http://img4.imgtn.bdimg.com/it/u=3276179142,1686381254&fm=26&gp=0.jpg'
+        },
+        {
+          src:
+            'http://img4.imgtn.bdimg.com/it/u=3276179142,1686381254&fm=26&gp=0.jpg'
+        },
+        {
+          src:
+            'http://img4.imgtn.bdimg.com/it/u=3276179142,1686381254&fm=26&gp=0.jpg'
+        }
+      ]
+    }
+  }
+}
+</script>
+<style lang="scss" scoped>
+.proDetail {
+  background: #f7f7f7;
+  padding-bottom: 70px;
+}
+.swipeWrap {
+  position: relative;
+  .goBack {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    z-index: 10;
+    font-size: 20px;
+    padding: 10px;
+  }
+  .van-swipe-item {
+    text-align: center;
+  }
+  img {
+    width: calc(100vw - 20px);
+    height: calc(100vw - 20px);
+    display: inline-block;
+    overflow: hidden;
+  }
+}
+.describe {
+  padding: 10px;
+  line-height: 20px;
+  background: white;
+}
+.price {
+  color: #ff0000;
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+.jf {
+  font-size: 14px;
+}
+.describeText {
+  color: #333333;
+  font-size: 15px;
+}
+.titleWrap{
+    padding: 0 10px;
+}
+.count {
+  padding: 0 10px;
+  font-size: 14px;
+  color: #333333;
+  line-height: 40px;
+  height: 40px;
+  background: white;
+  margin-top: 10px;
+  span:nth-of-type(2) {
+    margin-left: 40px;
+  }
+}
+.probablyImg {
+  img {
+    display: inline-block;
+    width: 100%;
+    overflow: hidden;
+  }
+}
+.van-divider {
+  background: white;
+  margin: 0;
+  padding: 16px 0 10px 0;
+  color: #333333;
+  font-size:12px;
+}
+.detailImg {
+  background: white;
+  padding-bottom: 20px;
+  text-align: center;
+}
+.btnGroup {
+  padding: 0 20px;
+  .van-button {
+      width: 100%;
+      height: 36px;
+      line-height: 36px;
+      border-radius: 5px;
+      font-size: 14px;
+  }
+}
+</style>
