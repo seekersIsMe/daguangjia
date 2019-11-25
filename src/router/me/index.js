@@ -6,6 +6,14 @@ const me = [
     meta: {
       title: '个人中心'
     }
+  },
+  {
+    path: '/info',
+    name: 'info',
+    component: () => import('@/views/me/info'),
+    meta: {
+      title: '个人中心'
+    }
   }
 ]
 export default me

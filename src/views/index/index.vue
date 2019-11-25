@@ -95,13 +95,11 @@ import axios from 'axios'
 import myTitle from '@/components/myTitle'
 import btn from '@/components/btn'
 import listItem from '@/components/listItem'
-import scroll from '@/components/scroll'
 export default {
   components: {
     myTitle,
     btn,
-    listItem,
-    scroll
+    listItem
   },
   data () {
     return {

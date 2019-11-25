@@ -4,7 +4,7 @@
       <div class="title">
         <van-icon name="arrow-left" @click="goback" />
         <span class="f18">个人中心</span>
-        <van-icon name="user-o" />
+        <van-icon name="user-o" @click="gotoInfo"/>
       </div>
       <div class="meInfo">
         <van-image class="aiv" round width="64px" height="64px" :src="aivSrc" />
@@ -84,6 +84,13 @@ export default {
   methods: {
     goback () {
       this.$router.go(-1)
+    },
+    gotoInfo () {
+      this.$router.push(
+        {
+          path: '/info'
+        }
+      )
     }
   }
 }
