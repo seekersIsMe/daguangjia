@@ -52,7 +52,7 @@
 </template>
 <script>
 export default {
-  data() {
+  data () {
     return {
       finished: false,
       loading: false,
@@ -106,7 +106,7 @@ export default {
     }
   },
   methods: {
-    onLoad() {
+    onLoad () {
       setTimeout(() => {
         this.scoreList.push(
           ...[

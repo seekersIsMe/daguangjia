@@ -62,7 +62,7 @@
       </div>
     </div>
     <div class="addressWrap">
-      <van-cell title="我的地址" is-link />
+      <van-cell title="我的地址" is-link @click="goAddressList"/>
     </div>
     <div class="unbind">解绑手机号</div>
   </div>
@@ -92,10 +92,17 @@ export default {
         }
       )
     },
-    getScoreDetail() {
+    getScoreDetail () {
       this.$router.push({
         path: '/scoreDetail'
       })
+    },
+    goAddressList () {
+      this.$router.push(
+        {
+          path: '/addressList'
+        }
+      )
     }
   }
 }
