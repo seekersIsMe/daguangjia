@@ -3,7 +3,7 @@
     <div class="aiv item">
       <van-cell title="头像">
         <!-- 使用 right-icon 插槽来自定义右侧图标 -->
-        <div slot="right-icon" class="right">
+        <div slot="right-icon" class="right" @click="selectPic">
           <img class="img" :src="imgSrc" alt="" />
           <van-icon name="arrow" />
         </div>
@@ -37,15 +37,43 @@
     />
     <van-row>
       <van-col span="18" offset="3">
-        <van-button class="w100" type="primary" color="#00AEFF" @click="save">保存</van-button>
+        <van-button class="w100" type="primary" color="#00AEFF" @click="save"
+          >保存</van-button
+        >
       </van-col>
     </van-row>
+    <!-- 拍照选择图片 -->
+    <van-overlay :show="isShowPic" @click="isShowPic = false">
+      <div class="picWrap" @click.stop>
+        <div class="bodyPic">
+          <van-button type="default" @click="gotoAlbum">
+            <div class="btnWrap">
+              <span class="pic1"></span>
+              <span>
+                相册
+              </span>
+            </div>
+          </van-button>
+          <van-button type="default" @click="takePic">
+             <div class="btnWrap">
+              <span class="pic2"></span>
+              <span>
+                拍照
+              </span>
+            </div>
+          </van-button>
+        </div>
+        <div class="cancelPic">
+          <van-button type="default">取消</van-button>
+        </div>
+      </div>
+    </van-overlay>
   </div>
 </template>
 <script>
 import areaList from '@/assets/json/area.js'
 export default {
-  data() {
+  data () {
     return {
       nickname: '向阳的微笑',
       telNum: 1534524525,
@@ -53,20 +81,21 @@ export default {
       company: '向阳集团',
       imgSrc: '',
       areaList: Object.freeze(areaList),
-      isShowArea: false
+      isShowArea: false,
+      isShowPic: false
     }
   },
   methods: {
-    selectArea() {
+    selectArea () {
       if (this.isShowArea) {
         return
       }
       this.isShowArea = true
     },
-    cancelArea() {
+    cancelArea () {
       this.isShowArea = false
     },
-    select(val) {
+    select (val) {
       // let areaList = ['北京市', '天津市', '上海市', '重庆市']
       let areaListCode = ['110000', '120000', '310000', '500000']
       // 北京市，天津市，上海市，重庆市，
@@ -82,7 +111,12 @@ export default {
       console.log(val)
       console.log(this.address)
     },
-    save() {}
+    save () {},
+    selectPic () {
+      this.isShowPic = true
+    },
+    gotoAlbum () {},
+    takePic () {}
   }
 }
 </script>
@@ -142,10 +176,57 @@ export default {
     left: 0;
     right: 0;
   }
-  .w100{
+  .w100 {
     width: 100%;
     border-radius: 5px;
     margin-top: 30px;
+  }
+}
+.picWrap {
+  height: 100%;
+  position: relative;
+  .van-button {
+    width: 100%;
+  }
+  .bodyPic {
+    position: absolute;
+    bottom: 90px;
+    left: 12px;
+    right: 12px;
+    background: white;
+    border-radius: 5px;
+  }
+  .cancelPic {
+    position: absolute;
+    bottom: 30px;
+    left: 12px;
+    right: 12px;
+  }
+  .btnWrap{
+    color: #00AEFF;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .pic1,.pic2{
+      display: inline-block;
+      width: 25px;
+      height: 20px;
+      margin-right: 4px;
+    }
+    .pic1{
+      background: url(~@/assets/img/me/pic1.png) no-repeat center center;
+      background-size: 100% 100%;
+    }
+    .pic2{
+      background: url(~@/assets/img/me/pic2.png) no-repeat center center;
+      background-size: 100% 100%;
+    }
+  }
+}
+.cancelPic{
+  .van-button{
+    border-radius: 5px; 
   }
 }
 </style>

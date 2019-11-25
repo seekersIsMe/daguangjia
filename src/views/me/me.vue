@@ -29,7 +29,7 @@
           </van-col>
           <van-col span="6">
             <div class="icon3 icon"></div>
-            <p>已完成</p>
+            <p>已发货</p>
           </van-col>
           <van-col span="6">
             <div class="icon4 icon"></div>
@@ -54,7 +54,7 @@
             <div class="icon">{{loseEfficacyScore}}</div>
             <p>已失效</p>
           </van-col>
-          <van-col span="6">
+          <van-col span="6" @click="getScoreDetail">
             <div class="icon icon1"></div>
             <p>明细</p>
           </van-col>
@@ -91,6 +91,11 @@ export default {
           path: '/info'
         }
       )
+    },
+    getScoreDetail() {
+      this.$router.push({
+        path: '/scoreDetail'
+      })
     }
   }
 }

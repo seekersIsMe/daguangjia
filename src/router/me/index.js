@@ -14,6 +14,14 @@ const me = [
     meta: {
       title: '个人中心'
     }
+  },
+  {
+    path: '/scoreDetail',
+    name: 'scoreDetail',
+    component: () => import('@/views/me/scoreDetail'),
+    meta: {
+      title: '积分明细'
+    }
   }
 ]
 export default me
