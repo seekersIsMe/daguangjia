@@ -26,19 +26,26 @@
         <span>已失效：{{ allPastDueScore }}</span>
       </div>
       <div class="scoreList">
-        <div class="item" v-for="(item,index) in scoreList" :key="index">
-          <div class="left">
-            <p class="detail">
-              {{ item.detail }}
-            </p>
-            <p class="date">
-              {{ item.date }}
-            </p>
+        <van-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          @load="onLoad"
+        >
+          <div class="item" v-for="(item, index) in scoreList" :key="index">
+            <div class="left">
+              <p class="detail">
+                {{ item.detail }}
+              </p>
+              <p class="date">
+                {{ item.date }}
+              </p>
+            </div>
+            <div class="right" :class="item.score > 0 ? 'color' : 'color_'">
+              {{ String(item.score) }}
+            </div>
           </div>
-          <div class="right" :class="item.score>0 ? 'color': 'color_'">
-            {{ String(item.score) }}
-          </div>
-        </div>
+        </van-list>
       </div>
     </div>
   </div>
@@ -47,6 +54,8 @@
 export default {
   data() {
     return {
+      finished: false,
+      loading: false,
       myScore: 10000,
       pastDueScore: 1200,
       pastDueDate: '2020-2-30',
@@ -95,6 +104,32 @@ export default {
         }
       ]
     }
+  },
+  methods: {
+    onLoad() {
+      setTimeout(() => {
+        this.scoreList.push(
+          ...[
+            {
+              detail: '每日签到',
+              date: '2019.10.2 19:50:20',
+              score: 1000
+            },
+            {
+              detail: '每日签到',
+              date: '2019.10.2 19:50:20',
+              score: 2000
+            },
+            {
+              detail: '每日签到',
+              date: '2019.10.2 19:50:20',
+              score: -20100
+            }
+          ]
+        )
+        this.loading = false
+      }, 500)
+    }
   }
 }
 </script>
@@ -131,7 +166,7 @@ export default {
       color: white;
     }
   }
-  .scoreListWrap{
+  .scoreListWrap {
     position: absolute;
     top: 40vw;
     left: 15px;
@@ -139,42 +174,42 @@ export default {
     bottom: 0;
     overflow-y: auto;
     background: white;
-    .title{
+    .title {
       display: flex;
       justify-content: center;
       padding: 20px;
       box-sizing: border-box;
-      border-bottom: 1px solid #E1E1E1; 
-      span:nth-of-type(2){
+      border-bottom: 1px solid #e1e1e1;
+      span:nth-of-type(2) {
         margin-left: 20px;
       }
     }
-    .scoreList{
-      overflow-y:auto;
-      .item{
+    .scoreList {
+      overflow-y: auto;
+      .item {
         padding: 20px;
         box-sizing: border-box;
         display: flex;
-        justify-content:space-between;
+        justify-content: space-between;
         align-items: center;
-        border-bottom: 1px solid #E1E1E1;
-        .detail{
+        border-bottom: 1px solid #e1e1e1;
+        .detail {
           font-size: 16px;
           color: #333333;
           line-height: 30px;
         }
-        .date{
+        .date {
           font-size: 13px;
           color: #999999;
           line-height: 20px;
         }
-        .right{
+        .right {
           font-size: 16px;
         }
-        .color{
-          color: #00AEFF
+        .color {
+          color: #00aeff;
         }
-        .color_{
+        .color_ {
           color: #333333;
         }
       }
