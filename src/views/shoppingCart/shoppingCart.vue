@@ -4,7 +4,8 @@
       <p class="titleCar">购物车</p>
       <p class="optionText" @click="manage">{{isManage?'完成':'管理'}}</p>
     </div>
-    <div class="carItemWrap">
+    <div v-if="itemDataList.length>0">
+      <div class="carItemWrap">
       <div class="list">
         <carItem v-model="itemDataList" @change="carChange" />
       </div>
@@ -19,6 +20,12 @@
       </div>
       <van-button round type="primary" v-if="!isManage" color="#00AEFF">结算</van-button>
       <van-button round type="primary" v-else color="#FF0000" @click="del">删除</van-button>
+    </div>
+    </div>
+    <div class="noPro" v-else>
+      <div class="noProBg">
+      </div>
+      <p>您的购物车是空的</p>
     </div>
   </div>
 </template>
@@ -176,5 +183,21 @@ export default {
       }
     }
   }
+  .noPro{
+    margin-top: 20vw;
+    color: #999999;
+    font-size: 14px;
+    text-align: center;
+    .noProBg{
+        margin: auto;
+        width: 40vw;
+        height: 44vw;
+        background: url(~@/assets/img/nocProcar.png) no-repeat center center;
+        background-size: 100% 100%;
+    }
+    p{
+        margin-top: 20px;
+    }
+}
 }
 </style>

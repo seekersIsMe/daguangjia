@@ -9,7 +9,7 @@
         <van-tab title="已完成"></van-tab>
       </van-tabs>
     </van-sticky>
-    <div class="list">
+    <div class="list" v-if="listData.length > 0">
       <van-list
         v-model="loading"
         :finished="finished"
@@ -37,6 +37,11 @@
         </div>
       </van-list>
     </div>
+    <div class="noPro">
+        <div class="noProBg">
+        </div>
+        <p>购物车为空</p>
+    </div>
   </div>
 </template>
 <script>
@@ -45,7 +50,7 @@ export default {
   components: {
     item
   },
-  data() {
+  data () {
     return {
       active: 1,
       loading: false,
@@ -131,7 +136,7 @@ export default {
     goBack () {
       this.$router.go(-1)
     },
-    gotoOrderDetail() {
+    gotoOrderDetail () {
       this.$router.push({
         path: '/orderDetail'
       })
@@ -213,6 +218,7 @@ export default {
 }
 .orderList {
   background: #f7f7f7;
+  height: 100vh;
 }
 .header {
   position: relative;
@@ -251,5 +257,21 @@ export default {
     color: #ff0000;
     font-weight: 500;
   }
+}
+.noPro{
+    margin-top: 20vw;
+    color: #999999;
+    font-size: 14px;
+    text-align: center;
+    .noProBg{
+        margin: auto;
+        width: 160px;
+        height: 260px;
+        background: url(~@/assets/img/noPro.png) no-repeat center center;
+        background-size: 100% 100%;
+    }
+    p{
+        margin-top: 20px;
+    }
 }
 </style>
