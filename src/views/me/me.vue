@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="orderWrap">
-      <div class="title">我的订单</div>
+      <div class="title" @click="gotoOrder">我的订单</div>
       <div class="orderIcon">
         <van-row type="flex" justify="space-between">
           <van-col span="6">
@@ -103,6 +103,11 @@ export default {
           path: '/addressList'
         }
       )
+    },
+    gotoOrder () {
+      this.$router.push({
+        path: '/orderList'
+      })
     }
   }
 }
