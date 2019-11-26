@@ -5,16 +5,14 @@
       <p class="stateName">
         {{ stateName[0] }}
       </p>
-      <p class="lastTime" v-if="type === 0">
-        订单在{{ lastTime }}内完成付款!
-      </p>
+      <p class="lastTime" v-if="type === 0">订单在{{ lastTime }}内完成付款!</p>
     </div>
     <div class="body bgW">
       <item :itemData="itemData" />
       <div class="sumDetail">
-        <span>公{{count}}件</span>
+        <span>公{{ count }}件</span>
         <span>合计：</span>
-        <span class="score">{{score}}积分</span>
+        <span class="score">{{ score }}积分</span>
       </div>
     </div>
     <div class="footer bgW">
@@ -36,7 +34,9 @@
       </div>
     </div>
     <div class="btnGroup bgW">
-      <van-button type="primary" color="#FF0000">关闭订单</van-button>
+      <van-button type="primary" color="#FF0000" @click="closeOrder"
+        >关闭订单</van-button
+      >
       <van-button type="primary" color="#00AEFF">立即兑换</van-button>
     </div>
   </div>
@@ -47,7 +47,7 @@ export default {
   components: {
     item
   },
-  data () {
+  data() {
     return {
       type: 0,
       orderTime: '2019-11-26',
@@ -77,6 +77,19 @@ export default {
   methods: {
     goBack () {
       this.$router.go(-1)
+    },
+    closeOrder () {
+      this.$dialog
+        .confirm({
+          title: '关闭订单',
+          message: '请确定是否关闭订单'
+        })
+        .then(() => {
+          // on close
+        })
+        .catch(() => {
+          // on cancel
+        })
     }
   }
 }
@@ -85,62 +98,63 @@ export default {
 .bgW {
   background: white;
 }
-.orderDetail{
+.orderDetail {
   background: #f7f7f7;
   height: 100vh;
   position: relative;
-  .header{
+  .header {
     height: 32vw;
     background: url(~@/assets/img/orderBg.png);
     background-size: 100% 100%;
     position: relative;
     overflow: hidden;
     color: white;
-    .van-icon{
+    .van-icon {
       position: absolute;
       left: 10px;
       top: 20px;
     }
-    p{
+    p {
       margin-left: 35px;
     }
-    .stateName{
+    .stateName {
       margin-top: 12vw;
       font-size: 20px;
     }
-    .lastTime{
+    .lastTime {
       font-size: 13px;
       margin-top: 20px;
     }
   }
 }
-.body{
+.body {
   padding: 0 10px 10px 10px;
-  .sumDetail{
+  .sumDetail {
     text-align: right;
     font-size: 14px;
     color: #999999;
     padding: 0 10px;
     line-height: 30px;
-    .score{
+    .score {
       font-size: 15px;
-      color: #FF0000;
+      color: #ff0000;
       font-weight: 500;
     }
   }
 }
-.footer{
+.footer {
   margin-top: 10px;
   font-size: 13px;
   color: #666666;
   padding: 0 10px;
-  .orderCode,.orderTime{
+  .orderCode,
+  .orderTime {
     display: flex;
     justify-content: space-between;
     line-height: 40px;
   }
 }
-.btnGroup{
+.btnGroup {
   display: flex;
   justify-content: flex-end;
   padding: 5px 15px;
@@ -148,10 +162,10 @@ export default {
   bottom: 20px;
   left: 0;
   right: 0;
-  .van-button{
+  .van-button {
     border-radius: 5px;
   }
-  .van-button:last-of-type{
+  .van-button:last-of-type {
     margin-left: 10px;
   }
 }
