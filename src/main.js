@@ -3,13 +3,13 @@ import App from './App'
 import router from './router'
 import Vant from 'vant'
 import 'vant/lib/index.css'
-import axios from 'axios'
+import {axiosUtil} from './api/axios'
 // import { Lazyload } from 'vant'
 
 Vue.use(Vant)
 // Vue.use(Lazyload)
 Vue.config.productionTip = false
-// Vue.proptype.axios = axios
+Vue.prototype.$axios = axiosUtil
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

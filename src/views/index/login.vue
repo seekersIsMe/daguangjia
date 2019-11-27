@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <div class="loginIcon">
-      <span class="login"></span>
+      <span class="icon"></span>
     </div>
     <van-cell-group>
       <van-field
@@ -36,10 +36,9 @@
   </div>
 </template>
 <script>
-import { getCode } from '@/api/index/index'
 import wx from 'weixin-js-sdk'
 export default {
-  data() {
+  data () {
     return {
       telNum: '',
       code: '',
@@ -49,11 +48,15 @@ export default {
     }
   },
   methods: {
-    blur(val) {},
-    getCode() {
-      getCode({
-        userName: this.telNum
-      }).then(res => {
+    blur (val) {},
+    getCode () {
+      this.$axios({
+        url: '/sysUser/getPhoneCode',
+        params: {
+          userName: this.telNum
+        },
+        method: 'post'
+      }, res => {
         console.log(res)
       })
       // this.time = 59
@@ -66,7 +69,7 @@ export default {
       //   })
       // }
     },
-    login() {
+    login () {
       console.log('微信', wx)
       // window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx5410a6f99a36e39f&redirect_uri=http%3A%2F%2F350bcf1a.nat123.cc%3A28312%2F%23%2Findex&response_type=code&scope=&state=123#wechat_redirect'
       window.location.href =
@@ -82,17 +85,17 @@ export default {
       // })
       this.vail()
     },
-    vail() {
+    vail () {
       this.vailTel()
       this.telIsTrue && this.vailCode()
     },
-    vailCode() {
+    vailCode () {
       if (this.code === '') {
         this.$toast('请输入验证码')
         this.codeIsTrue = false
       }
     },
-    vailTel() {
+    vailTel () {
       if (this.telNum === '') {
         this.$toast('请输入手机号')
         this.telIsTrue = false
@@ -105,7 +108,7 @@ export default {
         this.$toast('请正确输入手机号')
       }
     },
-    sec60() {
+    sec60 () {
       if (this.time === 0) {
         this.time = 60
       } else {
@@ -128,7 +131,8 @@ export default {
     display: inline-block;
     width: rem(50);
     height: rem(50);
-    background: #00aeff;
+    background: url(~@/assets/img/logo.png) no-repeat center center;
+    background-size: 100% 100%;
   }
 }
 .getCode {
