@@ -169,7 +169,7 @@ export default {
     },
     code() {
       let url =
-        'https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxd991d12dffbcb838&secret=92d933d92116b498f6dd51e10a240cda'
+        'https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxd991d12dffbcb838&secret=19db5681405637649e2993678f7fc591'
       // let a = https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
       // this.$store.commit('changeToken', null)
       // this.$store.commit('changeCode', this.getQueryString('code'))

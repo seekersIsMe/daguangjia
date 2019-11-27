@@ -18,25 +18,20 @@
         clearable
         center
       >
-        <span slot="button" class="getCode" @click="getCode" v-if='time === 60'>
+        <span slot="button" class="getCode" @click="getCode" v-if="time === 60">
           获取验证码
         </span>
-        <span
-        slot="button"
-        class="getCode"
-        v-else
-        >
-        {{ time }}s后重新获取
+        <span slot="button" class="getCode" v-else>
+          {{ time }}s后重新获取
         </span>
       </van-field>
     </van-cell-group>
     <van-row>
       <van-col span="18" offset="3">
-        <van-button
-          @click="login"
-          type="primary"
-          color="#00aeff"
-        >登录</van-button></van-col>
+        <van-button @click="login" type="primary" color="#00aeff"
+          >登录</van-button
+        ></van-col
+      >
     </van-row>
   </div>
 </template>
@@ -44,7 +39,7 @@
 import { getCode } from '@/api/index/index'
 import wx from 'weixin-js-sdk'
 export default {
-  data () {
+  data() {
     return {
       telNum: '',
       code: '',
@@ -54,20 +49,28 @@ export default {
     }
   },
   methods: {
-    blur (val) {
+    blur(val) {},
+    getCode() {
+      getCode({
+        userName: this.telNum
+      }).then(res => {
+        console.log(res)
+      })
+      // this.time = 59
+      // this.sec60()
+      // if (this.time === 0) {
+      //   getCode({
+      //     userName: this.telNum
+      //   }).then(res => {
+      //     console.log(res)
+      //   })
+      // }
     },
-    getCode () {
-      this.time = 59
-      this.sec60()
-      if (this.time === 0) {
-        // getCode().then(res => {
-        // })
-      }
-    },
-    login () {
+    login() {
       console.log('微信', wx)
       // window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx5410a6f99a36e39f&redirect_uri=http%3A%2F%2F350bcf1a.nat123.cc%3A28312%2F%23%2Findex&response_type=code&scope=&state=123#wechat_redirect'
-      window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx5410a6f99a36e39f&redirect_uri=http%3A%2F%2F350bcf1a.nat123.cc%3A28312%2F%23%2Findex&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
+      window.location.href =
+        'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd991d12dffbcb838&redirect_uri=http%3A%2F%2Fahuibenben.cross.echosite.cn%2F%23%2Findex&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
       // wx.chooseImage({
       //   count: 1, // 默认9
       //   sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
@@ -79,17 +82,17 @@ export default {
       // })
       this.vail()
     },
-    vail () {
+    vail() {
       this.vailTel()
       this.telIsTrue && this.vailCode()
     },
-    vailCode () {
+    vailCode() {
       if (this.code === '') {
         this.$toast('请输入验证码')
         this.codeIsTrue = false
       }
     },
-    vailTel () {
+    vailTel() {
       if (this.telNum === '') {
         this.$toast('请输入手机号')
         this.telIsTrue = false
@@ -102,7 +105,7 @@ export default {
         this.$toast('请正确输入手机号')
       }
     },
-    sec60 () {
+    sec60() {
       if (this.time === 0) {
         this.time = 60
       } else {
@@ -131,10 +134,10 @@ export default {
 .getCode {
   color: red;
 }
-.van-button{
+.van-button {
   width: 100%;
   font-size: rem(14);
   border-radius: rem(5);
-  margin-top: rem(50)
+  margin-top: rem(50);
 }
 </style>
