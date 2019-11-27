@@ -130,10 +130,27 @@ export default {
 </script>
 <style lang="scss" scoped>
 .addressListWrap {
+  /*iphone XR*/
+  @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) {
+    height: calc(100vh - 34px);
+  }
+  @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 2) {
+    height: calc(100vh - 34px);
+  }
+  /*iphone XMAX*/
+  @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) {
+     height: calc(100vh - 34px);
+  }
+  /* iphone X/XS */
+  @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
+     height: calc(100vh - 34px);
+  }
   height: 100vh;
-  overflow: hidden;
+  box-sizing: border-box;
+  overflow-y: auto;
   position: relative;
   background: #f7f7f7;
+
   .bgW {
     background: white;
   }

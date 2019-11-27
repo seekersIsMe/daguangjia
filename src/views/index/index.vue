@@ -4,7 +4,8 @@
       v-model="loading"
       :finished="finished"
       finished-text="没有更多了"
-      @load="scrollToEnd">
+      @load="scrollToEnd"
+    >
       <div class="bgBlue">
         <div class="searchWrap">
           <div class="addressWrap">
@@ -69,8 +70,13 @@
             </template>
           </myTitle>
           <van-row>
-            <van-col span="6" gutter="10" v-for="(item, index) in seckillData" :key="index">
-              <div class="img">{{item.img}}</div>
+            <van-col
+              span="6"
+              gutter="10"
+              v-for="(item, index) in seckillData"
+              :key="index"
+            >
+              <div class="img">{{ item.img }}</div>
               <div class="killText">秒杀价{{ item.price_ }}积分</div>
               <div class="originPrice">原价：{{ item.price }}积分</div>
             </van-col>
@@ -81,8 +87,8 @@
             <myTitle :titleVal="'新品精选'" class="myTitle"></myTitle>
           </div>
           <div class="itemWrap">
-            <div v-for="(item,index) in itemCount" :key="index" class="item">
-               <listItem :key="index" />
+            <div v-for="(item, index) in itemCount" :key="index" class="item">
+              <listItem :key="index" />
             </div>
           </div>
         </div>
@@ -101,7 +107,7 @@ export default {
     btn,
     listItem
   },
-  data () {
+  data() {
     return {
       address: '广州',
       searchVal: '',
@@ -136,17 +142,15 @@ export default {
       error: false,
       loading: false,
       finished: false,
-      itemCount: [
-        1, 2, 3, 4, 5, 6
-      ]
+      itemCount: [1, 2, 3, 4, 5, 6]
     }
   },
-  created () {
+  created() {
     // this.code()
   },
   methods: {
     // 超过一万，一千，十万
-    changNum (val) {
+    changNum(val) {
       if (val > 1000 && val < 10000) {
         return (val / 1000).toFixed(2) + '千'
       }
@@ -157,13 +161,13 @@ export default {
         return Math.round(val / 1000) / 100 + '十万万'
       }
     },
-    getQueryString (name) {
+    getQueryString(name) {
       var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i')
       var r = window.location.search.substr(1).match(reg)
       if (r != null) return unescape(r[2])
       return null
     },
-    code () {
+    code() {
       let url =
         'https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxd991d12dffbcb838&secret=92d933d92116b498f6dd51e10a240cda'
       // let a = https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
@@ -187,13 +191,13 @@ export default {
           console.log('授权成功', res)
         })
     },
-    onSearch (val) {
+    onSearch(val) {
       console.log(val)
       this.$router.push({
         path: 'proList'
       })
     },
-    scrollToEnd () {
+    scrollToEnd() {
       console.log('到达底部了')
       setTimeout(() => {
         for (let i = 0; i < 10; i++) {
@@ -207,7 +211,25 @@ export default {
 </script>
 <style lang="scss" scoped>
 .indexWrap {
-  .van-list{
+  /*iphone XR*/
+  @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) {
+    height: calc(100vh - 34px);
+  }
+  @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 2) {
+    height: calc(100vh - 34px);
+  }
+  /*iphone XMAX*/
+  @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) {
+    height: calc(100vh - 34px);
+  }
+  /* iphone X/XS */
+  @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
+    height: calc(100vh - 34px);
+  }
+  height: 100vh;
+  box-sizing: border-box;
+  overflow-y: auto;
+  .van-list {
     padding-bottom: 70px;
   }
   .bgBlue {
@@ -332,8 +354,8 @@ export default {
         display: flex;
         flex-wrap: wrap;
         .item:nth-of-type(2n) {
-        margin-left: 10px;
-      }
+          margin-left: 10px;
+        }
       }
     }
   }

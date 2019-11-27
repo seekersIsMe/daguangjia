@@ -54,6 +54,7 @@
   font-size: 12px;
   height: 50px;
   background: #FFFFFF;
+  border-top: 1px solid #e8e8e7;
   /*iphone XR*/
   @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) {
     bottom: 34px;

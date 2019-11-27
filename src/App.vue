@@ -8,8 +8,12 @@
 </template>
 <script>
 import tab from './components/tab'
-const noShowTabRoute = [
-  '/login'
+const showTabRoute = [
+  '/',
+  '/index',
+  '/me',
+  '/shoppingCart',
+  '/type'
 ]
 export default {
   name: 'App',
@@ -18,7 +22,7 @@ export default {
   },
   computed: {
     isShowTab () {
-      return !noShowTabRoute.includes(this.$route.path)
+      return showTabRoute.includes(this.$route.path)
     }
   }
 }

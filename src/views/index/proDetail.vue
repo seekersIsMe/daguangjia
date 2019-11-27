@@ -1,4 +1,5 @@
 <template>
+<div class="proDetailWrap">
   <div class="proDetail">
     <div class="swipeWrap">
       <div class="goBack">
@@ -54,6 +55,7 @@
       <van-button color="#00AEFF">立即兑换</van-button>-->
     </div>
   </div>
+</div>
 </template>
 <script>
 import myTitle from '@/components/myTitle'
@@ -111,9 +113,28 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.proDetailWrap{
+/*iphone XR*/
+  @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) {
+    height: calc(100vh - 34px);
+  }
+  @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 2) {
+    height: calc(100vh - 34px);
+  }
+  /*iphone XMAX*/
+  @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) {
+     height: calc(100vh - 34px);
+  }
+  /* iphone X/XS */
+  @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
+     height: calc(100vh - 34px);
+  }
+  height: 100vh;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
 .proDetail {
   background: #f7f7f7;
-  padding-bottom: 70px;
 }
 .swipeWrap {
   position: relative;

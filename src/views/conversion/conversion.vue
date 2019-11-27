@@ -7,7 +7,7 @@
       <div class="title">积分兑换卡券享更多优惠</div>
       <div class="line"></div>
       <div class="itemWrap">
-        <item v-for="(item,index) in itemData" :key="index" :itemData="item" />
+        <item v-for="(item, index) in itemData" :key="index" :itemData="item" />
       </div>
     </div>
   </div>
@@ -18,7 +18,7 @@ export default {
   components: {
     item
   },
-  data () {
+  data() {
     return {
       itemData: [
         {
@@ -61,7 +61,7 @@ export default {
     }
   },
   methods: {
-    goBack () {
+    goBack() {
       this.$router.go(-1)
     }
   }
@@ -69,10 +69,26 @@ export default {
 </script>
 <style lang="scss" scoped>
 .conversionWrap {
+  /*iphone XR*/
+  @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) {
+    padding-bottom: 34px;
+  }
+  @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 2) {
+    padding-bottom: 34px;
+  }
+  /*iphone XMAX*/
+  @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) {
+    padding-bottom: 34px;
+  }
+  /* iphone X/XS */
+  @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
+    padding-bottom: 34px;
+  }
+  height: 100vh;
+  box-sizing: border-box;
+  overflow-y: auto;
   background: url(~@/assets/img/bg.png) no-repeat center center;
   background-size: 100% 100%;
-  height: 100vh;
-  overflow: hidden;
   .scrollWrap {
     height: 100%;
     overflow: auto;
