@@ -1,5 +1,6 @@
 <template>
   <div class="infoWrap">
+    <div class="header bgW"><van-icon @click="goBack" name="arrow-left" />个人中心</div>
     <div class="aiv item">
       <van-cell title="头像">
         <!-- 使用 right-icon 插槽来自定义右侧图标 -->
@@ -116,7 +117,10 @@ export default {
       this.isShowPic = true
     },
     gotoAlbum () {},
-    takePic () {}
+    takePic () {},
+    goBack () {
+      this.$router.go(-1)
+    }
   }
 }
 </script>
@@ -126,6 +130,20 @@ export default {
   overflow: hidden;
   background: #f7f7f7;
   position: relative;
+  .bgW{
+    background: white;
+  }
+  .header {
+  position: relative;
+  text-align: center;
+  height: 40px;
+  line-height: 40px;
+  .van-icon {
+    position: absolute;
+    top: 11px;
+    left: 10px;
+  }
+}
   .item {
     margin-top: 10px;
   }

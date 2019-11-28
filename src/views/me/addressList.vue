@@ -2,11 +2,10 @@
   <div class="addressListWrap">
     <van-sticky>
       <div class="header bgW">
-        <van-icon name="arrow-left" />收货地址
+        <van-icon name="arrow-left" @click="goBack"/>收货地址
       </div>
     </van-sticky>
     <div class="addressList bgW">
-      <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
         <div class="item" v-for="(item,index) in addressList" :key="index">
           <div class="body">
             <div class="p1">
@@ -23,7 +22,6 @@
             <van-icon name="edit" />
           </div>
         </div>
-      </van-list>
     </div>
     <div class="addBtn" @click="addAddress">
       <van-button type="primary" icon="add-o" color="#00AEFF">新建收货地址</van-button>
@@ -31,11 +29,11 @@
   </div>
 </template>
 <script>
+const getAddressListUrl = '/sysUser/getAddress'
 export default {
   data () {
     return {
-      loading: false,
-      finished: false,
+      userId: localStorage.getItem('userId'),
       addressList: [
         {
           name: '张三疯张三疯张三疯张三疯',
@@ -96,34 +94,31 @@ export default {
     }
   },
   methods: {
+    getAddressList () {
+      this.$axios({
+        url: getAddressListUrl,
+        params: {
+          uid: this.userId
+        },
+        method: 'post'
+      }, res => {
+        if (res.status === 10001) {
+            let {interal, orderStatus, info} = res.data.info
+            this.interal = interal
+            this.orderStatus = orderStatus
+            this.info = info
+          } else {
+            this.$toast(res.msg)
+          }
+      })
+    },
     addAddress () {
       this.$router.push({
         path: '/addAddress'
       })
     },
-    onLoad () {
-      setTimeout(() => {
-        this.addressList.push(
-          ...[
-            {
-              name: '张三疯',
-              tel: '15384658754',
-              address: '广东省广州市天河区珠江新城369号'
-            },
-            {
-              name: '张三疯',
-              tel: '15384658754',
-              address: '广东省广州市天河区珠江新城369号'
-            },
-            {
-              name: '张三疯',
-              tel: '15384658754',
-              address: '广东省广州市天河区珠江新城369号'
-            }
-          ]
-        )
-        this.loading = false
-      }, 500)
+    goBack () {
+      this.$router.go(-1)
     }
   }
 }

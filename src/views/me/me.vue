@@ -7,13 +7,22 @@
         <van-icon name="user-o" @click="gotoInfo" />
       </div>
       <div class="meInfo">
-        <van-image class="aiv" round width="64px" height="64px" :src="aivSrc" v-if="aivSrc" />
-        <span class="defaultAiv"></span>
-        <p class="name">{{ name }}</p>
-        <p class="company">
-          <span>{{ address }}</span>
-          <span>{{ company }}</span>
-        </p>
+        <van-image
+          class="aiv"
+          round
+          width="64px"
+          height="64px"
+          :src="info.logoPath"
+          v-if="info.logoPath"
+        />
+        <span v-else class="defaultAiv"></span>
+        <div class="info">
+          <p class="name">{{ info.nickName }}</p>
+          <p class="company">
+            <span>{{ info.city }}</span>
+            <span>{{ info.unitName }}</span>
+          </p>
+        </div>
       </div>
     </div>
     <div class="orderWrap">
@@ -21,19 +30,32 @@
       <div class="orderIcon">
         <van-row type="flex" justify="space-between">
           <van-col span="6">
-            <div class="icon1 icon"></div>
+            <div class="icon1 icon">
+              <div class="infoCount">
+                {{ orderStatus.status0 > 99 ? '99+' : orderStatus.status0 }}
+              </div>
+            </div>
             <p>待支付</p>
           </van-col>
           <van-col span="6">
-            <div class="icon2 icon"></div>
+            <div class="icon2 icon">
+              <div class="infoCount">
+                {{ orderStatus.status1 > 99 ? '99+' : orderStatus.status1 }}
+              </div>
+            </div>
             <p>待发货</p>
           </van-col>
           <van-col span="6">
-            <div class="icon3 icon"></div>
+            <div class="icon3 icon">
+              <div class="infoCount">
+                {{ orderStatus.status2 > 99 ? '99+' : orderStatus.status2 }}
+              </div>
+            </div>
             <p>已发货</p>
           </van-col>
           <van-col span="6">
-            <div class="icon4 icon"></div>
+            <div class="icon4 icon">
+            </div>
             <p>全部</p>
           </van-col>
         </van-row>
@@ -43,19 +65,15 @@
       <div class="title">我的积分</div>
       <div class="scoreIcon">
         <van-row type="flex" justify="space-between">
-          <van-col span="6">
-            <div class="icon">{{ sumScore }}</div>
-            <p>总积分</p>
+          <van-col span="8">
+            <div class="icon">{{ interal.integral }}</div>
+            <p>剩余积分</p>
           </van-col>
-          <van-col span="6">
-            <div class="icon">{{ spendScore }}</div>
-            <p>已消费</p>
+          <van-col span="8">
+            <div class="icon">{{ interal.expired }}</div>
+            <p>即将过期</p>
           </van-col>
-          <van-col span="6">
-            <div class="icon">{{ loseEfficacyScore }}</div>
-            <p>已失效</p>
-          </van-col>
-          <van-col span="6" @click="getScoreDetail">
+          <van-col span="8" @click="getScoreDetail">
             <div class="icon icon1"></div>
             <p>明细</p>
           </van-col>
@@ -74,14 +92,27 @@ export default {
   data() {
     return {
       userId: localStorage.getItem('userId'),
-      name: '向阳的微笑(133****0223)',
-      aivSrc:
-        'http://img3.duitang.com/uploads/item/201605/07/20160507191419_J2m8R.thumb.700_0.jpeg',
-      address: '广州',
-      company: '| 向阳集团',
-      sumScore: 1000000,
-      spendScore: 50000,
-      loseEfficacyScore: 10000
+      info: {
+        uid: 1, //用户id
+        unitName: '龙相软件', //企业名称
+        phone: '18613089064', //手机号
+        nickName: '中雨', //昵称
+        logoPath: 'aa.png', //头像
+        province: '广东省', //省
+        city: '广州市', //市
+        district: '天河区', //区
+        provinceCode: 440000 //省代码
+      },
+      orderStatus: {
+        status0: 2, //待支付数
+        status1: 2, //待发货数
+        status2: 1 //已发货数
+      },
+      interal: {
+        expired: 575, //即将过期积分，如果为0，则不需要显示过期那行
+        integral: 1475, //剩余积分
+        overTime: '2019-11-30' //积分过期时间，如果没有过期的积分，这里的时间是空字符串
+      }
     }
   },
   created() {
@@ -99,6 +130,10 @@ export default {
         },
         res => {
           if (res.status === 10001) {
+            let {interal, orderStatus, info} = res.data.info
+            this.interal = interal
+            this.orderStatus = orderStatus
+            this.info = info
           } else {
             this.$toast(res.msg)
           }
@@ -161,7 +196,7 @@ export default {
       text-align: center;
       color: #333333;
       font-size: 15px;
-      height: 107px;
+      height: 90px;
       background: url(~@/assets/img/tuoyuan.png) no-repeat center center;
       background-size: 110% 100%;
       padding-bottom: 10px;
@@ -169,7 +204,7 @@ export default {
         display: inline-block;
         transform: translateY(-32px);
       }
-      .defaultAiv{
+      .defaultAiv {
         display: inline-block;
         height: 64px;
         width: 64px;
@@ -177,6 +212,9 @@ export default {
         transform: translateY(-32px);
         background: url(~@/assets/img/defaultAic.png) no-repeat center center;
         background-size: 100% 100%;
+      }
+      .info {
+        transform: translateY(-20px);
       }
       .name {
         margin-bottom: 10px;
@@ -236,6 +274,20 @@ export default {
       }
       .icon {
         margin: auto;
+        position: relative;
+        .infoCount {
+          position: absolute;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background: #ff0000;
+          color: white;
+          font-size: 10px;
+          text-align: center;
+          line-height: 20px;
+          right: -10px;
+          top: -10px;
+        }
       }
       .icon1 {
         width: 44px;
