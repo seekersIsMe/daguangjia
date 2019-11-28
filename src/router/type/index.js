@@ -4,7 +4,8 @@ const type = [
     name: 'type',
     component: () => import('@/views/type/type'),
     meta: {
-      title: '分类'
+      title: '分类',
+      keepAlive: false
     }
   }
 ]

@@ -67,6 +67,7 @@
 <script>
 import listItem from '@/components/listItem'
 export default {
+  name: 'proList',
   components: {
     listItem
   },

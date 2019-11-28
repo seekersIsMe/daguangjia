@@ -4,7 +4,8 @@ const conversion = [
     name: 'conversion',
     component: () => import('@/views/conversion/conversion'),
     meta: {
-      title: '兑换'
+      title: '兑换',
+      keepAlive: false
     }
   }
 ]

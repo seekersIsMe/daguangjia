@@ -4,14 +4,16 @@ const index = [
     name: 'index',
     component: () => import('@/views/index/index'),
     meta: {
-      title: '大积分管家'
+      title: '大积分管家',
+      keepAlive: true
     }
   },
   {
     path: '*',
     redirect: '/',
     meta: {
-      title: '大积分管家'
+      title: '大积分管家',
+      keepAlive: true
     }
   },
   {
@@ -19,7 +21,8 @@ const index = [
     name: 'index',
     component: () => import('@/views/index/index'),
     meta: {
-      title: '大积分管家'
+      title: '大积分管家',
+      keepAlive: true
     }
   },
   {
@@ -27,7 +30,8 @@ const index = [
     name: 'login',
     component: () => import('@/views/index/login'),
     meta: {
-      title: '大积分管家'
+      title: '大积分管家',
+      keepAlive: false
     }
   },
   {
@@ -35,7 +39,8 @@ const index = [
     name: 'proList',
     component: () => import('@/views/index/proList'),
     meta: {
-      title: '商品列表'
+      title: '商品列表',
+      keepAlive: true
     }
   },
   {
@@ -43,7 +48,8 @@ const index = [
     name: 'proDetail',
     component: () => import('@/views/index/proDetail'),
     meta: {
-      title: '商品详情'
+      title: '商品详情',
+      keepAlive: false
     }
   }
 ]

@@ -102,12 +102,13 @@ import myTitle from '@/components/myTitle'
 import btn from '@/components/btn'
 import listItem from '@/components/listItem'
 export default {
+  name: 'index',
   components: {
     myTitle,
     btn,
     listItem
   },
-  data() {
+  data () {
     return {
       address: '广州',
       searchVal: '',
@@ -145,12 +146,12 @@ export default {
       itemCount: [1, 2, 3, 4, 5, 6]
     }
   },
-  created() {
+  created () {
     // this.code()
   },
   methods: {
     // 超过一万，一千，十万
-    changNum(val) {
+    changNum (val) {
       if (val > 1000 && val < 10000) {
         return (val / 1000).toFixed(2) + '千'
       }
@@ -161,13 +162,13 @@ export default {
         return Math.round(val / 1000) / 100 + '十万万'
       }
     },
-    getQueryString(name) {
+    getQueryString (name) {
       var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i')
       var r = window.location.search.substr(1).match(reg)
       if (r != null) return unescape(r[2])
       return null
     },
-    code() {
+    code () {
       let url =
         'https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxd991d12dffbcb838&secret=19db5681405637649e2993678f7fc591'
       // let a = https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
@@ -191,13 +192,13 @@ export default {
           console.log('授权成功', res)
         })
     },
-    onSearch(val) {
+    onSearch (val) {
       console.log(val)
       this.$router.push({
         path: 'proList'
       })
     },
-    scrollToEnd() {
+    scrollToEnd () {
       console.log('到达底部了')
       setTimeout(() => {
         for (let i = 0; i < 10; i++) {

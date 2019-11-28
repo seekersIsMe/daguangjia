@@ -4,7 +4,8 @@ const shoppingCart = [
     name: 'shoppingCart',
     component: () => import('@/views/shoppingCart/shoppingCart'),
     meta: {
-      title: '购物车'
+      title: '购物车',
+      keepAlive: true
     }
   },
   {
@@ -12,7 +13,8 @@ const shoppingCart = [
     name: 'pay',
     component: () => import('@/views/order/pay'),
     meta: {
-      title: '支付结果'
+      title: '支付结果',
+      keepAlive: false
     }
   },
   {
@@ -20,7 +22,8 @@ const shoppingCart = [
     name: 'YesOrder',
     component: () => import('@/views/order/YesOrder'),
     meta: {
-      title: '订单确认'
+      title: '订单确认',
+      keepAlive: false
     }
   }
 ]

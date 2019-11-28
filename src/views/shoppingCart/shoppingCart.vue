@@ -32,6 +32,7 @@
 <script>
 import carItem from './carItem'
 export default {
+  name: 'shoppingCart',
   components: {
     carItem
   },

@@ -4,7 +4,8 @@ const me = [
     name: 'me',
     component: () => import('@/views/me/me'),
     meta: {
-      title: '个人中心'
+      title: '个人中心',
+      keepAlive: false
     }
   },
   {
@@ -12,7 +13,8 @@ const me = [
     name: 'info',
     component: () => import('@/views/me/info'),
     meta: {
-      title: '个人中心'
+      title: '个人中心',
+      keepAlive: false
     }
   },
   {
@@ -20,7 +22,8 @@ const me = [
     name: 'scoreDetail',
     component: () => import('@/views/me/scoreDetail'),
     meta: {
-      title: '积分明细'
+      title: '积分明细',
+      keepAlive: false
     }
   },
   {
@@ -28,7 +31,8 @@ const me = [
     name: 'addressList',
     component: () => import('@/views/me/addressList'),
     meta: {
-      title: '收货地址'
+      title: '收货地址',
+      keepAlive: false
     }
   },
   {
@@ -36,7 +40,8 @@ const me = [
     name: 'addAddress',
     component: () => import('@/views/me/addAddress'),
     meta: {
-      title: '新增收获地址'
+      title: '新增收获地址',
+      keepAlive: false
     }
   },
   {
@@ -44,7 +49,8 @@ const me = [
     name: 'orderList',
     component: () => import('@/views/order/orderList'),
     meta: {
-      title: '我的订单'
+      title: '我的订单',
+      keepAlive: false
     }
   },
   {
@@ -52,7 +58,8 @@ const me = [
     name: 'orderDetail',
     component: () => import('@/views/order/orderDetail'),
     meta: {
-      title: '订单详情'
+      title: '订单详情',
+      keepAlive: false
     }
   }
 ]

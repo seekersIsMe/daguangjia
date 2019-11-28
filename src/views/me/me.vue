@@ -89,37 +89,37 @@
 <script>
 const getUserInfoUrl = '/sysUser/getInfo'
 export default {
-  data() {
+  data () {
     return {
       userId: localStorage.getItem('userId'),
       info: {
-        uid: 1, //用户id
-        unitName: '龙相软件', //企业名称
-        phone: '18613089064', //手机号
-        nickName: '中雨', //昵称
-        logoPath: 'aa.png', //头像
-        province: '广东省', //省
-        city: '广州市', //市
-        district: '天河区', //区
-        provinceCode: 440000 //省代码
+        uid: '', // 用户id
+        unitName: '', // 企业名称
+        phone: '', // 手机号
+        nickName: '', // 昵称
+        logoPath: '', // 头像
+        province: '', // 省
+        city: '', // 市
+        district: '', // 区
+        provinceCode: 440000 // 省代码
       },
       orderStatus: {
-        status0: 2, //待支付数
-        status1: 2, //待发货数
-        status2: 1 //已发货数
+        status0: 0, // 待支付数
+        status1: 0, // 待发货数
+        status2: 0 // 已发货数
       },
       interal: {
-        expired: 575, //即将过期积分，如果为0，则不需要显示过期那行
-        integral: 1475, //剩余积分
-        overTime: '2019-11-30' //积分过期时间，如果没有过期的积分，这里的时间是空字符串
+        expired: 0, // 即将过期积分，如果为0，则不需要显示过期那行
+        integral: 0, // 剩余积分
+        overTime: '' // 积分过期时间，如果没有过期的积分，这里的时间是空字符串
       }
     }
   },
-  created() {
+  created () {
     this.getUserInfo()
   },
   methods: {
-    getUserInfo() {
+    getUserInfo () {
       this.$axios(
         {
           url: getUserInfoUrl,
@@ -140,25 +140,25 @@ export default {
         }
       )
     },
-    goback() {
+    goback () {
       this.$router.go(-1)
     },
-    gotoInfo() {
+    gotoInfo () {
       this.$router.push({
         path: '/info'
       })
     },
-    getScoreDetail() {
+    getScoreDetail () {
       this.$router.push({
         path: '/scoreDetail'
       })
     },
-    goAddressList() {
+    goAddressList () {
       this.$router.push({
         path: '/addressList'
       })
     },
-    gotoOrder() {
+    gotoOrder () {
       this.$router.push({
         path: '/orderList'
       })

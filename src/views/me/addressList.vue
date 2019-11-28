@@ -6,20 +6,20 @@
       </div>
     </van-sticky>
     <div class="addressList bgW">
-        <div class="item" v-for="(item,index) in addressList" :key="index">
+        <div class="item" v-if="addressList.length>0" v-for="(item,index) in addressList" :key="index">
           <div class="body">
             <div class="p1">
-              <span class="name w100">{{ item.name }}</span>
+              <span class="name w100">{{ item.nick_name }}</span>
               <span class="tel">{{item.tel}}</span>
-              <span class="default" v-if="index===0">默认</span>
+              <span class="default" v-if="item.is_default">默认</span>
             </div>
             <div class="p2">
               <span class="addressTitle w100">收货地址</span>
-              <span class="adress">{{ item.address }}</span>
+              <span class="adress">{{ getAddress(item) }}</span>
             </div>
           </div>
           <div class="icon">
-            <van-icon name="edit" />
+            <van-icon name="edit" @click="editAddress(item)" />
           </div>
         </div>
     </div>
@@ -35,63 +35,20 @@ export default {
     return {
       userId: localStorage.getItem('userId'),
       addressList: [
-        {
-          name: '张三疯张三疯张三疯张三疯',
-          tel: '15384658754',
-          address: '广东省广州市天河区珠江新城369号'
-        },
-        {
-          name: '张三疯',
-          tel: '15384658754',
-          address: '广东省广州市天河区珠江新城369号'
-        },
-        {
-          name: '张三疯',
-          tel: '15384658754',
-          address: '广东省广州市天河区珠江新城369号'
-        },
-        {
-          name: '张三疯',
-          tel: '15384658754',
-          address: '广东省广州市天河区珠江新城369号'
-        },
-        {
-          name: '张三疯',
-          tel: '15384658754',
-          address: '广东省广州市天河区珠江新城369号'
-        },
-        {
-          name: '张三疯',
-          tel: '15384658754',
-          address: '广东省广州市天河区珠江新城369号'
-        },
-        {
-          name: '张三疯',
-          tel: '15384658754',
-          address: '广东省广州市天河区珠江新城369号'
-        },
-        {
-          name: '张三疯',
-          tel: '15384658754',
-          address: '广东省广州市天河区珠江新城369号'
-        },
-        {
-          name: '张三疯',
-          tel: '15384658754',
-          address: '广东省广州市天河区珠江新城369号'
-        },
-        {
-          name: '张三疯',
-          tel: '15384658754',
-          address: '广东省广州市天河区珠江新城369号'
-        },
-        {
-          name: '张三疯',
-          tel: '15384658754',
-          address: '广东省广州市天河区珠江新城369号'
-        }
+        // {
+        //   nick_name: '',
+        //   phone: '',
+        //   address: '',
+        //   province: '',
+        //   city: '',
+        //   district: '',
+        //   is_default: true
+        // }
       ]
     }
+  },
+  created () {
+    this.getAddressList()
   },
   methods: {
     getAddressList () {
@@ -103,19 +60,41 @@ export default {
         method: 'post'
       }, res => {
         if (res.status === 10001) {
-            let {interal, orderStatus, info} = res.data.info
-            this.interal = interal
-            this.orderStatus = orderStatus
-            this.info = info
-          } else {
-            this.$toast(res.msg)
-          }
+          this.addressList = res.data.info || []
+        } else {
+          this.$toast(res.msg)
+        }
       })
     },
     addAddress () {
       this.$router.push({
         path: '/addAddress'
       })
+    },
+    getAddress (item) {
+      let areaList = ['北京市', '天津市', '上海市', '重庆市']
+      if (areaList.includes(item.province)) {
+        return item.city + item.district + item.address
+      } else {
+        return item.province + item.city + item.district + item.address
+      }
+    },
+    editAddress (item) {
+      this.$router.push({
+        path: '/addAddress',
+        query: {
+          id: item.id,
+          name: item.nick_name,
+          tel: item.phone,
+          province: item.province,
+          city: item.city,
+          county: item.district,
+          addressDetail: item.address,
+          areaCode: item.provinceCode,
+          isDefault: item.isDefault
+        }
+      })
+      console.log(item)
     },
     goBack () {
       this.$router.go(-1)
@@ -165,7 +144,7 @@ export default {
     }
   }
   .addressList {
-    height: 100%;
+    // height: 100%;
     overflow-y: auto;
     margin-top: 10px;
   }
