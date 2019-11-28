@@ -4,14 +4,15 @@
       <div class="title">
         <van-icon name="arrow-left" @click="goback" />
         <span class="f18">个人中心</span>
-        <van-icon name="user-o" @click="gotoInfo"/>
+        <van-icon name="user-o" @click="gotoInfo" />
       </div>
       <div class="meInfo">
-        <van-image class="aiv" round width="64px" height="64px" :src="aivSrc" />
-        <p class="name">{{name}}</p>
+        <van-image class="aiv" round width="64px" height="64px" :src="aivSrc" v-if="aivSrc" />
+        <span class="defaultAiv"></span>
+        <p class="name">{{ name }}</p>
         <p class="company">
-          <span>{{address}}</span>
-          <span>{{company}}</span>
+          <span>{{ address }}</span>
+          <span>{{ company }}</span>
         </p>
       </div>
     </div>
@@ -43,15 +44,15 @@
       <div class="scoreIcon">
         <van-row type="flex" justify="space-between">
           <van-col span="6">
-            <div class="icon">{{sumScore}}</div>
+            <div class="icon">{{ sumScore }}</div>
             <p>总积分</p>
           </van-col>
           <van-col span="6">
-            <div class="icon">{{spendScore}}</div>
+            <div class="icon">{{ spendScore }}</div>
             <p>已消费</p>
           </van-col>
           <van-col span="6">
-            <div class="icon">{{loseEfficacyScore}}</div>
+            <div class="icon">{{ loseEfficacyScore }}</div>
             <p>已失效</p>
           </van-col>
           <van-col span="6" @click="getScoreDetail">
@@ -62,15 +63,17 @@
       </div>
     </div>
     <div class="addressWrap">
-      <van-cell title="我的地址" is-link @click="goAddressList"/>
+      <van-cell title="我的地址" is-link @click="goAddressList" />
     </div>
     <div class="unbind">解绑手机号</div>
   </div>
 </template>
 <script>
+const getUserInfoUrl = '/sysUser/getInfo'
 export default {
-  data () {
+  data() {
     return {
+      userId: localStorage.getItem('userId'),
       name: '向阳的微笑(133****0223)',
       aivSrc:
         'http://img3.duitang.com/uploads/item/201605/07/20160507191419_J2m8R.thumb.700_0.jpeg',
@@ -81,30 +84,46 @@ export default {
       loseEfficacyScore: 10000
     }
   },
+  created() {
+    this.getUserInfo()
+  },
   methods: {
-    goback () {
-      this.$router.go(-1)
-    },
-    gotoInfo () {
-      this.$router.push(
+    getUserInfo() {
+      this.$axios(
         {
-          path: '/info'
+          url: getUserInfoUrl,
+          params: {
+            uid: this.userId
+          },
+          method: 'post'
+        },
+        res => {
+          if (res.status === 10001) {
+          } else {
+            this.$toast(res.msg)
+          }
         }
       )
     },
-    getScoreDetail () {
+    goback() {
+      this.$router.go(-1)
+    },
+    gotoInfo() {
+      this.$router.push({
+        path: '/info'
+      })
+    },
+    getScoreDetail() {
       this.$router.push({
         path: '/scoreDetail'
       })
     },
-    goAddressList () {
-      this.$router.push(
-        {
-          path: '/addressList'
-        }
-      )
+    goAddressList() {
+      this.$router.push({
+        path: '/addressList'
+      })
     },
-    gotoOrder () {
+    gotoOrder() {
       this.$router.push({
         path: '/orderList'
       })
@@ -149,6 +168,15 @@ export default {
       .aiv {
         display: inline-block;
         transform: translateY(-32px);
+      }
+      .defaultAiv{
+        display: inline-block;
+        height: 64px;
+        width: 64px;
+        border-radius: 50%;
+        transform: translateY(-32px);
+        background: url(~@/assets/img/defaultAic.png) no-repeat center center;
+        background-size: 100% 100%;
       }
       .name {
         margin-bottom: 10px;

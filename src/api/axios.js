@@ -35,19 +35,25 @@ export function axiosUtil (axiosParams, callback) {
     urlParams = axiosParams.params
   }
   if (axiosParams.method === 'post') {
-    api.post(root + axiosParams.url, urlParams).then(function (res) {
-      callback(res.data)
-    }).catch((err) => {
-      // 这里会捕获内部异样，例如语法异常
-      console.log(err.message, axiosParams.url)
-    //   Message.error('请联系系统管理员');
-    })
+    api
+      .post(root + '/integral/api' + axiosParams.url, urlParams)
+      .then(function (res) {
+        callback(res.data)
+      })
+      .catch(err => {
+        // 这里会捕获内部异样，例如语法异常
+        console.log(err.message, axiosParams.url)
+        //   Message.error('请联系系统管理员');
+      })
   } else {
-    api.get(root + axiosParams.url, {params: urlParams}).then(function (res) {
-      callback(res.data)
-    }).catch((err) => {
-      console.log(err.message, axiosParams.url)
-    //   Message.error('请联系系统管理员');
-    })
+    api
+      .get(root + '/integral/api' + axiosParams.url, { params: urlParams })
+      .then(function (res) {
+        callback(res.data)
+      })
+      .catch(err => {
+        console.log(err.message, axiosParams.url)
+        //   Message.error('请联系系统管理员');
+      })
   }
-};
+}
