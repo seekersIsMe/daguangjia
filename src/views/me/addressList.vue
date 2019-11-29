@@ -9,9 +9,9 @@
         <div class="item" v-if="addressList.length>0" v-for="(item,index) in addressList" :key="index">
           <div class="body">
             <div class="p1">
-              <span class="name w100">{{ item.nick_name }}</span>
+              <span class="name w100">{{ item.nickName }}</span>
               <span class="tel">{{item.tel}}</span>
-              <span class="default" v-if="item.is_default">默认</span>
+              <span class="default" v-if="item.isDefault">默认</span>
             </div>
             <div class="p2">
               <span class="addressTitle w100">收货地址</span>
@@ -84,13 +84,13 @@ export default {
         path: '/addAddress',
         query: {
           id: item.id,
-          name: item.nick_name,
+          name: item.nickName,
           tel: item.phone,
           province: item.province,
           city: item.city,
           county: item.district,
           addressDetail: item.address,
-          areaCode: item.provinceCode,
+          areaCode: String(item.provinceCode),
           isDefault: item.isDefault
         }
       })
