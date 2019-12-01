@@ -2,13 +2,13 @@
   <div class="itemWrap">
       <div class="proItem" v-for="(itemPro, ind) in itemData" :key="ind">
         <div class="img">
-          <img :src="itemPro.src" alt="" />
+          <img :src="itemPro.goodsLogo" alt="" />
         </div>
         <div class="ProDatail">
-          <p class="detail">{{ itemPro.detail }}</p>
+          <p class="detail">{{ itemPro.goodsName }}</p>
           <p class="priceCount">
             <span>{{ itemPro.price }}</span>
-            <span> x{{ itemPro.count }} </span>
+            <span> x{{ itemPro.amount }} </span>
           </p>
         </div>
       </div>
@@ -22,18 +22,10 @@ export default {
       default: () => {
         return [
           {
-            src: '',
-            detail:
-              'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-            price: 1000,
-            count: 20
-          },
-          {
-            src: '',
-            detail:
-              'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-            price: 1000,
-            count: 20
+            goodsLogo: '',
+            goodsName: '',
+            price: 0,
+            amount: 0
           }
         ]
       }

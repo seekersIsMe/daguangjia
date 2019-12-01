@@ -26,10 +26,10 @@
       </div>
     </div>
     <div class="orderWrap">
-      <div class="title" @click="gotoOrder">我的订单</div>
+      <div class="title" @click="gotoOrder()">我的订单</div>
       <div class="orderIcon">
         <van-row type="flex" justify="space-between">
-          <van-col span="6">
+          <van-col span="6" @click="gotoOrder(0)">
             <div class="icon1 icon">
               <div class="infoCount">
                 {{ orderStatus.status0 > 99 ? '99+' : orderStatus.status0 }}
@@ -37,7 +37,7 @@
             </div>
             <p>待支付</p>
           </van-col>
-          <van-col span="6">
+          <van-col span="6" @click="gotoOrder(1)">
             <div class="icon2 icon">
               <div class="infoCount">
                 {{ orderStatus.status1 > 99 ? '99+' : orderStatus.status1 }}
@@ -45,7 +45,7 @@
             </div>
             <p>待发货</p>
           </van-col>
-          <van-col span="6">
+          <van-col span="6" @click="gotoOrder(2)">
             <div class="icon3 icon">
               <div class="infoCount">
                 {{ orderStatus.status2 > 99 ? '99+' : orderStatus.status2 }}
@@ -53,7 +53,7 @@
             </div>
             <p>已发货</p>
           </van-col>
-          <van-col span="6">
+          <van-col span="6" @click="gotoOrder()">
             <div class="icon4 icon">
             </div>
             <p>全部</p>
@@ -150,7 +150,12 @@ export default {
     },
     getScoreDetail () {
       this.$router.push({
-        path: '/scoreDetail'
+        path: '/scoreDetail',
+        query: {
+          expired: this.interal.expired,
+          interal: this.interal.interal,
+          overTime: this.interal.overTime
+        }
       })
     },
     goAddressList () {
@@ -158,9 +163,12 @@ export default {
         path: '/addressList'
       })
     },
-    gotoOrder () {
+    gotoOrder (index) {
       this.$router.push({
-        path: '/orderList'
+        path: '/orderList',
+        query: {
+          type: index
+        }
       })
     }
   }

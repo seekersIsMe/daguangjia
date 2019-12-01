@@ -4,6 +4,7 @@
       v-model="loading"
       :finished="finished"
       finished-text="没有更多了"
+      :immediate-check="false"
       @load="scrollToEnd"
     >
       <div class="bgBlue">
@@ -27,8 +28,8 @@
         </div>
         <div class="swipeWrap">
           <van-swipe :autoplay="3000">
-            <van-swipe-item v-for="(image, index) in images" :key="index">
-              <img class="swipeImg" :src="image" />
+            <van-swipe-item v-for="(item, index) in images" :key="index">
+              <img class="swipeImg" :src="item.logoPath" />
             </van-swipe-item>
           </van-swipe>
         </div>
@@ -59,7 +60,7 @@
         </van-row>
       </div>
       <div class="hotWrap">
-        <div class="seckillWrap">
+        <div class="seckillWrap" v-if="seckillData.length > 0">
           <myTitle :titleVal="seckillTitle" class="myTitle">
             <template v-slot:right>
               <btn :myTitle="'剩余时间'">
@@ -76,9 +77,11 @@
               v-for="(item, index) in seckillData"
               :key="index"
             >
-              <div class="img">{{ item.img }}</div>
-              <div class="killText">秒杀价{{ item.price_ }}积分</div>
-              <div class="originPrice">原价：{{ item.price }}积分</div>
+              <div class="img">
+                <img :src="item.goodsLogo">
+              </div>
+              <div class="killText">秒杀价{{ item.priceSpike }}积分</div>
+              <div class="originPrice">原价：{{ item.dailyPrice }}积分</div>
             </van-col>
           </van-row>
         </div>
@@ -88,7 +91,7 @@
           </div>
           <div class="itemWrap">
             <div v-for="(item, index) in itemCount" :key="index" class="item">
-              <listItem :key="index" />
+              <listItem :itemData="item" @addCar="addCar(item)" />
             </div>
           </div>
         </div>
@@ -101,6 +104,10 @@ import axios from 'axios'
 import myTitle from '@/components/myTitle'
 import btn from '@/components/btn'
 import listItem from '@/components/listItem'
+const getImgsUrl = '/sysGoods/getBanner'
+const getFlashSaleUrl = '/sysGoods/getFlashSale'
+const getNewGoodsUrl = '/sysGoods/getNewGoods'
+const addCartUrl = '/sysCart/addCart'
 export default {
   name: 'index',
   components: {
@@ -112,55 +119,87 @@ export default {
     return {
       address: '广州',
       searchVal: '',
-      images: [
-        'https://img.yzcdn.cn/vant/apple-1.jpg',
-        'https://img.yzcdn.cn/vant/apple-2.jpg'
-      ],
-      time: 30 * 3600 * 1000,
+      images: [],
+      time: 0,
       seckillTitle: '秒杀专区',
-      seckillData: [
-        {
-          img: 1,
-          price: '1千',
-          price_: 500
-        },
-        {
-          img: 2,
-          price: '1万',
-          price_: '5千'
-        },
-        {
-          img: 3,
-          price: '1千',
-          price_: 500
-        },
-        {
-          img: 4,
-          price: '1千',
-          price_: 500
-        }
-      ],
+      seckillData: [],
+      page: 1,
       error: false,
       loading: false,
       finished: false,
-      itemCount: [1, 2, 3, 4, 5, 6]
+      itemCount: [],
+      userId: localStorage.getItem('userId')
     }
   },
   created () {
     // this.code()
+    this.getImgs()
+    this.getFlashSale()
+    this.getNewGoods()
   },
   methods: {
-    // 超过一万，一千，十万
-    changNum (val) {
-      if (val > 1000 && val < 10000) {
-        return (val / 1000).toFixed(2) + '千'
-      }
-      if (val > 10000 && val < 100000) {
-        return Math.round(val / 100) / 100 + '万'
-      }
-      if (val > 100000 && val < 1000000) {
-        return Math.round(val / 1000) / 100 + '十万万'
-      }
+    addCar (item) {
+      this.$axios({
+        url: addCartUrl,
+        method: 'post',
+        params: {
+          uid: this.userId,
+          goodsId: item.id,
+          goodsType: 2
+        }
+      }, res => {
+        if (res.status === 10001) {
+          // this.$toast('')
+        } else {
+          this.$toast(res.msg)
+        }
+      })
+    },
+    getImgs () {
+      this.$axios({
+        url: getImgsUrl,
+        method: 'post'
+      }, res => {
+        if (res.status === 10001) {
+          this.images = res.data.info || []
+        } else {
+          this.$toast(res.msg)
+        }
+      })
+    },
+    getFlashSale () {
+      this.$axios({
+        url: getFlashSaleUrl,
+        method: 'post'
+      }, res => {
+        if (res.status === 10001) {
+          this.seckillData = res.data.info || []
+          this.time = res.data.time && (res.data.time - new Date().getTime() || 0)
+        } else {
+          this.$toast(res.msg)
+        }
+      })
+    },
+    getNewGoods () {
+      this.$axios({
+        url: getNewGoodsUrl,
+        method: 'post',
+        params: {
+          page: this.page,
+          brandId: '',
+          goodsName: this.searchVal
+        }
+      }, res => {
+        if (res.status === 10001) {
+          this.itemCount = [...this.itemCount, ...res.data.info]
+          this.loading = false
+          if (res.data.info && res.data.info.length < 10) {
+            this.finished = true
+          }
+        } else {
+          this.$toast(res.msg)
+        }
+      })
     },
     getQueryString (name) {
       var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i')
@@ -193,19 +232,16 @@ export default {
         })
     },
     onSearch (val) {
-      console.log(val)
       this.$router.push({
-        path: 'proList'
+        path: 'proList',
+        queryy: {
+          goodsName: val
+        }
       })
     },
     scrollToEnd () {
-      console.log('到达底部了')
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.itemCount.push(this.itemCount.length + 1)
-        }
-        this.loading = false
-      }, 500)
+      !this.finished && this.page++
+      !this.finished && this.getNewGoods()
     }
   }
 }
@@ -334,6 +370,11 @@ export default {
         width: 80px;
         height: 80px;
         margin: auto;
+        img{
+          display: inline-block;
+          width: 100%;
+          height: 100%;
+        }
       }
       .killText {
         color: #e40d0d;

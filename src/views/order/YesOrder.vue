@@ -40,7 +40,7 @@ export default {
   components: {
     item
   },
-  data() {
+  data () {
     return {
       name: '陈有三',
       tel: '18365412974',
@@ -100,7 +100,7 @@ export default {
     }
   },
   methods: {
-    goBack() {
+    goBack () {
       this.$router.go(-1)
     }
     // lookOrder () {

@@ -1,9 +1,9 @@
 <template>
   <div class="listItem" @click="goToDetail">
     <div class="imgWrap">
-      <img :src="itemData.src" />
+      <img :src="itemData.goodsLogo" />
     </div>
-    <p class="productTitle">{{itemData.title}}</p>
+    <p class="productTitle">{{itemData.goodsName}}</p>
     <div class="priceWrap">
       <span>{{ changNum(itemData.price) }}积分</span>
       <div class="shoppingWrap" @click="addCar">
@@ -19,9 +19,9 @@ export default {
       type: Object,
       default: () => {
         return {
-          title: '歌斐颂黑巧克力100%纯黑纯可可脂苦散装低烘撒大苏打水水',
-          src: 'http://b-ssl.duitang.com/uploads/item/201809/26/20180926162125_vjbwi.jpg',
-          price: 5000
+          goodsName: '',
+          goodsLogo: '',
+          price: 0
         }
       }
     }
@@ -29,6 +29,9 @@ export default {
   methods: {
     // 超过一万，一千，十万
     changNum (val) {
+      if (val < 1000) {
+        return val
+      }
       if (val > 1000 && val < 10000) {
         return (val / 1000).toFixed(2) + '千'
       }

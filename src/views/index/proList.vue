@@ -4,7 +4,7 @@
       <div class="searchWrap">
         <form action="/">
           <van-search
-            v-model="searchData"
+            v-model="searchVal"
             placeholder="搜索商品名称"
             clearable
             shape="round"
@@ -13,14 +13,24 @@
         </form>
       </div>
       <div class="tabWrap">
-        <van-tabs v-model="active">
+        <van-tabs v-model="active" @change='changeType'>
           <van-tab title="默认"></van-tab>
-          <van-tab title="销量"></van-tab>
+          <van-tab>
+            <template slot="title">
+              <div class="arrowWrap">
+                <span>销量</span>
+                <span class="arrow" @click="changeSalesSort">
+                  <van-icon v-if="isSalesDown" name="arrow-down" />
+                  <van-icon v-else name="arrow-up" />
+                </span>
+              </div>
+            </template>
+          </van-tab>
           <van-tab>
             <template slot="title">
               <div class="arrowWrap">
                 <span>价格</span>
-                <span class="arrow" @click.stop="changePriceSort">
+                <span class="arrow" @click="changePriceSort">
                   <van-icon v-if="isPriceDown" name="arrow-down" />
                   <van-icon v-else name="arrow-up" />
                 </span>
@@ -46,26 +56,29 @@
         </van-tabs>
       </div>
     </van-sticky>
-    <keep-alive>
+    <!-- <keep-alive> -->
       <div class="result">
           <van-list
-            v-model="loading[0]"
-            :finished="finished[0]"
+            v-model="loading"
+            :finished="finished"
             finished-text="没有更多了"
-            @load="scrollToEnd(0)"
+            :immediate-check="false"
+            @load="scrollToEnd"
           >
             <div class="proListWrap">
-              <div v-for="(item,index) in itemCount[0]" :key="index" class="item">
-                <listItem :key="index" />
+              <div v-for="(item,index) in itemCount" :key="index" class="item">
+                <listItem :itemData="item" @addCar="addCar"/>
               </div>
             </div>
           </van-list>
       </div>
-    </keep-alive>
+    <!-- </keep-alive> -->
   </div>
 </template>
 <script>
 import listItem from '@/components/listItem'
+const getNewGoodsUrl = '/sysGoods/getNewGoods'
+const addCartUrl = '/sysCart/addCart'
 export default {
   name: 'proList',
   components: {
@@ -73,9 +86,11 @@ export default {
   },
   data () {
     return {
-      searchData: '',
+      searchVal: '',
       active: 0,
+      page: 1,
       isPriceDown: true,
+      isSalesDown: true,
       brand: 0,
       brandOption: [
         { text: '品牌', value: 0 },
@@ -83,36 +98,128 @@ export default {
         { text: '活动商品', value: 2 }
       ],
       brandListIsShow: false,
-      itemCount: [
-        [1, 2, 3, 4, 5, 6],
-        [1, 2, 3, 4, 5, 6],
-        [1, 2, 3, 4, 5, 6],
-        [1, 2, 3, 4, 5, 6]
-      ],
-      loading: [false, false, false, false],
-      finished: [false, false, false, false]
+      itemCount: [],
+      loading: false,
+      finished: true,
+      queryParam: {},
+      userId: localStorage.getItem('userId')
     }
   },
+  created () {
+    this.searchVal = this.$route.query.goodsName || ''
+    this.getNewGoods()
+  },
   methods: {
+    addCar (item) {
+      this.$axios({
+        url: addCartUrl,
+        method: 'post',
+        params: {
+          uid: this.userId,
+          goodsId: item.id,
+          goodsType: 2
+        }
+      }, res => {
+        if (res.status === 10001) {
+          // this.$toast('')
+        } else {
+          this.$toast(res.msg)
+        }
+      })
+    },
+    changeType () {
+      this.itemCount = []
+      this.page = 1
+      this.finished = false
+      this.loading = false
+      switch (this.active) {
+        case 0:
+          this.queryParam = {}
+          this.getNewGoods()
+          break
+        case 1:
+          this.queryParam = {
+            orderBy: this.isSalesDown ? 0 : 1
+          }
+          this.getNewGoods()
+          break
+        case 2:
+          this.queryParam = {
+            orderPrice: this.isPriceDown ? 0 : 1
+          }
+          this.getNewGoods()
+          break
+        case 3:
+          this.queryParam = {}
+          this.getNewGoods()
+          break
+      }
+    },
+    getNewGoods () {
+      let params = {
+        page: this.page,
+        brandId: '',
+        goodsName: this.searchVal,
+        ...this.queryParam
+      }
+      this.$axios({
+        url: getNewGoodsUrl,
+        method: 'post',
+        params: params
+      }, res => {
+        if (res.status === 10001) {
+          this.itemCount = [...this.itemCount, ...res.data.info]
+          this.loading = false
+          if (res.data.info && res.data.info.length < 10) {
+            this.finished = true
+          }
+        } else {
+          this.$toast(res.msg)
+        }
+      })
+    },
     onSearch () {},
+    changeSalesSort () {
+      if (this.active !== 1) {
+        return
+      }
+      this.isSalesDown = !this.isSalesDown
+      this.$refs.brandList.toggle(false)
+      this.queryParam = {
+        orderBy: this.isSalesDown ? 0 : 1
+      }
+      this.page = 1
+      this.itemCount = []
+      this.getNewGoods()
+    },
     changePriceSort () {
+      if (this.active !== 2) {
+        return
+      }
       this.isPriceDown = !this.isPriceDown
       this.$refs.brandList.toggle(false)
+      this.queryParam = {
+        orderPrice: this.isPriceDown ? 0 : 1
+      }
+      this.page = 1
+      this.itemCount = []
+      this.getNewGoods()
     },
     selectBrand () {
+      if (this.active !== 3) {
+        return
+      }
       this.brandListIsShow = !this.brandListIsShow
       this.$refs.brandList.toggle(this.brandListIsShow)
+      this.queryParam = {}
+      this.getNewGoods()
     },
     menuClose () {
       this.brandListIsShow = false
     },
     scrollToEnd (val) {
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.itemCount[val].push(this.itemCount.length + 1)
-        }
-        this.loading[val] = false
-      }, 500)
+      !this.finished && this.page++
+      !this.finished && this.getNewGoods()
     }
   }
 }

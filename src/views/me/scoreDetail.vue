@@ -1,6 +1,9 @@
 <template>
   <div class="scoreDetailWrap">
     <div class="header">
+       <div class="headerTitle">
+        <van-icon name="arrow-left" @click="goBack" />收货地址
+      </div>
       <div class="p1">
         <span class="scoreIcon"> </span>
         <span>
@@ -8,7 +11,7 @@
         </span>
         <span>{{ myScore }}</span>
       </div>
-      <div class="p2">
+      <div class="p2" v-if='pastDueScore > 0'>
         <span>
           {{ pastDueScore }}
         </span>
@@ -21,28 +24,25 @@
       </div>
     </div>
     <div class="scoreListWrap">
-      <div class="title">
-        <span>已消费：{{ allUseScore }}</span>
-        <span>已失效：{{ allPastDueScore }}</span>
-      </div>
       <div class="scoreList">
         <van-list
           v-model="loading"
           :finished="finished"
           finished-text="没有更多了"
+          :mmediate-check="false"
           @load="onLoad"
         >
           <div class="item" v-for="(item, index) in scoreList" :key="index">
             <div class="left">
               <p class="detail">
-                {{ item.detail }}
+                {{ item.remark }}
               </p>
               <p class="date">
-                {{ item.date }}
+                {{ item.createTime }}
               </p>
             </div>
-            <div class="right" :class="item.score > 0 ? 'color' : 'color_'">
-              {{ String(item.score) }}
+            <div class="right" :class="item.amount.includes('+') > 0 ? 'color' : 'color_'">
+              {{ String(item.amount) }}
             </div>
           </div>
         </van-list>
@@ -51,84 +51,53 @@
   </div>
 </template>
 <script>
+const getScoreListUrl = '/sysUser/getEcoinList'
 export default {
   data () {
     return {
       finished: false,
       loading: false,
-      myScore: 10000,
-      pastDueScore: 1200,
-      pastDueDate: '2020-2-30',
-      allPastDueScore: 10000,
-      allUseScore: 10000,
-      scoreList: [
-        {
-          detail: '每日签到',
-          date: '2019.10.2 19:50:20',
-          score: 1000
-        },
-        {
-          detail: '每日签到',
-          date: '2019.10.2 19:50:20',
-          score: -1000
-        },
-        {
-          detail: '每日签到',
-          date: '2019.10.2 19:50:20',
-          score: 1000
-        },
-        {
-          detail: '每日签到',
-          date: '2019.10.2 19:50:20',
-          score: 2000
-        },
-        {
-          detail: '每日签到',
-          date: '2019.10.2 19:50:20',
-          score: -20100
-        },
-        {
-          detail: '每日签到',
-          date: '2019.10.2 19:50:20',
-          score: 1000
-        },
-        {
-          detail: '每日签到',
-          date: '2019.10.2 19:50:20',
-          score: 2000
-        },
-        {
-          detail: '每日签到',
-          date: '2019.10.2 19:50:20',
-          score: -20100
-        }
-      ]
+      myScore: 0,
+      pastDueScore: 0,
+      pastDueDate: '',
+      page: 1,
+      userId: localStorage.getItem('userId'),
+      scoreList: []
     }
   },
+  created () {
+    this.myScore = this.$route.query.integral || 0
+    this.pastDueScore = this.$route.query.expired || 0
+    this.pastDueDate = this.$route.query.overTime || ''
+    this.getScoreList()
+  },
   methods: {
+    getScoreList () {
+      this.$axios({
+        url: getScoreListUrl,
+        method: 'post',
+        params: {
+          uid: this.userId,
+          page: this.page
+        }
+      }, res => {
+        if (res.status === 10001) {
+          this.scoreList = [...this.scoreList, ...res.data.info]
+          this.loading = false
+          if (res.data.info && res.data.info.length < 10) {
+            this.finished = true
+          }
+        } else {
+          this.$toast(res.msg)
+        }
+      })
+    },
+    goBack () {
+      this.$router.go(-1)
+    },
     onLoad () {
-      setTimeout(() => {
-        this.scoreList.push(
-          ...[
-            {
-              detail: '每日签到',
-              date: '2019.10.2 19:50:20',
-              score: 1000
-            },
-            {
-              detail: '每日签到',
-              date: '2019.10.2 19:50:20',
-              score: 2000
-            },
-            {
-              detail: '每日签到',
-              date: '2019.10.2 19:50:20',
-              score: -20100
-            }
-          ]
-        )
-        this.loading = false
-      }, 500)
+      this.page++
+      !this.finished && this.getScoreList()
     }
   }
 }
@@ -154,12 +123,28 @@ export default {
   box-sizing: border-box;
   overflow-y: auto;
   position: relative;
+  .headerTitle {
+    position: relative;
+    line-height: 40px;
+    height: 40px;
+    color: white;
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 7vw;
+    .van-icon {
+      position: absolute;
+      left: 15px;
+      font-size: 18px;
+      margin-top: 11px;
+    }
+  }
   .header {
     width: 100vw;
     height: 60vw;
     background: url(~@/assets/img/me/scoreBg.png) no-repeat center center;
     background-size: 100% 100%;
-    padding-top: 15vw;
+    // padding-top: 15vw;
     .p1 {
       display: flex;
       justify-content: center;
@@ -190,6 +175,7 @@ export default {
     bottom: 0;
     overflow-y: auto;
     background: white;
+    border-radius: 5px;
     .title {
       display: flex;
       justify-content: center;

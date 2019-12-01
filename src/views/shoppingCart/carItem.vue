@@ -5,13 +5,13 @@
         <van-checkbox v-model="item.checked" @change="select"></van-checkbox>
       </div>
       <div class="img">
-        <img :src="item.src" alt />
+        <img :src="item.goodsLogo" alt />
       </div>
       <div class="carBody">
-        <p class="title">{{item.title}}</p>
+        <p class="title">{{item.goodsName}}</p>
         <div class="priceCount">
           <span class="price">{{item.price}}积分</span>
-          <van-stepper v-model="item.count" @change="changeCount" integer />
+          <van-stepper v-model="item.amount" @change="changeCount" integer />
         </div>
       </div>
     </div>

@@ -2,11 +2,11 @@
   <div class="orderList">
     <van-sticky>
       <div class="header bgW"><van-icon @click="goBack" name="arrow-left" />我的订单</div>
-      <van-tabs v-model="active">
+      <van-tabs v-model="active" @change='changeType'>
         <van-tab title="全部"></van-tab>
         <van-tab title="待支付"></van-tab>
         <van-tab title="待发货"></van-tab>
-        <van-tab title="已完成"></van-tab>
+        <van-tab title="已发货"></van-tab>
       </van-tabs>
     </van-sticky>
     <div class="list" v-if="listData.length > 0">
@@ -14,23 +14,24 @@
         v-model="loading"
         :finished="finished"
         finished-text="没有更多了"
+        :mmediate-check="false"
         @load="onLoad"
       >
         <div class="item bgW" v-for="(item, index) in listData" :key="index" @click="gotoOrderDetail">
           <div class="title">
-            <span class="orderCode"> 订单号：{{ item.orderCode }} </span>
-            <span class="orderStatus">{{ item.orderStatus }}</span>
+            <span class="orderCode"> 订单号：{{ item.orderNo }} </span>
+            <span class="orderStatus">{{ getOrderStatusText(item.orderStatus) }}</span>
           </div>
-          <item :itemData="item.itemPro" />
+          <item :itemData="item.goodsList" />
           <div class="footer">
             <span class="color33">删除订单</span>
             <div class="right">
-              <span class="color33">共{{ item.count }}件</span>
+              <span class="color33">共{{ item.totalAmount }}件</span>
               <span class="color33">
                 合计：
               </span>
               <span class="sumScore">
-                {{ item.sumScore }}
+                {{ item.totalPrice }}
               </span>
             </div>
           </div>
@@ -46,93 +47,60 @@
 </template>
 <script>
 import item from './item'
+const getOrderListUrl = '/sysOrder/getOrders'
 export default {
   components: {
     item
   },
   data () {
     return {
-      active: 1,
+      active: 0,
       loading: false,
       finished: false,
-      listData: [
-        {
-          orderCode: '2013548932166',
-          orderStatus: '已完成',
-          count: 9999,
-          sumScore: 85464464,
-          itemPro: [
-            {
-              src: '',
-              detail:
-                'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-              price: 1000,
-              count: 20
-            },
-            {
-              src: '',
-              detail:
-                'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-              price: 1000,
-              count: 20
-            }
-          ]
-        },
-        {
-          orderCode: '2013548932166',
-          orderStatus: '已完成',
-          count: 9999,
-          sumScore: 85464464,
-          itemPro: [
-            {
-              src: '',
-              detail:
-                'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-              price: 1000,
-              count: 20
-            },
-            {
-              src: '',
-              detail:
-                'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-              price: 1000,
-              count: 20
-            },
-            {
-              src: '',
-              detail:
-                'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-              price: 1000,
-              count: 20
-            }
-          ]
-        },
-        {
-          orderCode: '2013548932166',
-          orderStatus: '已完成',
-          count: 9999,
-          sumScore: 85464464,
-          itemPro: [
-            {
-              src: '',
-              detail:
-                'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-              price: 1000,
-              count: 20
-            },
-            {
-              src: '',
-              detail:
-                'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-              price: 1000,
-              count: 20
-            }
-          ]
-        }
-      ]
+      page: 1,
+      userId: localStorage.getItem('userId'),
+      listData: []
     }
   },
+  created () {
+    this.active = this.$route.query.hasOwnProperty('type') ? this.$route.query.type + 1 : 0
+    this.getOrderList()
+  },
   methods: {
+    changeType () {
+      this.page = 1
+      this.listData = []
+      this.getOrderList()
+    },
+    getOrderStatusText (key) {
+      let obj = new Map()
+      obj.set(-1, '关闭')
+      obj.set(0, '待支付')
+      obj.set(1, '已发送')
+      obj.set(2, '已完成')
+      return obj.get(key)
+    },
+    getOrderList () {
+      this.$axios({
+        url: getOrderListUrl,
+        method: 'post',
+        params: {
+          uid: this.userId,
+          orderStatus: this.active === 0 ? '' : this.active - 1,
+          page: this.page
+        }
+      }, res => {
+        if (res.status === 10001) {
+          this.listData = [...this.listData, ...res.data.info]
+          this.loading = false
+          if (res.data.info && res.data.info.length < 10) {
+            this.finished = true
+          }
+        } else {
+          this.$toast(res.msg)
+        }
+      })
+    },
     goBack () {
       this.$router.go(-1)
     },
@@ -142,64 +110,8 @@ export default {
       })
     },
     onLoad () {
-      setTimeout(() => {
-        this.listData.push(
-          ...[
-            {
-              orderCode: '2013548932166',
-              orderStatus: '已完成',
-              count: 9999,
-              sumScore: 85464464,
-              itemPro: [
-                {
-                  src: '',
-                  detail:
-                    'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-                  price: 1000,
-                  count: 20
-                },
-                {
-                  src: '',
-                  detail:
-                    'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-                  price: 1000,
-                  count: 20
-                },
-                {
-                  src: '',
-                  detail:
-                    'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-                  price: 1000,
-                  count: 20
-                }
-              ]
-            },
-            {
-              orderCode: '2013548932166',
-              orderStatus: '已完成',
-              count: 9999,
-              sumScore: 85464464,
-              itemPro: [
-                {
-                  src: '',
-                  detail:
-                    'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-                  price: 1000,
-                  count: 20
-                },
-                {
-                  src: '',
-                  detail:
-                    'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-                  price: 1000,
-                  count: 20
-                }
-              ]
-            }
-          ]
-        )
-        this.loading = false
-      })
+      this.page++
+      !this.finished && this.getOrderList()
     }
   }
 }

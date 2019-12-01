@@ -6,31 +6,33 @@
     </div>
     <div v-if="itemDataList.length>0">
       <div class="carItemWrap">
-      <div class="list">
-        <carItem v-model="itemDataList" @change="carChange" />
+        <div class="list">
+          <van-list v-model="loading" :finished="finished" finished-text="没有更多了" :immediate-check="false" @load="onLoad">
+            <carItem v-model="itemDataList" @change="carChange" />
+          </van-list>
+        </div>
       </div>
-    </div>
-    <div class="settleWrap">
-      <div class="left">
-         <van-checkbox v-model="isSelectAll" @change="selectAll">全选</van-checkbox>
-        <p v-show="!isManage">
-          <span class="heji">合计：</span>
-          <span class="jifen">{{ sum }}积分</span>
-        </p>
+      <div class="settleWrap">
+        <div class="left">
+          <van-checkbox v-model="isSelectAll" @change="selectAll">全选</van-checkbox>
+          <p v-show="!isManage">
+            <span class="heji">合计：</span>
+            <span class="jifen">{{ sum }}积分</span>
+          </p>
+        </div>
+        <van-button round type="primary" v-if="!isManage" color="#00AEFF" @click="settle">结算</van-button>
+        <van-button round type="primary" v-else color="#FF0000" @click="del">删除</van-button>
       </div>
-      <van-button round type="primary" v-if="!isManage" color="#00AEFF">结算</van-button>
-      <van-button round type="primary" v-else color="#FF0000" @click="del">删除</van-button>
-    </div>
     </div>
     <div class="noPro" v-else>
-      <div class="noProBg">
-      </div>
+      <div class="noProBg"></div>
       <p>您的购物车是空的</p>
     </div>
   </div>
 </template>
 <script>
 import carItem from './carItem'
+const getCartListUrl = '/sysCart/getCartList'
 export default {
   name: 'shoppingCart',
   components: {
@@ -38,63 +40,58 @@ export default {
   },
   data () {
     return {
-      itemDataList: [
-        {
-          checked: false,
-          src:
-            'http://img3.duitang.com/uploads/item/201605/07/20160507191419_J2m8R.thumb.700_0.jpeg',
-          title:
-            'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包dsadsadasdasdsdsBA6097-363',
-          price: 50000,
-          count: 1
-        },
-        {
-          checked: false,
-          src:
-            'http://img3.duitang.com/uploads/item/201605/07/20160507191419_J2m8R.thumb.700_0.jpeg',
-          title: 'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-          price: 5000,
-          count: 500
-        },
-        {
-          checked: false,
-          src:
-            'http://img3.duitang.com/uploads/item/201605/07/20160507191419_J2m8R.thumb.700_0.jpeg',
-          title: 'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-          price: 5000,
-          count: 500
-        },
-        {
-          checked: false,
-          src:
-            'http://img3.duitang.com/uploads/item/201605/07/20160507191419_J2m8R.thumb.700_0.jpeg',
-          title: 'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-          price: 5000,
-          count: 500
-        },
-        {
-          checked: false,
-          src:
-            'http://img3.duitang.com/uploads/item/201605/07/20160507191419_J2m8R.thumb.700_0.jpeg',
-          title: 'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-          price: 5000,
-          count: 500
-        },
-        {
-          checked: false,
-          src:
-            'http://img3.duitang.com/uploads/item/201605/07/20160507191419_J2m8R.thumb.700_0.jpeg',
-          title: 'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-          price: 5000,
-          count: 500
-        }
-      ],
+      userId: localStorage.getItem('userId'),
+      page: 1,
+      loading: false,
+      finished: false,
+      itemDataList: [],
       isSelectAll: false,
       sum: 0,
-      isManage: false
+      isManage: false,
+      selectPro: [],
+      delList: []
     }
   },
+  created () {
+    this.getCartList()
+  },
   methods: {
+    settle () {
+
+    },
+    onLoad () {
+      !this.finished && this.page++
+      !this.finished && this.getCartList()
+    },
+    getCartList () {
+      this.$axios(
+        {
+          url: getCartListUrl,
+          method: 'post',
+          params: {
+            uid: this.userId,
+            page: this.page
+          }
+        },
+        res => {
+          if (res.status === 10001) {
+            if (res.data.info) {
+              let itemDataList = res.data.info.map(p => {
+                p.checked = false
+                return p
+              })
+              this.itemDataList = [...this.itemDataList, ...itemDataList]
+              this.loading = false
+              if (res.data.info && res.data.info.length < 10) {
+                this.finished = true
+              }
+            }
+          } else {
+            this.$toast(res.msg)
+          }
+        }
+      )
+    },
     carChange (val) {
       console.log(val)
     },
@@ -107,21 +104,40 @@ export default {
       })
     },
     del () {
-      this.$dialog.confirm({
-        title: '删除商品',
-        message: '确定删除所选商品'
-      }).then(() => {
-        // on confirm
-      }).catch(() => {
-        // on cancel
-      })
+      this.$dialog
+        .confirm({
+          title: '删除商品',
+          message: '确定删除所选商品'
+        })
+        .then(() => {
+          this.itemDataList
+        })
+        .catch(() => {
+          // on cancel
+        })
+    }
+  },
+  watch: {
+    itemDataList: {
+      handler () {
+        this.selectPro = this.itemDataList.map(p => {
+          if (p.checked) {
+            return p
+          }
+        })
+        this.sum = this.selectPro.reduce((a, b) => {
+          return a + b.price * b.amount
+        }, 0)
+      },
+      deep: true,
+      immediate: true
     }
   }
 }
 </script>
 <style lang="scss" scoped>
 .shoppingCartWrap {
-   /*iphone XR*/
+  /*iphone XR*/
   @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) {
     height: calc(100vh - 34px);
   }
@@ -165,7 +181,7 @@ export default {
     height: calc(100vh - 150px);
     overflow-y: auto;
   }
-  .settleWrap{
+  .settleWrap {
     position: absolute;
     bottom: 50px;
     left: 0;
@@ -179,43 +195,44 @@ export default {
     font-size: 16px;
     background: white;
     border-top: 1px solid #e8e8e7;
-    .van-checkbox,.heji {
+    .van-checkbox,
+    .heji {
       color: #333333;
     }
-    .jifen{
-      color: #FF0000;
+    .jifen {
+      color: #ff0000;
     }
-    .van-button{
+    .van-button {
       width: 80px;
       height: 35px;
       line-height: 35px;
-      /deep/ .van-button__text{
+      /deep/ .van-button__text {
         font-size: 16px;
       }
     }
-    .left{
+    .left {
       display: flex;
-      .van-checkbox{
+      .van-checkbox {
         margin-right: 20px;
         font-size: 16px;
       }
     }
   }
-  .noPro{
+  .noPro {
     margin-top: 20vw;
     color: #999999;
     font-size: 14px;
     text-align: center;
-    .noProBg{
-        margin: auto;
-        width: 40vw;
-        height: 44vw;
-        background: url(~@/assets/img/nocProcar.png) no-repeat center center;
-        background-size: 100% 100%;
+    .noProBg {
+      margin: auto;
+      width: 40vw;
+      height: 44vw;
+      background: url(~@/assets/img/nocProcar.png) no-repeat center center;
+      background-size: 100% 100%;
     }
-    p{
-        margin-top: 20px;
+    p {
+      margin-top: 20px;
     }
-}
+  }
 }
 </style>

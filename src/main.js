@@ -2,11 +2,13 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import Vant from 'vant'
+import Vuex from 'vuex'
 import 'vant/lib/index.css'
 import {axiosUtil} from './api/axios'
 // import { Lazyload } from 'vant'
 
 Vue.use(Vant)
+Vue.use(Vuex)
 // Vue.use(Lazyload)
 Vue.config.productionTip = false
 Vue.prototype.$axios = axiosUtil

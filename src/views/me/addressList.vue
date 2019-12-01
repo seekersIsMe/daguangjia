@@ -2,12 +2,14 @@
   <div class="addressListWrap">
     <van-sticky>
       <div class="header bgW">
-        <van-icon name="arrow-left" @click="goBack"/>收货地址
+        <van-icon name="arrow-left" @click="goBack" />收货地址
       </div>
     </van-sticky>
     <div class="addressList bgW">
-        <div class="item" v-if="addressList.length>0" v-for="(item,index) in addressList" :key="index">
-          <div class="body">
+      <div v-if="addressList.length>0">
+        <van-swipe-cell  v-for="(item,index) in addressList" :key="index">
+          <div class="item">
+             <div class="body">
             <div class="p1">
               <span class="name w100">{{ item.nickName }}</span>
               <span class="tel">{{item.tel}}</span>
@@ -21,7 +23,12 @@
           <div class="icon">
             <van-icon name="edit" @click="editAddress(item)" />
           </div>
-        </div>
+          </div>
+          <template slot="right">
+            <van-button square type="danger" text="删除" @click="delAddress(index)" />
+          </template>
+        </van-swipe-cell>
+      </div>
     </div>
     <div class="addBtn" @click="addAddress">
       <van-button type="primary" icon="add-o" color="#00AEFF">新建收货地址</van-button>
@@ -30,6 +37,7 @@
 </template>
 <script>
 const getAddressListUrl = '/sysUser/getAddress'
+const delAddressUrl = '/sysUser/deleteAddress'
 export default {
   data () {
     return {
@@ -52,23 +60,45 @@ export default {
   },
   methods: {
     getAddressList () {
-      this.$axios({
-        url: getAddressListUrl,
-        params: {
-          uid: this.userId
+      this.$axios(
+        {
+          url: getAddressListUrl,
+          params: {
+            uid: this.userId
+          },
+          method: 'post'
         },
-        method: 'post'
-      }, res => {
-        if (res.status === 10001) {
-          this.addressList = res.data.info || []
-        } else {
-          this.$toast(res.msg)
+        res => {
+          if (res.status === 10001) {
+            this.addressList = res.data.info || []
+          } else {
+            this.$toast(res.msg)
+          }
         }
-      })
+      )
     },
     addAddress () {
       this.$router.push({
         path: '/addAddress'
+      })
+    },
+    delAddress (index) {
+      this.$axios({
+        url: delAddressUrl,
+        method: 'post',
+        params: {
+          uid: this.userId,
+          addressId: this.addressList[index].id
+        }
+      }, res => {
+        let msg = ''
+        if (res.status === 10001) {
+          this.addressList.splice(index, 1)
+          msg = '删除成功'
+        } else {
+          msg = res.msg
+        }
+        this.$toast(msg)
       })
     },
     getAddress (item) {
@@ -113,11 +143,11 @@ export default {
   }
   /*iphone XMAX*/
   @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) {
-     height: calc(100vh - 34px);
+    height: calc(100vh - 34px);
   }
   /* iphone X/XS */
   @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
-     height: calc(100vh - 34px);
+    height: calc(100vh - 34px);
   }
   height: 100vh;
   box-sizing: border-box;
@@ -147,6 +177,12 @@ export default {
     // height: 100%;
     overflow-y: auto;
     margin-top: 10px;
+  }
+  /deep/ .van-swipe-cell{
+    .van-swipe-cell__right{
+      display: flex;
+      align-items: center
+    }
   }
   .item {
     display: flex;
