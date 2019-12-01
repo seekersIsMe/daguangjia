@@ -16,7 +16,7 @@
             <span class="address">{{ address }}</span>
           </p>
         </div>
-        <van-icon name="arrow" @click="selectAddress"/>
+        <van-icon name="arrow" @click="selectAddress" />
       </div>
       <div class="dash"></div>
     </div>
@@ -26,20 +26,37 @@
     </div>
     <div class="footer">
       <div>
-        <span>合计积分：</span>
-        <span class="price">{{ sumScore }}</span>
+        <p>
+          <span>合计积分：</span>
+          <span class="price">{{ sumScore }}</span>
+        </p>
+        <p>
+          <span>微信支付：</span>
+          <span class="price">{{ wxPay }}</span>
+        </p>
       </div>
-
-      <van-button type="primary" color="#00AEFF">立即兑换</van-button>
+      <van-button type="primary" color="#00AEFF" @click="exchange">立即兑换</van-button>
     </div>
+    <van-popup
+      v-model="show"
+      :overlay="false"
+      position="right"
+      :style="{ height: '100%',width: '100%' }"
+    >
+      <selectAddress @selectAddress="choiceAddress" @close="close" />
+    </van-popup>
   </div>
 </template>
 <script>
 import item from './item'
+import selectAddress from '@/components/selectAddress'
 const getDefaultAddressUrl = '/sysUser/getDefaultAddress'
+const saveOrderUrl = '/sysOrder/saveOrder'
+const getUserInfoUrl = '/sysUser/getInfo'
 export default {
   components: {
-    item
+    item,
+    selectAddress
   },
   data () {
     return {
@@ -47,9 +64,21 @@ export default {
       name: '',
       tel: '',
       address: '',
+      addressId: '',
       sumScore: 0,
       proList: [],
-      isSelectAddress: false
+      isSelectAddress: false,
+      show: false,
+      integral: 0 // 剩余积分
+    }
+  },
+  computed: {
+    wxPay () {
+      if (this.sumScore > this.integral) {
+        return this.sumScore - this.integral
+      } else {
+        return 0
+      }
     }
   },
   created () {
@@ -57,61 +86,108 @@ export default {
     if (order) {
       this.proList = JSON.parse(order)
     }
-    this.isSelectAddress = this.$route.query.selectAddress || false
-    console.log('ok')
-    if (this.isSelectAddress) {
-      let data = JSON.parse(localStorage.getItem('selectAddress'))
+    this.getDefaultAddress()
+    this.getUserInfo()
+  },
+  methods: {
+    exchange () {
+      let goods = this.proList.map(p => {
+        return p.goodsId
+      })
+      let amount = this.proList.map(p => {
+        return p.amount
+      })
+      let cartIds = this.proList.map(p => {
+        return p.cartId
+      })
+      console.log(this.proList)
+      this.$axios(
+        {
+          url: saveOrderUrl,
+          method: 'post',
+          params: {
+            uid: this.userId,
+            addressId: this.addressId,
+            goods: goods.join(','),
+            amount: amount.join(','),
+            integral: this.wxPay === 0 ? this.sumScore : this.integral,
+            wxPay: this.wxPay,
+            cartIds: cartIds.join(',')
+          }
+        },
+        res => {
+          if (res.status === 10001) {
+            // 调起微信支付
+            if (res.data.info.wxPay !== 0) {
+
+            }
+          } else {
+          }
+        }
+      )
+    },
+    getUserInfo () {
+      this.$axios(
+        {
+          url: getUserInfoUrl,
+          params: {
+            uid: this.userId
+          },
+          method: 'post'
+        },
+        res => {
+          if (res.status === 10001) {
+            this.integral = res.data.info.interal.integral
+          } else {
+            this.$toast(res.msg)
+          }
+        }
+      )
+    },
+    close () {
+      this.show = false
+    },
+    choiceAddress (data) {
       this.name = data.nickName
       this.tel = data.phone
+      this.addressId = data.id
       let areaList = ['北京市', '天津市', '上海市', '重庆市']
       if (areaList.includes(data.province)) {
         this.address = data.city + data.district + data.address
       } else {
         this.address = data.province + data.city + data.district + data.address
       }
-    } else {
-      this.getDefaultAddress()
-    }
-  },
-  beforeRouteEnter (to, from, next) {
-    next(vm => { //  这里的vm指的就是vue实例，可以用来当做this使用
-      console.log('to', to)
-      console.log(from)
-    })
-  },
-  methods: {
+    },
     selectAddress () {
-      this.$router.push(
+      this.show = true
+    },
+    getDefaultAddress () {
+      this.$axios(
         {
-          path: '/addressList',
-          query: {
-            isSelect: true
+          url: getDefaultAddressUrl,
+          method: 'post',
+          params: {
+            uid: this.userId
+          }
+        },
+        res => {
+          if (res.status === 10001) {
+            let data = res.data.info[0]
+            this.name = data.nickName
+            this.tel = data.phone
+            this.addressId = data.id
+            let areaList = ['北京市', '天津市', '上海市', '重庆市']
+            if (areaList.includes(data.province)) {
+              this.address = data.city + data.district + data.address
+            } else {
+              this.address =
+                data.province + data.city + data.district + data.address
+            }
+          } else {
+            this.$toast(res.msg)
           }
         }
       )
-    },
-    getDefaultAddress () {
-      this.$axios({
-        url: getDefaultAddressUrl,
-        method: 'post',
-        params: {
-          uid: this.userId
-        }
-      }, res => {
-        if (res.status === 10001) {
-          let data = res.data.info[0]
-          this.name = data.nickName
-          this.tel = data.phone
-          let areaList = ['北京市', '天津市', '上海市', '重庆市']
-          if (areaList.includes(data.province)) {
-            this.address = data.city + data.district + data.address
-          } else {
-            this.address = data.province + data.city + data.district + data.address
-          }
-        } else {
-          this.$toast(res.msg)
-        }
-      })
     },
     goBack () {
       // console.log('路由', this.$router)
@@ -220,6 +296,9 @@ export default {
     padding: 15px;
   }
   .footer {
+    p{
+      line-height: 18px;
+    }
     /*iphone XR*/
     @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) {
       bottom: 34px;
