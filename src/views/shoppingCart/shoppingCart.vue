@@ -33,6 +33,8 @@
 <script>
 import carItem from './carItem'
 const getCartListUrl = '/sysCart/getCartList'
+const deleteCartUrl = '/sysCart/deleteCart'
+const operateCartUrl = '/sysCart/operateCart'
 export default {
   name: 'shoppingCart',
   components: {
@@ -57,7 +59,21 @@ export default {
   },
   methods: {
     settle () {
-
+      let selectPros = []
+      this.itemDataList.forEach(p => {
+        if (p.checked) {
+          selectPros.push(p.cartId)
+        }
+      })
+      if (selectPros.length === 0) {
+        this.$toast('请先选择要兑换的商品')
+        return
+      }
+      let order = JSON.stringify(this.itemDataList)
+      localStorage.setItem('order', order)
+      this.$router.push({
+        path: '/YesOrder'
+      })
     },
     onLoad () {
       !this.finished && this.page++
@@ -104,30 +120,89 @@ export default {
       })
     },
     del () {
+      let carIds = []
+      this.itemDataList.forEach(p => {
+        if (p.checked) {
+          carIds.push(p.cartId)
+        }
+      })
+      if (carIds.length === 0) {
+        this.$toast('请先选择要删除的商品')
+        return
+      }
       this.$dialog
         .confirm({
           title: '删除商品',
           message: '确定删除所选商品'
         })
         .then(() => {
-          this.itemDataList
+          this.$axios({
+            url: deleteCartUrl,
+            method: 'post',
+            params: {
+              uid: this.userId,
+              cartIds: carIds.join(',')
+            }
+          }, res => {
+            if (res.status === 10001) {
+              this.page = 1
+              this.finished = false
+              this.loading = false
+              this.itemDataList = []
+              this.getCartList()
+              this.$toast('删除成功')
+            } else {
+              this.$toast(res.msg)
+            }
+          })
         })
         .catch(() => {
           // on cancel
         })
     }
   },
+  destroyed () {
+    if (this.itemDataList.length === 0) {
+      return
+    }
+    let cartIds = this.itemDataList.map(p => {
+      return p.cartId
+    })
+    let amounts = this.itemDataList.map(p => {
+      return p.amount
+    })
+    this.$axios({
+      url: operateCartUrl,
+      method: 'post',
+      params: {
+        uid: this.userId,
+        cartIds: cartIds.join(','),
+        amounts: amounts.join(',')
+      }
+    }, res => {
+      if (res.status === 10001) {
+        // this.$toast('保存成功')
+      } else {
+        this.$toast(res.msg)
+      }
+    })
+  },
   watch: {
     itemDataList: {
       handler () {
-        this.selectPro = this.itemDataList.map(p => {
+        this.selectPro = []
+        this.itemDataList.forEach(p => {
           if (p.checked) {
-            return p
+            this.selectPro.push(p)
           }
         })
-        this.sum = this.selectPro.reduce((a, b) => {
-          return a + b.price * b.amount
-        }, 0)
+        if (this.selectPro.length > 0) {
+          this.sum = this.selectPro.reduce((a, b) => {
+            return a + b.price * b.amount
+          }, 0)
+        } else {
+          this.sum = 0
+        }
       },
       deep: true,
       immediate: true

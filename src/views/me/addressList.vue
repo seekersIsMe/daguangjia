@@ -7,30 +7,33 @@
     </van-sticky>
     <div class="addressList bgW">
       <div v-if="addressList.length>0">
-        <van-swipe-cell  v-for="(item,index) in addressList" :key="index">
-          <div class="item">
-             <div class="body">
-            <div class="p1">
-              <span class="name w100">{{ item.nickName }}</span>
-              <span class="tel">{{item.tel}}</span>
-              <span class="default" v-if="item.isDefault">默认</span>
+        <van-radio-group v-model="radio" @change='changeAddress'>
+          <van-swipe-cell v-for="(item,index) in addressList" :key="index">
+            <div class="item">
+              <div class="body">
+                <div class="p1">
+                  <span class="name w100">{{ item.nickName }}</span>
+                  <span class="tel">{{item.tel}}</span>
+                  <span class="default" v-if="item.isDefault">默认</span>
+                </div>
+                <div class="p2">
+                  <span class="addressTitle w100">收货地址</span>
+                  <span class="adress">{{ getAddress(item) }}</span>
+                </div>
+              </div>
+              <div class="icon">
+                <van-icon name="edit" @click="editAddress(item)" v-if='!isSelect'/>
+                <van-radio :name="index" v-else />
+              </div>
             </div>
-            <div class="p2">
-              <span class="addressTitle w100">收货地址</span>
-              <span class="adress">{{ getAddress(item) }}</span>
-            </div>
-          </div>
-          <div class="icon">
-            <van-icon name="edit" @click="editAddress(item)" />
-          </div>
-          </div>
-          <template slot="right">
-            <van-button square type="danger" text="删除" @click="delAddress(index)" />
-          </template>
-        </van-swipe-cell>
+            <template slot="right">
+              <van-button square type="danger" text="删除" @click="delAddress(index)" />
+            </template>
+          </van-swipe-cell>
+        </van-radio-group>
       </div>
     </div>
-    <div class="addBtn" @click="addAddress">
+    <div class="addBtn" @click="addAddress" v-if='!isSelect'>
       <van-button type="primary" icon="add-o" color="#00AEFF">新建收货地址</van-button>
     </div>
   </div>
@@ -41,7 +44,9 @@ const delAddressUrl = '/sysUser/deleteAddress'
 export default {
   data () {
     return {
+      radio: '',
       userId: localStorage.getItem('userId'),
+      isSelect: false,
       addressList: [
         // {
         //   nick_name: '',
@@ -56,9 +61,14 @@ export default {
     }
   },
   created () {
+    this.isSelect = this.$route.query.isSelect
     this.getAddressList()
   },
   methods: {
+    changeAddress () {
+      let selectAddress = this.addressList[this.radio]
+      localStorage.setItem('selectAddress', JSON.stringify(selectAddress))
+    },
     getAddressList () {
       this.$axios(
         {
@@ -83,23 +93,26 @@ export default {
       })
     },
     delAddress (index) {
-      this.$axios({
-        url: delAddressUrl,
-        method: 'post',
-        params: {
-          uid: this.userId,
-          addressId: this.addressList[index].id
+      this.$axios(
+        {
+          url: delAddressUrl,
+          method: 'post',
+          params: {
+            uid: this.userId,
+            addressId: this.addressList[index].id
+          }
+        },
+        res => {
+          let msg = ''
+          if (res.status === 10001) {
+            this.addressList.splice(index, 1)
+            msg = '删除成功'
+          } else {
+            msg = res.msg
+          }
+          this.$toast(msg)
         }
-      }, res => {
-        let msg = ''
-        if (res.status === 10001) {
-          this.addressList.splice(index, 1)
-          msg = '删除成功'
-        } else {
-          msg = res.msg
-        }
-        this.$toast(msg)
-      })
+      )
     },
     getAddress (item) {
       let areaList = ['北京市', '天津市', '上海市', '重庆市']
@@ -127,7 +140,18 @@ export default {
       console.log(item)
     },
     goBack () {
-      this.$router.go(-1)
+      if (!this.isSelect) {
+        this.$router.go(-1)
+      } else {
+        this.$router.push(
+          {
+            path: '/YesOrder',
+            query: {
+              selectAddress: true
+            }
+          }
+        )
+      }
     }
   }
 }
@@ -178,10 +202,10 @@ export default {
     overflow-y: auto;
     margin-top: 10px;
   }
-  /deep/ .van-swipe-cell{
-    .van-swipe-cell__right{
+  /deep/ .van-swipe-cell {
+    .van-swipe-cell__right {
       display: flex;
-      align-items: center
+      align-items: center;
     }
   }
   .item {

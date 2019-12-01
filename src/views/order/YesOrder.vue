@@ -16,7 +16,7 @@
             <span class="address">{{ address }}</span>
           </p>
         </div>
-        <van-icon name="arrow" />
+        <van-icon name="arrow" @click="selectAddress"/>
       </div>
       <div class="dash"></div>
     </div>
@@ -36,71 +36,85 @@
 </template>
 <script>
 import item from './item'
+const getDefaultAddressUrl = '/sysUser/getDefaultAddress'
 export default {
   components: {
     item
   },
   data () {
     return {
-      name: '陈有三',
-      tel: '18365412974',
-      address: '广东省广州市天河区珠江新城369号',
-      sumScore: 10000000,
-      proList: [
-        {
-          src: '',
-          detail:
-            'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-          price: 1000,
-          count: 20
-        },
-        {
-          src: '',
-          detail:
-            'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-          price: 1000,
-          count: 20
-        },
-        {
-          src: '',
-          detail:
-            'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-          price: 1000,
-          count: 20
-        },
-        {
-          src: '',
-          detail:
-            'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-          price: 1000,
-          count: 20
-        },
-        {
-          src: '',
-          detail:
-            'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-          price: 1000,
-          count: 20
-        },
-        {
-          src: '',
-          detail:
-            'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-          price: 1000,
-          count: 20
-        },
-        {
-          src: '',
-          detail:
-            'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-          price: 1000,
-          count: 20
-        }
-      ]
+      userId: localStorage.getItem('userId'),
+      name: '',
+      tel: '',
+      address: '',
+      sumScore: 0,
+      proList: [],
+      isSelectAddress: false
     }
   },
+  created () {
+    let order = localStorage.getItem('order')
+    if (order) {
+      this.proList = JSON.parse(order)
+    }
+    this.isSelectAddress = this.$route.query.selectAddress || false
+    console.log('ok')
+    if (this.isSelectAddress) {
+      let data = JSON.parse(localStorage.getItem('selectAddress'))
+      this.name = data.nickName
+      this.tel = data.phone
+      let areaList = ['北京市', '天津市', '上海市', '重庆市']
+      if (areaList.includes(data.province)) {
+        this.address = data.city + data.district + data.address
+      } else {
+        this.address = data.province + data.city + data.district + data.address
+      }
+    } else {
+      this.getDefaultAddress()
+    }
+  },
+  beforeRouteEnter (to, from, next) {
+    next(vm => { //  这里的vm指的就是vue实例，可以用来当做this使用
+      console.log('to', to)
+      console.log(from)
+    })
+  },
   methods: {
+    selectAddress () {
+      this.$router.push(
+        {
+          path: '/addressList',
+          query: {
+            isSelect: true
+          }
+        }
+      )
+    },
+    getDefaultAddress () {
+      this.$axios({
+        url: getDefaultAddressUrl,
+        method: 'post',
+        params: {
+          uid: this.userId
+        }
+      }, res => {
+        if (res.status === 10001) {
+          let data = res.data.info[0]
+          this.name = data.nickName
+          this.tel = data.phone
+          let areaList = ['北京市', '天津市', '上海市', '重庆市']
+          if (areaList.includes(data.province)) {
+            this.address = data.city + data.district + data.address
+          } else {
+            this.address = data.province + data.city + data.district + data.address
+          }
+        } else {
+          this.$toast(res.msg)
+        }
+      })
+    },
     goBack () {
+      // console.log('路由', this.$router)
       this.$router.go(-1)
     }
     // lookOrder () {
@@ -108,6 +122,17 @@ export default {
     //     path: '/orderDetail'
     //   })
     // }
+  },
+  watch: {
+    proList: {
+      handler () {
+        this.sumScore = this.proList.reduce((a, b) => {
+          return a + b.price * b.amount
+        }, 0)
+      },
+      deep: true,
+      immediate: true
+    }
   }
 }
 </script>
