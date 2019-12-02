@@ -59,37 +59,21 @@
 </template>
 <script>
 import myTitle from '@/components/myTitle'
+const getGoodsDetailUrl = '/sysGoods/getGoodsDetail'
 export default {
   components: {
     myTitle
   },
   data () {
     return {
-      imgList: [
-        {
-          src:
-            'http://img3.imgtn.bdimg.com/it/u=3588968057,985090052&fm=11&gp=0.jpg'
-        },
-        {
-          src:
-            'http://img3.imgtn.bdimg.com/it/u=3588968057,985090052&fm=11&gp=0.jpg'
-        },
-        {
-          src:
-            'http://img3.imgtn.bdimg.com/it/u=3588968057,985090052&fm=11&gp=0.jpg'
-        },
-        {
-          src:
-            'http://img3.imgtn.bdimg.com/it/u=3588968057,985090052&fm=11&gp=0.jpg'
-        }
-      ],
+      goodId: '',
+      imgList: [],
       describe: {
         price: 3000,
-        describeText:
-          'Nike耐克男包女包2019秋季新款学生书包旅游包双肩背包BA5879-682 '
+        describeText: ''
       },
-      sales: 300, // 销量
-      inventory: 1000, // 库存
+      sales: 0, // 销量
+      inventory: 0, // 库存
       probablyImg: [
         {
           src:
@@ -108,6 +92,37 @@ export default {
             'http://img4.imgtn.bdimg.com/it/u=3276179142,1686381254&fm=26&gp=0.jpg'
         }
       ]
+    }
+  },
+  created () {
+    this.goodId = this.$route.query.id || ''
+    this.getGoodsDetail()
+  },
+  methods: {
+    getGoodsDetail () {
+      this.$axios({
+        url: getGoodsDetailUrl,
+        method: 'post',
+        params: {
+          goodsId: this.goodId
+        }
+      }, res => {
+        if (res.status === 10001) {
+          let data = res.data.info
+          this.imgList.push(
+            {
+              src: data.goodsLogo
+            }
+          )
+          this.describe.price = data.dailyPrice
+          this.describe.describeText = data.goodsName
+          this.sales = data.saleCount
+          this.inventory = data.stock
+          console.log('详情', data.detail)
+        } else {
+          this.$toast(res.msg)
+        }
+      })
     }
   }
 }

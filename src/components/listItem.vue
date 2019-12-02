@@ -42,9 +42,14 @@ export default {
         return Math.round(val / 1000) / 100 + '十万万'
       }
     },
-    // 跳转G到产品的详情页面
+    // 跳转到产品的详情页面
     goToDetail () {
-
+      this.$router.push({
+        path: '/proDetail',
+        query: {
+          id: this.itemData.id
+        }
+      })
     },
     addCar () {
       this.$emit('addCar')
