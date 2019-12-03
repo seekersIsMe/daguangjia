@@ -40,7 +40,7 @@ import wx from 'weixin-js-sdk'
 const getCodeUrl = '/sysUser/getPhoneCode'
 const sendLoginUrl = '/sysUser/userLogin'
 export default {
-  data() {
+  data () {
     return {
       telNum: '',
       code: '',
@@ -51,8 +51,8 @@ export default {
     }
   },
   methods: {
-    blur(val) {},
-    getCode() {
+    blur (val) {},
+    getCode () {
       this.vailTel()
       if (!this.telIsTrue) {
         return
@@ -74,8 +74,7 @@ export default {
         )
       }
     },
-    login() {
-      console.log('微信', wx)
+    login () {
       // window.location.href =
       // 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd991d12dffbcb838&redirect_uri=http%3A%2F%2Fahuibenben.cross.echosite.cn%2F%23%2Findex&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
       // wx.chooseImage({
@@ -90,7 +89,7 @@ export default {
       this.vail()
       this.telIsTrue && this.codeIsTrue && this.sendLogin()
     },
-    sendLogin() {
+    sendLogin () {
       this.$axios(
         {
           url: sendLoginUrl,
@@ -101,7 +100,6 @@ export default {
           method: 'post'
         },
         res => {
-          console.log(res)
           if (res.status === 10001) {
             localStorage.setItem('isLogin', true)
             localStorage.setItem('userId', res.data.info.uid)
@@ -114,11 +112,11 @@ export default {
         }
       )
     },
-    vail() {
+    vail () {
       this.vailTel()
       this.telIsTrue && this.vailCode()
     },
-    vailCode() {
+    vailCode () {
       if (this.code === '') {
         this.$toast('请输入验证码')
         this.codeIsTrue = false
@@ -126,7 +124,7 @@ export default {
         this.codeIsTrue = true
       }
     },
-    vailTel() {
+    vailTel () {
       if (this.telNum === '') {
         this.$toast('请输入手机号')
         this.telIsTrue = false
@@ -139,7 +137,7 @@ export default {
         this.$toast('请正确输入手机号')
       }
     },
-    sec60() {
+    sec60 () {
       if (this.time === 0) {
         this.isCanGetCode = true
         this.time = 60

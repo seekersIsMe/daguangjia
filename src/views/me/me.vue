@@ -26,7 +26,7 @@
       </div>
     </div>
     <div class="orderWrap">
-      <div class="title" @click="gotoOrder()">我的订单</div>
+      <div class="title" @click="gotoOrder(-1)">我的订单</div>
       <div class="orderIcon">
         <van-row type="flex" justify="space-between">
           <van-col span="6" @click="gotoOrder(0)">
@@ -53,7 +53,7 @@
             </div>
             <p>已发货</p>
           </van-col>
-          <van-col span="6" @click="gotoOrder()">
+          <van-col span="6" @click="gotoOrder(-1)">
             <div class="icon4 icon">
             </div>
             <p>全部</p>

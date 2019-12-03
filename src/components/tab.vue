@@ -71,11 +71,11 @@
     bottom: 34px;
   }
   .duihuan {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     background: url(~@/assets/img/duihuan.png) no-repeat center center;
     background-size: 100% 100%;
-    margin-top: -36px;
+    margin-top: -26px;
   }
   .tab-link {
       flex: 1;

@@ -3,7 +3,7 @@
     <div class="header">
       <van-icon @click="goBack" name="arrow-left" />
       <p class="stateName">
-        {{ stateName[0] }}
+        {{ stateName[type+1] }}
       </p>
       <p class="lastTime" v-if="type === 0">订单在{{ lastTime }}内完成付款!</p>
     </div>
@@ -33,59 +33,103 @@
         </span>
       </div>
     </div>
-    <div class="btnGroup bgW">
+    <div class="btnGroup bgW" v-if="type === 0">
       <van-button type="primary" color="#FF0000" @click="closeOrder"
         >关闭订单</van-button
       >
-      <van-button type="primary" color="#00AEFF">立即兑换</van-button>
+      <van-button type="primary" color="#00AEFF" @click="buyNow">立即兑换</van-button>
     </div>
   </div>
 </template>
 <script>
 import item from './item'
+const getOrderDetailUrl = '/sysOrder/getOrderDetail'
+const cancelOrderUrl = '/sysOrder/cancelOrder'
 export default {
   components: {
     item
   },
-  data() {
+  data () {
     return {
+      orderId: '',
+      userId: localStorage.getItem('userId'),
       type: 0,
       orderTime: '2019-11-26',
       orderCode: '432156321365413',
-      stateName: ['待支付', '已发货', '待发货', '交易成功', '订单关闭'],
+      // 订单状态(-1,取消,0：待支付，1：待发货，2：待收货，3：已完成)
+      stateName: ['订单关闭', '待支付', '待发货', '待收货', '已完成'],
       lastTime: '29分59秒',
-      count: 10000,
-      score: 9999999,
-      itemData: [
-        {
-          src: '',
-          detail:
-            'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-          price: 1000,
-          count: 20
-        },
-        {
-          src: '',
-          detail:
-            'Nike耐克男女包2019冬新款学生书包运动休闲包双肩背包BA6097-363',
-          price: 1000,
-          count: 20
-        }
-      ]
+      count: 0,
+      score: 0,
+      itemData: []
     }
   },
+  created () {
+    this.orderId = this.$route.query.orderId || ''
+    if (this.orderId === '') {
+      this.$toast('缺少订单id')
+      return
+    }
+    this.getOrderDetail()
+  },
   methods: {
-    goBack() {
+    getOrderDetail () {
+      this.$axios({
+        url: getOrderDetailUrl,
+        method: 'post',
+        params: {
+          orderId: this.orderId,
+          uid: this.userId
+        }
+      }, res => {
+        if (res.status === 10001) {
+          let data = res.data.info[0]
+          this.type = data.orderStatus
+          this.orderTime = data.createTime
+          this.orderCode = data.orderNo
+          this.count = data.totalAmount
+          this.score = data.totalPrice
+          this.itemData = data.goodsList
+        } else {
+          this.$toast(res.msg)
+        }
+      })
+    },
+    goBack () {
       this.$router.go(-1)
     },
-    closeOrder() {
+    buyNow () {
+      let orderString = JSON.stringify(this.itemData)
+      localStorage.removeItem('order')
+      localStorage.setItem('order', orderString)
+      this.$router.push({
+        path: '/YesOrder'
+      })
+    },
+    closeOrder () {
       this.$dialog
         .confirm({
           title: '关闭订单',
           message: '请确定是否关闭订单'
         })
         .then(() => {
-          // on close
+          this.$axios({
+            url: cancelOrderUrl,
+            method: 'post',
+            params: {
+              uid: this.userId,
+              orderId: this.orderId
+            }
+          }, res => {
+            if (res.status === 10001) {
+              this.$toast('关闭成功')
+              this.$router.push({
+                path: '/orderList'
+              })
+            } else {
+              this.$toast('系统错误')
+            }
+          })
         })
         .catch(() => {
           // on cancel

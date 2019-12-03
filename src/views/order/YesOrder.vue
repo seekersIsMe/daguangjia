@@ -20,7 +20,7 @@
       </div>
       <div class="dash"></div>
     </div>
-    <div class="proList">
+    <div class="proList bgW">
       <p class="title">商品清单</p>
       <item :itemData="proList" />
     </div>
@@ -294,6 +294,7 @@ export default {
   }
   .proList {
     padding: 15px;
+    margin-top: 10px;
   }
   .footer {
     p{

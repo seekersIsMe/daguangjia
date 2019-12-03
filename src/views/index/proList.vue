@@ -117,7 +117,7 @@ export default {
         params: {
           uid: this.userId,
           goodsId: item.id,
-          goodsType: 2
+          goodsType: 1
         }
       }, res => {
         if (res.status === 10001) {

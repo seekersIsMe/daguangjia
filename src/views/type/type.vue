@@ -91,7 +91,14 @@ export default {
         }
       })
     },
-    onSearch () {}
+    onSearch (val) {
+      this.$router.push({
+        path: 'proList',
+        queryy: {
+          goodsName: val
+        }
+      })
+    }
   }
 }
 </script>

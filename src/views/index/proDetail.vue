@@ -3,7 +3,7 @@
   <div class="proDetail">
     <div class="swipeWrap">
       <div class="goBack">
-        <van-icon name="arrow-left" />
+        <van-icon name="arrow-left" @click="goBack"/>
       </div>
       <van-swipe :autoplay="3000" indicator-color="white">
         <van-swipe-item v-for="(item,index) in imgList" :key="index">
@@ -45,10 +45,10 @@
     <div class="btnGroup">
       <van-row gutter="15">
         <van-col span="12">
-          <van-button color="#23A85E">加入购物车</van-button>
+          <van-button color="#23A85E" @click="addCar">加入购物车</van-button>
         </van-col>
         <van-col span="12">
-          <van-button color="#00AEFF">立即兑换</van-button>
+          <van-button color="#00AEFF" @click="buyNow">立即兑换</van-button>
         </van-col>
       </van-row>
       <!-- <van-button color="#23A85E">加入购物车</van-button>
@@ -60,6 +60,7 @@
 <script>
 import myTitle from '@/components/myTitle'
 const getGoodsDetailUrl = '/sysGoods/getGoodsDetail'
+const addCartUrl = '/sysCart/addCart'
 export default {
   components: {
     myTitle
@@ -67,6 +68,8 @@ export default {
   data () {
     return {
       goodId: '',
+      userId: localStorage.getItem('userId'),
+      proId: '',
       imgList: [],
       describe: {
         price: 3000,
@@ -99,6 +102,9 @@ export default {
     this.getGoodsDetail()
   },
   methods: {
+    goBack () {
+      this.$router.go(-1)
+    },
     getGoodsDetail () {
       this.$axios({
         url: getGoodsDetailUrl,
@@ -114,6 +120,7 @@ export default {
               src: data.goodsLogo
             }
           )
+          this.proId = data.id
           this.describe.price = data.dailyPrice
           this.describe.describeText = data.goodsName
           this.sales = data.saleCount
@@ -122,6 +129,39 @@ export default {
         } else {
           this.$toast(res.msg)
         }
+      })
+    },
+    addCar () {
+      this.$axios({
+        url: addCartUrl,
+        method: 'post',
+        params: {
+          uid: this.userId,
+          goodsId: this.proId,
+          goodsType: 1
+        }
+      }, res => {
+        if (res.status === 10001) {
+          this.$toast('加入成功')
+        } else {
+          this.$toast(res.msg)
+        }
+      })
+    },
+    buyNow () {
+      let order = [
+        {
+          goodsLogo: this.imgList[0].src,
+          goodsName: this.describe.describeText,
+          price: this.describe.price,
+          amount: 1
+        }
+      ]
+      let orderString = JSON.stringify(order)
+      localStorage.removeItem('order')
+      localStorage.setItem('order', orderString)
+      this.$router.push({
+        path: '/YesOrder'
       })
     }
   }

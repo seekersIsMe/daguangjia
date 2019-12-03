@@ -17,14 +17,14 @@
         :mmediate-check="false"
         @load="onLoad"
       >
-        <div class="item bgW" v-for="(item, index) in listData" :key="index" @click="gotoOrderDetail">
+        <div class="item bgW" v-for="(item, index) in listData" :key="index" @click="gotoOrderDetail(item)">
           <div class="title">
             <span class="orderCode"> 订单号：{{ item.orderNo }} </span>
             <span class="orderStatus">{{ getOrderStatusText(item.orderStatus) }}</span>
           </div>
           <item :itemData="item.goodsList" />
           <div class="footer">
-            <span class="color33">删除订单</span>
+            <span class="color33"></span>
             <div class="right">
               <span class="color33">共{{ item.totalAmount }}件</span>
               <span class="color33">
@@ -38,7 +38,7 @@
         </div>
       </van-list>
     </div>
-    <div class="noPro">
+    <div class="noPro" v-else>
         <div class="noProBg">
         </div>
         <p>购物车为空</p>
@@ -86,7 +86,7 @@ export default {
         method: 'post',
         params: {
           uid: this.userId,
-          orderStatus: this.active === 0 ? '' : this.active - 1,
+          orderStatus: this.active === 0 ? -100 : this.active - 1,
           page: this.page
         }
       }, res => {
@@ -104,9 +104,12 @@ export default {
     goBack () {
       this.$router.go(-1)
     },
-    gotoOrderDetail () {
+    gotoOrderDetail (item) {
       this.$router.push({
-        path: '/orderDetail'
+        path: '/orderDetail',
+        query: {
+          orderId: item.orderId
+        }
       })
     },
     onLoad () {

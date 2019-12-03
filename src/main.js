@@ -18,7 +18,18 @@ new Vue({
   router,
   render: h => h(App)
 })
-router.beforeEach((to, form, next) => {
+router.beforeEach((to, from, next) => {
+  if (to.path === '/login') {
+    window.localStorage.removeItem('isLogin')
+  }
+  if (!window.localStorage.getItem('isLogin') && to.path !== '/login') {
+    next({
+      path: '/login',
+      query: {redirect: to.fullPath} // 将跳转的路由path作为参数，登录成功后跳转到该路由
+    })
+  } else {
+    next()
+  }
+  // 动态标题
   document.title = to.meta.title || '大积分管家'
-  next()
 })

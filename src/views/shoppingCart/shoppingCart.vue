@@ -70,6 +70,7 @@ export default {
         return
       }
       let order = JSON.stringify(this.itemDataList)
+      localStorage.removeItem('order')
       localStorage.setItem('order', order)
       this.$router.push({
         path: '/YesOrder'
