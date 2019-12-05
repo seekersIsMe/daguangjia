@@ -1,5 +1,5 @@
 import axios from 'axios'
-const root = process.env.API_ROOT
+// const root = process.env.API_ROOT
 
 /* 默认请求封装参数 */
 const defaultParams = {
@@ -23,7 +23,8 @@ export function axiosUtil (axiosParams, callback) {
       'content-type': headersType,
       // 'Authorization': accessToken,
       token: accessToken
-    }
+    },
+    baseURL: `/apiNginx`
   })
   let urlParams = ''
   if (axiosParams.contentType === 'form' && axiosParams.method === 'post') {
@@ -36,7 +37,7 @@ export function axiosUtil (axiosParams, callback) {
   }
   if (axiosParams.method === 'post') {
     api
-      .post(root + '/integral/api' + axiosParams.url, urlParams)
+      .post('/integral/api' + axiosParams.url, urlParams)
       .then(function (res) {
         callback(res.data)
       })
@@ -47,7 +48,7 @@ export function axiosUtil (axiosParams, callback) {
       })
   } else {
     api
-      .get(root + '/integral/api' + axiosParams.url, { params: urlParams })
+      .get('/integral/api' + axiosParams.url, { params: urlParams })
       .then(function (res) {
         callback(res.data)
       })

@@ -1,8 +1,7 @@
 const index = [
   {
-    path: '/',
-    name: 'index',
-    component: () => import('@/views/index/index'),
+    path: '',
+    redirect: '/index',
     meta: {
       title: '大积分管家',
       keepAlive: true
@@ -10,7 +9,7 @@ const index = [
   },
   {
     path: '*',
-    redirect: '/',
+    redirect: '/index',
     meta: {
       title: '大积分管家',
       keepAlive: true
@@ -19,7 +18,7 @@ const index = [
   {
     path: '/index',
     name: 'index',
-    component: () => import('@/views/index/index'),
+    component: () => import(/* webpackChunkName: "index" */'@/views/index/index'),
     meta: {
       title: '大积分管家',
       keepAlive: true
@@ -28,7 +27,7 @@ const index = [
   {
     path: '/login',
     name: 'login',
-    component: () => import('@/views/index/login'),
+    component: () => import(/* webpackChunkName: "login" */'@/views/index/login'),
     meta: {
       title: '大积分管家',
       keepAlive: false
@@ -37,7 +36,7 @@ const index = [
   {
     path: '/proList',
     name: 'proList',
-    component: () => import('@/views/index/proList'),
+    component: () => import(/* webpackChunkName: "proList" */'@/views/index/proList'),
     meta: {
       title: '商品列表',
       keepAlive: true
@@ -46,7 +45,7 @@ const index = [
   {
     path: '/proDetail',
     name: 'proDetail',
-    component: () => import('@/views/index/proDetail'),
+    component: () => import(/* webpackChunkName: "proDetail" */'@/views/index/proDetail'),
     meta: {
       title: '商品详情',
       keepAlive: false

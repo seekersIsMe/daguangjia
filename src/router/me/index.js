@@ -47,7 +47,7 @@ const me = [
   {
     path: '/orderList',
     name: 'orderList',
-    component: () => import('@/views/order/orderList'),
+    component: () => import(/* webpackChunkName: "orderList" */'@/views/order/orderList'),
     meta: {
       title: '我的订单',
       keepAlive: false
@@ -56,7 +56,7 @@ const me = [
   {
     path: '/orderDetail',
     name: 'orderDetail',
-    component: () => import('@/views/order/orderDetail'),
+    component: () => import(/* webpackChunkName: "orderDetail" */'@/views/order/orderDetail'),
     meta: {
       title: '订单详情',
       keepAlive: false

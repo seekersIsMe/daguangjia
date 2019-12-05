@@ -15,16 +15,10 @@ export default {
   components: {
     tab
   },
-  beforeEnter (a, b, c) {
-    console.log(a, b, c)
-  },
   computed: {
     isShowTab () {
       return showTabRoute.includes(this.$route.path)
     }
-  },
-  mounted () {
-    console.log(this.$router)
   }
 }
 </script>

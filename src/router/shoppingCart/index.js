@@ -2,7 +2,7 @@ const shoppingCart = [
   {
     path: '/shoppingCart',
     name: 'shoppingCart',
-    component: () => import('@/views/shoppingCart/shoppingCart'),
+    component: () => import(/* webpackChunkName: "shoppingCart" */'@/views/shoppingCart/shoppingCart'),
     meta: {
       title: '购物车',
       keepAlive: true
@@ -11,7 +11,7 @@ const shoppingCart = [
   {
     path: '/pay',
     name: 'pay',
-    component: () => import('@/views/order/pay'),
+    component: () => import(/* webpackChunkName: "pay" */'@/views/order/pay'),
     meta: {
       title: '支付结果',
       keepAlive: false
@@ -20,7 +20,7 @@ const shoppingCart = [
   {
     path: '/YesOrder',
     name: 'YesOrder',
-    component: () => import('@/views/order/YesOrder'),
+    component: () => import(/* webpackChunkName: "YesOrder" */'@/views/order/YesOrder'),
     meta: {
       title: '订单确认',
       keepAlive: false

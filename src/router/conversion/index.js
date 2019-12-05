@@ -2,7 +2,7 @@ const conversion = [
   {
     path: '/conversion',
     name: 'conversion',
-    component: () => import('@/views/conversion/conversion'),
+    component: () => import(/* webpackChunkName: "conversion" */'@/views/conversion/conversion'),
     meta: {
       title: '兑换',
       keepAlive: false
