@@ -1,7 +1,7 @@
 <template>
   <div class="listItem" @click="goToDetail">
     <div class="imgWrap">
-      <img :src="itemData.goodsLogo" />
+      <img :src="'http://47.107.110.186:8082'+itemData.goodsLogo" />
     </div>
     <p class="productTitle">{{itemData.goodsName}}</p>
     <div class="priceWrap">

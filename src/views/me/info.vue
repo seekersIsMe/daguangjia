@@ -5,7 +5,7 @@
       <van-cell title="头像">
         <!-- 使用 right-icon 插槽来自定义右侧图标 -->
         <div slot="right-icon" class="right" @click="selectPic">
-          <img class="img" :src="imgSrc" alt="" />
+          <img class="img" :src="'http://47.107.110.186:8082'+imgSrc" alt="" />
           <van-icon name="arrow" />
         </div>
       </van-cell>
@@ -244,7 +244,7 @@ export default {
 }
 .cancelPic{
   .van-button{
-    border-radius: 5px; 
+    border-radius: 5px;
   }
 }
 </style>

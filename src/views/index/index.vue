@@ -29,7 +29,7 @@
         <div class="swipeWrap">
           <van-swipe :autoplay="3000">
             <van-swipe-item v-for="(item, index) in images" :key="index">
-              <img class="swipeImg" :src="item.logoPath" />
+              <img class="swipeImg" :src="'http://47.107.110.186:8082'+item.logoPath" />
             </van-swipe-item>
           </van-swipe>
         </div>
@@ -78,7 +78,7 @@
               :key="index"
             >
               <div class="img">
-                <img :src="item.goodsLogo">
+                <img :src="'http://47.107.110.186:8082'+item.goodsLogo">
               </div>
               <div class="killText">秒杀价{{ item.priceSpike }}积分</div>
               <div class="originPrice">原价：{{ item.dailyPrice }}积分</div>
