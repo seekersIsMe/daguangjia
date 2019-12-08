@@ -22,7 +22,7 @@
       <div class="typeListWrap">
         <van-grid :column-num="3">
           <van-grid-item v-for="(item,index) in typeList[activeKey]" :key="index" @click="selectType(item)">
-            <img :src="'http://47.107.110.186:8082'+item.logo" />
+            <img :src="'http://47.107.110.186:8084'+item.logo" />
             <p>{{item.subCategoryName}}</p>
           </van-grid-item>
         </van-grid>
@@ -131,6 +131,15 @@ export default {
     }
   .typeListWrap {
     flex: 1;
+    overflow: hidden;
+    img{
+      display: inline-block;
+      width: 100%;
+    }
+    p{
+      margin-top: 10px;
+      font-size: 12px;
+    }
   }
 }
 </style>

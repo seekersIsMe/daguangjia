@@ -2,7 +2,7 @@
   <div class="itemWrap">
       <div class="proItem" v-for="(itemPro, ind) in itemData" :key="ind">
         <div class="img">
-          <img :src="'http://47.107.110.186:8082'+itemPro.goodsLogo" alt="" />
+          <img :src="'http://47.107.110.186:8084'+itemPro.goodsLogo" alt="" />
         </div>
         <div class="ProDatail">
           <p class="detail">{{ itemPro.goodsName }}</p>

@@ -7,7 +7,7 @@
       </div>
       <van-swipe :autoplay="3000" indicator-color="white">
         <van-swipe-item v-for="(item,index) in imgList" :key="index">
-          <img :src="'http://47.107.110.186:8082'+item.src" alt />
+          <img :src="'http://47.107.110.186:8084'+item.src" alt />
         </van-swipe-item>
       </van-swipe>
     </div>
@@ -27,7 +27,7 @@
       <div class="probablyImg">
         <van-grid :column-num="2">
           <van-grid-item v-for="(item,index) in probablyImg" :key="index">
-            <img :src="'http://47.107.110.186:8082'+item.src" />
+            <img :src="'http://47.107.110.186:8084'+item.src" />
           </van-grid-item>
         </van-grid>
       </div>

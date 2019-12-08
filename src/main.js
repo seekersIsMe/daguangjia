@@ -6,6 +6,8 @@ import Vuex from 'vuex'
 import 'vant/lib/index.css'
 import {axiosUtil} from './api/axios'
 import routes from './router'
+import VueJsonp from 'vue-jsonp'
+Vue.use(VueJsonp)
 Vue.use(Vant)
 Vue.use(Vuex)
 Vue.use(VueRouter)

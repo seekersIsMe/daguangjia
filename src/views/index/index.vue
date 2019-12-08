@@ -29,7 +29,7 @@
         <div class="swipeWrap">
           <van-swipe :autoplay="3000">
             <van-swipe-item v-for="(item, index) in images" :key="index">
-              <img class="swipeImg" :src="'http://47.107.110.186:8082'+item.logoPath" />
+              <img class="swipeImg" :src="'http://47.107.110.186:8084'+item.logoPath" />
             </van-swipe-item>
           </van-swipe>
         </div>
@@ -78,7 +78,7 @@
               :key="index"
             >
               <div class="img">
-                <img :src="'http://47.107.110.186:8082'+item.goodsLogo">
+                <img :src="'http://47.107.110.186:8084'+item.goodsLogo">
               </div>
               <div class="killText">秒杀价{{ item.priceSpike }}积分</div>
               <div class="originPrice">原价：{{ item.dailyPrice }}积分</div>
@@ -128,16 +128,34 @@ export default {
       loading: false,
       finished: false,
       itemCount: [],
-      userId: localStorage.getItem('userId')
+      userId: localStorage.getItem('userId'),
+      code: '' // 授权code
     }
   },
   created () {
-    // this.code()
+    // this.getQueryString().then(res => {
+    //   this.getAccess_token()
+    // }).catch(err => {
+    //   this.getCode()
+    // })
     this.getImgs()
     this.getFlashSale()
     this.getNewGoods()
   },
   methods: {
+    getCode () {
+      let isAuto = localStorage.getItem('isAuto')
+      let autoTime = localStorage.getItem('autoTime')
+      if (!isAuto) {
+        // window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx4ec269f34598e506&redirect_uri=http%3A%2F%2Fahuibenben.cross.echosite.cn%2F%23%2Findex&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
+        window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd991d12dffbcb838&redirect_uri=http%3A%2F%2Fahuibenben.cross.echosite.cn%2F%23%2Findex&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
+      } else {
+        if ((new Date().getTime() - Number(autoTime)) > 30 * 24 * 60 * 60 * 1000) {
+          // window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx4ec269f34598e506&redirect_uri=http%3A%2F%2Fahuibenben.cross.echosite.cn%2F%23%2Findex&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
+          window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd991d12dffbcb838&redirect_uri=http%3A%2F%2Fahuibenben.cross.echosite.cn%2F%23%2Findex&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
+        }
+      }
+    },
     addCar (item) {
       this.$axios({
         url: addCartUrl,
@@ -201,35 +219,41 @@ export default {
         }
       })
     },
-    getQueryString (name) {
-      var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i')
-      var r = window.location.search.substr(1).match(reg)
-      if (r != null) return unescape(r[2])
-      return null
+    getQueryString () {
+      return new Promise((resolve, reject) => {
+        var reg = new RegExp('(^|&)' + 'code' + '=([^&]*)(&|$)', 'i')
+        var r = window.location.search.substr(1).match(reg)
+        if (r != null) {
+          this.code = unescape(r[2])
+          localStorage.setItem('isAuto', 1)
+          localStorage.setItem('autoTime', new Date().getTime())
+          resolve()
+        } else {
+          reject()
+        }
+      })
     },
-    code () {
-      let url =
-        'https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxd991d12dffbcb838&secret=19db5681405637649e2993678f7fc591'
-      // let a = https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
-      // this.$store.commit('changeToken', null)
-      // this.$store.commit('changeCode', this.getQueryString('code'))
-      console.log(
-        'url获取授权',
-        url +
-          '&code=' +
-          this.getQueryString('code') +
-          '&grant_type=authorization_code'
-      )
-      axios
-        .get(
-          url +
-            '&code=' +
-            this.getQueryString('code') +
-            '&grant_type=authorization_code'
-        )
-        .then(res => {
-          console.log('授权成功', res)
-        })
+    getAccess_token () {
+      // let url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxd991d12dffbcb838&secret=19db5681405637649e2993678f7fc591'
+      // let url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx4ec269f34598e506&secret=fecdd73d2b088d11dd31cd0fcc5eb76c'
+      if (!this.code) {
+      }
+      // url = url + '&code=' + this.code + '&grant_type=authorization_code'
+      // this.$jsonp('https://api.weixin.qq.com/sns/oauth2/access_token', {
+      //   appid: 'wxd991d12dffbcb838',
+      //   secret: '19db5681405637649e2993678f7fc591',
+      //   code: this.code,
+      //   grant_type: 'authorization_code',
+      //   callback: ''
+      // }).then(res => {
+      //   console.log('token', res)
+      // }).catch(err => {
+      //   // console.log(err)
+      // })
+      // axios.get(url)
+      //   .then(res => {
+      //     console.log('授权成功', res)
+      //   })
     },
     onSearch (val) {
       this.$router.push({

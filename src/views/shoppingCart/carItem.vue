@@ -5,7 +5,7 @@
         <van-checkbox v-model="item.checked" @change="select"></van-checkbox>
       </div>
       <div class="img">
-        <img :src="'http://47.107.110.186:8082'+item.goodsLogo" alt />
+        <img :src="'http://47.107.110.186:8084'+item.goodsLogo" alt />
       </div>
       <div class="carBody">
         <p class="title">{{item.goodsName}}</p>

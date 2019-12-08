@@ -75,6 +75,8 @@ export default {
       }
     },
     login () {
+      // 秘钥fecdd73d2b088d11dd31cd0fcc5eb76c
+      // wx4ec269f34598e506
       // window.location.href =
       // 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd991d12dffbcb838&redirect_uri=http%3A%2F%2Fahuibenben.cross.echosite.cn%2F%23%2Findex&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
       // wx.chooseImage({
