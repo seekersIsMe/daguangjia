@@ -29,7 +29,7 @@
         <div class="swipeWrap">
           <van-swipe :autoplay="3000">
             <van-swipe-item v-for="(item, index) in images" :key="index">
-              <img class="swipeImg" :src="'http://47.107.110.186:8084'+item.logoPath" />
+              <img class="swipeImg" :src="'http://47.107.110.186:8082'+item.logoPath" />
             </van-swipe-item>
           </van-swipe>
         </div>
@@ -37,25 +37,11 @@
       <div class="addKong"></div>
       <div class="recommendWrap">
         <van-row type="flex" justify="space-between">
-          <van-col>
-            <div class="icon1"></div>
-            <div>母婴用品</div>
-          </van-col>
-          <van-col>
-            <div class="icon2"></div>
-            <div>食品</div>
-          </van-col>
-          <van-col>
-            <div class="icon3"></div>
-            <div>护肤彩妆</div>
-          </van-col>
-          <van-col>
-            <div class="icon4"></div>
-            <div>数码电器</div>
-          </van-col>
-          <van-col>
-            <div class="icon5"></div>
-            <div>生活日用</div>
+          <van-col v-for='(item, index) in categoryList' :key="index" @click="goType(item)">
+            <div class="icon1">
+              <img src="item.logo" alt="">
+            </div>
+            <div>{{item.categoryName}}</div>
           </van-col>
         </van-row>
       </div>
@@ -78,7 +64,7 @@
               :key="index"
             >
               <div class="img">
-                <img :src="'http://47.107.110.186:8084'+item.goodsLogo">
+                <img :src="'http://47.107.110.186:8082'+item.goodsLogo">
               </div>
               <div class="killText">秒杀价{{ item.priceSpike }}积分</div>
               <div class="originPrice">原价：{{ item.dailyPrice }}积分</div>
@@ -108,6 +94,8 @@ const getImgsUrl = '/sysGoods/getBanner'
 const getFlashSaleUrl = '/sysGoods/getFlashSale'
 const getNewGoodsUrl = '/sysGoods/getNewGoods'
 const addCartUrl = '/sysCart/addCart'
+const getOpenIdUrl = '/sysUser/getOpenId'
+const getIndexCategoryUrl = '/sysGoods/getIndexCategory'
 export default {
   name: 'index',
   components: {
@@ -129,20 +117,49 @@ export default {
       finished: false,
       itemCount: [],
       userId: localStorage.getItem('userId'),
-      code: '' // 授权code
+      code: '', // 授权code
+      categoryList: []
     }
   },
   created () {
-    // this.getQueryString().then(res => {
-    //   this.getAccess_token()
-    // }).catch(err => {
-    //   this.getCode()
-    // })
+    if (!localStorage.getItem('isAuto')) {
+      this.getQueryString().then(res => {
+        this.getAccess_token()
+      }).catch(err => {
+        this.getCode()
+      })
+    } else {
+      debugger
+      if (!localStorage.getItem('isLogin')) {
+        var reg = new RegExp('(^|&)' + 'code' + '=([^&]*)(&|$)', 'i')
+        var r = window.location.search.substr(1).match(reg)
+        if (r != null) {
+          this.code = unescape(r[2])
+          this.getAccess_token()
+        }
+      }
+    }
     this.getImgs()
     this.getFlashSale()
     this.getNewGoods()
+    this.getIndexCategory()
   },
   methods: {
+    getIndexCategory () {
+      this.$axios({
+        url: getIndexCategoryUrl,
+        method: 'post'
+      }, res => {
+        if (res.status === 10001) {
+          res.data.info && res.data.info.forEach(p => {
+            p.logo = 'http://47.107.110.186:8082' + p.logo
+          })
+          this.categoryList = res.data.info || []
+        } else {
+          this.$toast(res.msg)
+        }
+      })
+    },
     getCode () {
       let isAuto = localStorage.getItem('isAuto')
       let autoTime = localStorage.getItem('autoTime')
@@ -237,7 +254,28 @@ export default {
       // let url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxd991d12dffbcb838&secret=19db5681405637649e2993678f7fc591'
       // let url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx4ec269f34598e506&secret=fecdd73d2b088d11dd31cd0fcc5eb76c'
       if (!this.code) {
+        return
       }
+      this.$axios({
+        url: getOpenIdUrl,
+        method: 'post',
+        params: {
+          code: this.code
+        }
+      }, res => {
+        if (res.status === 10001) {
+          if (!localStorage.getItem('isLogin')) {
+            this.$router.push({
+              path: '/login',
+              query: {
+                openId: res.data.info
+              }
+            })
+          }
+        } else {
+          this.$toast('openId获取失败')
+        }
+      })
       // url = url + '&code=' + this.code + '&grant_type=authorization_code'
       // this.$jsonp('https://api.weixin.qq.com/sns/oauth2/access_token', {
       //   appid: 'wxd991d12dffbcb838',

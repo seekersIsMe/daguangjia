@@ -44,11 +44,15 @@ export default {
     return {
       telNum: '',
       code: '',
+      openId: '',
       time: 60,
       telIsTrue: false,
       codeIsTrue: false,
       isCanGetCode: true
     }
+  },
+  created () {
+    this.openId = this.$route.query.openId
   },
   methods: {
     blur (val) {},
@@ -97,7 +101,8 @@ export default {
           url: sendLoginUrl,
           params: {
             userName: this.telNum,
-            code: this.code
+            code: this.code,
+            openId: this.openId
           },
           method: 'post'
         },

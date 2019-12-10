@@ -83,7 +83,7 @@
     <div class="addressWrap">
       <van-cell title="我的地址" is-link @click="goAddressList" />
     </div>
-    <div class="unbind">解绑手机号</div>
+    <div class="unbind" @click="unbind">解绑手机号</div>
   </div>
 </template>
 <script>
@@ -119,6 +119,19 @@ export default {
     this.getUserInfo()
   },
   methods: {
+    unbind () {
+      localStorage.removeItem('isLogin')
+      localStorage.removeItem('isAuto')
+      localStorage.removeItem('autoTime')
+      localStorage.removeItem('userId')
+      localStorage.removeItem('order')
+      window.location.href = window.location.origin + '/#/index'
+      // this.$router.push(
+      //   {
+      //     path: '/index'
+      //   }
+      // )
+    },
     getUserInfo () {
       this.$axios(
         {
@@ -134,6 +147,7 @@ export default {
             this.interal = interal
             this.orderStatus = orderStatus
             this.info = info
+            this.info.logoPath = 'http://47.107.110.186:8082/' + this.info.logoPath
           } else {
             this.$toast(res.msg)
           }
@@ -177,7 +191,8 @@ export default {
 <style lang="scss" scoped>
 .meWrap {
   background: #f7f7f7;
-  height: calc(100vh - 70px);
+  padding-bottom: 50px;
+  overflow: auto;
   .header {
     height: 180px;
     background: #00aeff;
@@ -189,7 +204,7 @@ export default {
       align-items: center;
       color: white;
       padding: 0 15px;
-      font-size: 18px;
+      font-size: 16px;
       line-height: 40px;
       .f18 {
         font-size: 18px;
@@ -235,7 +250,7 @@ export default {
     .title {
       line-height: 40px;
       color: #000000;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 500;
       padding-left: 20px;
       border-bottom: 1px solid #dddddd;
@@ -268,7 +283,7 @@ export default {
     .title {
       line-height: 40px;
       color: #000000;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 500;
       padding-left: 20px;
       border-bottom: 1px solid #dddddd;
@@ -327,7 +342,7 @@ export default {
     margin-bottom: 10px;
     .van-cell {
       color: #000000;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 500;
       padding: 0 20px;
       line-height: 40px;

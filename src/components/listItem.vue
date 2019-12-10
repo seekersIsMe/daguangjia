@@ -1,12 +1,12 @@
 <template>
   <div class="listItem" @click="goToDetail">
     <div class="imgWrap">
-      <img :src="'http://47.107.110.186:8084'+itemData.goodsLogo" />
+      <img :src="'http://47.107.110.186:8082'+itemData.goodsLogo" />
     </div>
     <p class="productTitle">{{itemData.goodsName}}</p>
     <div class="priceWrap">
       <span>{{ changNum(itemData.price) }}积分</span>
-      <div class="shoppingWrap" @click="addCar">
+      <div class="shoppingWrap" @click.stop="addCar">
       <!-- <van-icon name="shopping-cart-o" /> -->
       </div>
     </div>
@@ -52,6 +52,12 @@ export default {
       })
     },
     addCar () {
+      if (!localStorage.getItem('isLogin')) {
+        this.$toast('请先登录')
+        this.$router.push({
+          path: '/login'
+        })
+      }
       this.$emit('addCar')
     }
   }

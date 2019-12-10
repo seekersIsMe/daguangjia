@@ -22,7 +22,7 @@ router.beforeEach((to, from, next) => {
   if (to.path === '/login') {
     window.localStorage.removeItem('isLogin')
   }
-  if (!window.localStorage.getItem('isLogin') && to.path !== '/login') {
+  if ((!window.localStorage.getItem('isLogin') && to.path !== '/login' && to.path !== '/index')) {
     next({
       path: '/login',
       query: {redirect: to.fullPath} // 将跳转的路由path作为参数，登录成功后跳转到该路由
