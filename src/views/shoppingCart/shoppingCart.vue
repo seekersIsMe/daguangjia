@@ -4,11 +4,17 @@
       <p class="titleCar">购物车</p>
       <p class="optionText" @click="manage">{{isManage?'完成':'管理'}}</p>
     </div>
-    <div v-if="itemDataList.length>0">
+    <div v-if="shopList.length>0">
       <div class="carItemWrap">
         <div class="list">
           <van-list v-model="loading" :finished="finished" finished-text="没有更多了" :immediate-check="false" @load="onLoad">
-            <carItem v-model="itemDataList" @change="carChange" />
+            <div class="shopName" v-for="(item,index) in shopList" :key="index">
+              <van-checkbox v-model="checked"@change="selectAllShop"></van-checkbox>
+              <p class="name">
+                {{item.shopName}}
+              </p>
+            <carItem v-model="item.goods" @change="carChange" />
+            </div>
           </van-list>
         </div>
       </div>
@@ -51,25 +57,33 @@ export default {
       sum: 0,
       isManage: false,
       selectPro: [],
-      delList: []
+      delList: [],
+      shopList: []
     }
   },
   created () {
     this.getCartList()
   },
   methods: {
+    selectAllShop (item) {
+      item.forEach(p => {
+        p.checked = true
+      })
+    },
     settle () {
       let selectPros = []
-      this.itemDataList.forEach(p => {
-        if (p.checked) {
-          selectPros.push(p.cartId)
-        }
+      this.shopList.forEach(p => {
+        p.goods.forEach(p1 => {
+          if (p1.checked) {
+            selectPros.push(p1.cartId)
+          }
+        })
       })
       if (selectPros.length === 0) {
         this.$toast('请先选择要兑换的商品')
         return
       }
-      let order = JSON.stringify(this.itemDataList)
+      let order = JSON.stringify(this.shopList)
       localStorage.removeItem('order')
       localStorage.setItem('order', order)
       this.$router.push({
@@ -93,11 +107,13 @@ export default {
         res => {
           if (res.status === 10001) {
             if (res.data.info) {
-              let itemDataList = res.data.info.map(p => {
-                p.checked = false
-                return p
+              let data = res.data.info
+              data.forEach(p => {
+                p.goods.forEach(p1 => {
+                  p1.checked = false
+                })
               })
-              this.itemDataList = [...this.itemDataList, ...itemDataList]
+              this.shopList = [...this.shopList, ...data]
               this.loading = false
               if (res.data.info && res.data.info.length < 10) {
                 this.finished = true
@@ -116,17 +132,24 @@ export default {
       this.isManage = !this.isManage
     },
     selectAll () {
-      this.itemDataList.forEach(p => {
-        p.checked = this.isSelectAll
-      })
+      if (this.shopList.length > 0) {
+        this.shopList.forEach(p => {
+          p.goods.forEach(p1 => {
+            p1.checked = this.isSelectAll
+          })
+        })
+      }
     },
     del () {
       let carIds = []
-      this.itemDataList.forEach(p => {
-        if (p.checked) {
-          carIds.push(p.cartId)
-        }
+      this.shopList.forEach(p => {
+        p.goods.forEach(p1 => {
+          if (p1.checked) {
+            carIds.push(p1.cartId)
+          }
+        })
       })
+
       if (carIds.length === 0) {
         this.$toast('请先选择要删除的商品')
         return
@@ -149,7 +172,7 @@ export default {
               this.page = 1
               this.finished = false
               this.loading = false
-              this.itemDataList = []
+              this.shopList = []
               this.getCartList()
               this.$toast('删除成功')
             } else {
@@ -163,14 +186,20 @@ export default {
     }
   },
   destroyed () {
-    if (this.itemDataList.length === 0) {
+    if (this.shopList.length === 0) {
       return
     }
-    let cartIds = this.itemDataList.map(p => {
-      return p.cartId
-    })
-    let amounts = this.itemDataList.map(p => {
-      return p.amount
+    let cartIds = []
+    let amounts = []
+    this.shopList.forEach(p => {
+      p.goods.forEach(p1 => {
+        cartIds.push(
+          p.cartId
+        )
+        amounts.push(
+          p.amount
+        )
+      })
     })
     this.$axios({
       url: operateCartUrl,
@@ -189,13 +218,15 @@ export default {
     })
   },
   watch: {
-    itemDataList: {
+    shopList: {
       handler () {
         this.selectPro = []
-        this.itemDataList.forEach(p => {
-          if (p.checked) {
-            this.selectPro.push(p)
-          }
+        this.shopList.forEach(p => {
+          p.goods.forEach(p1 => {
+            if (p1.checked) {
+              this.selectPro.push(p1)
+            }
+          })
         })
         if (this.selectPro.length > 0) {
           this.sum = this.selectPro.reduce((a, b) => {
