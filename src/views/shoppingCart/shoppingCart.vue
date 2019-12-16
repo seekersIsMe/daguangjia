@@ -9,10 +9,12 @@
         <div class="list">
           <van-list v-model="loading" :finished="finished" finished-text="没有更多了" :immediate-check="false" @load="onLoad">
             <div class="shopName" v-for="(item,index) in shopList" :key="index">
-              <van-checkbox v-model="checked"@change="selectAllShop"></van-checkbox>
+              <div class="shopTitle">
+                <van-checkbox v-model="item.checked" @change="(value) =>{selectAllShop(item, value)}"></van-checkbox>
               <p class="name">
                 {{item.shopName}}
               </p>
+              </div>
             <carItem v-model="item.goods" @change="carChange" />
             </div>
           </van-list>
@@ -65,9 +67,9 @@ export default {
     this.getCartList()
   },
   methods: {
-    selectAllShop (item) {
-      item.forEach(p => {
-        p.checked = true
+    selectAllShop (item, value) {
+      item.goods.forEach(p => {
+        p.checked = value
       })
     },
     settle () {
@@ -83,7 +85,11 @@ export default {
         this.$toast('请先选择要兑换的商品')
         return
       }
-      let order = JSON.stringify(this.shopList)
+      let orderAry = this.shopList.map(p => {
+        return p.goods
+      })
+      console.log('商品列表', orderAry.flat())
+      let order = JSON.stringify(orderAry.flat())
       localStorage.removeItem('order')
       localStorage.setItem('order', order)
       this.$router.push({
@@ -109,6 +115,7 @@ export default {
             if (res.data.info) {
               let data = res.data.info
               data.forEach(p => {
+                p.checked = false
                 p.goods.forEach(p1 => {
                   p1.checked = false
                 })
@@ -287,6 +294,21 @@ export default {
     margin-top: 10px;
     height: calc(100vh - 150px);
     overflow-y: auto;
+    .shopName{
+      margin-bottom: 10px;
+    }
+    .shopTitle{
+      padding: 15px;
+      background: white;
+      display: flex;
+      align-items: center;
+      color: #333333;
+      font-size: 15px;
+      font-weight: 600;
+      .van-checkbox{
+        margin-right: 15px;
+      }
+    }
   }
   .settleWrap {
     position: absolute;

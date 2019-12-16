@@ -2,14 +2,18 @@
   <div class="orderDetail">
     <div class="header">
       <van-icon @click="goBack" name="arrow-left" />
-      <p class="stateName">
-        {{ stateName[type+1] }}
-      </p>
+      <p class="stateName">{{ stateName[type+1] }}</p>
       <p class="lastTime" v-if="type === 0">订单在{{ lastTime }}内完成付款!</p>
     </div>
-    <div class="body bgW">
-      <item :itemData="itemData" />
-      <div class="sumDetail">
+    <div class="body">
+      <div class="order bgW" v-for="(item,index) in orderData" :key="index">
+        <div class="shopTitle">
+          <van-icon name="shop-o" />
+          {{item.shopName}}
+        </div>
+        <item :itemData="item.goodsList" />
+      </div>
+      <div class="sumDetail bgW">
         <span>公{{ count }}件</span>
         <span>合计：</span>
         <span class="score">{{ score }}积分</span>
@@ -17,26 +21,16 @@
     </div>
     <div class="footer bgW">
       <div class="orderCode">
-        <span>
-          订单编号
-        </span>
-        <span>
-          {{ orderCode }}
-        </span>
+        <span>订单编号</span>
+        <span>{{ orderCode }}</span>
       </div>
       <div class="orderTime">
-        <span>
-          订单时间
-        </span>
-        <span>
-          {{ orderTime }}
-        </span>
+        <span>订单时间</span>
+        <span>{{ orderTime }}</span>
       </div>
     </div>
     <div class="btnGroup bgW" v-if="type === 0">
-      <van-button type="primary" color="#FF0000" @click="closeOrder"
-        >关闭订单</van-button
-      >
+      <van-button type="primary" color="#FF0000" @click="closeOrder">关闭订单</van-button>
       <van-button type="primary" color="#00AEFF" @click="buyNow">立即兑换</van-button>
     </div>
   </div>
@@ -61,7 +55,8 @@ export default {
       lastTime: '29分59秒',
       count: 0,
       score: 0,
-      itemData: []
+      itemData: [],
+      orderData: []
     }
   },
   created () {
@@ -74,32 +69,37 @@ export default {
   },
   methods: {
     getOrderDetail () {
-      this.$axios({
-        url: getOrderDetailUrl,
-        method: 'post',
-        params: {
-          orderId: this.orderId,
-          uid: this.userId
+      this.$axios(
+        {
+          url: getOrderDetailUrl,
+          method: 'post',
+          params: {
+            orderId: this.orderId,
+            uid: this.userId
+          }
+        },
+        res => {
+          if (res.status === 10001) {
+            this.orderData = res.data.info
+            this.type = this.orderData[0].orderStatus
+            this.orderTime = this.orderData[0].createTime
+            this.orderCode = this.orderData[0].orderNo
+            this.count = this.orderData[0].totalAmount
+            this.score = this.orderData[0].totalPrice
+          } else {
+            this.$toast(res.msg)
+          }
         }
-      }, res => {
-        if (res.status === 10001) {
-          let data = res.data.info[0]
-          this.type = data.orderStatus
-          this.orderTime = data.createTime
-          this.orderCode = data.orderNo
-          this.count = data.totalAmount
-          this.score = data.totalPrice
-          this.itemData = data.goodsList
-        } else {
-          this.$toast(res.msg)
-        }
-      })
+      )
     },
     goBack () {
       this.$router.go(-1)
     },
     buyNow () {
-      let orderString = JSON.stringify(this.itemData)
+      let order = this.orderData.map(p => {
+        return p.goodsList
+      })
+      let orderString = JSON.stringify(order.flat())
       localStorage.removeItem('order')
       localStorage.setItem('order', orderString)
       this.$router.push({
@@ -113,23 +113,26 @@ export default {
           message: '请确定是否关闭订单'
         })
         .then(() => {
-          this.$axios({
-            url: cancelOrderUrl,
-            method: 'post',
-            params: {
-              uid: this.userId,
-              orderId: this.orderId
+          this.$axios(
+            {
+              url: cancelOrderUrl,
+              method: 'post',
+              params: {
+                uid: this.userId,
+                orderId: this.orderId
+              }
+            },
+            res => {
+              if (res.status === 10001) {
+                this.$toast('关闭成功')
+                this.$router.push({
+                  path: '/orderList'
+                })
+              } else {
+                this.$toast('系统错误')
+              }
             }
-          }, res => {
-            if (res.status === 10001) {
-              this.$toast('关闭成功')
-              this.$router.push({
-                path: '/orderList'
-              })
-            } else {
-              this.$toast('系统错误')
-            }
-          })
+          )
         })
         .catch(() => {
           // on cancel
@@ -189,7 +192,18 @@ export default {
   }
 }
 .body {
-  padding: 0 10px 10px 10px;
+  .order{
+    padding: 0 10px;
+  }
+  .order:nth-of-type(2n){
+    margin-top: 10px;
+  }
+  .shopTitle {
+    padding-top: 15px;
+    color: #333333;
+    font-size: 15px;
+    font-weight: 600;
+  }
   .sumDetail {
     text-align: right;
     font-size: 14px;

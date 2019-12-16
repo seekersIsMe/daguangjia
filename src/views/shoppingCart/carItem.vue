@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bgW">
     <div class="carItem" v-for="(item,index) in itemDataList_" :key="index">
       <div class="checkbox">
         <van-checkbox v-model="item.checked" @change="select"></van-checkbox>
@@ -47,12 +47,19 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.bgW{
+  background: white;
+}
+.carItem:nth-of-type(2n){
+border-top: 1px solid #E1E1E1;
+}
 .carItem {
-  padding: 20px 15px;
+  padding: 20px 0;
+  margin: 0 15px;
   background: white;
   display: flex;
   align-items: center;
-  margin-bottom:10px;
+  // margin-bottom:10px;
   .checkbox{
       margin-right: 15px;
   }

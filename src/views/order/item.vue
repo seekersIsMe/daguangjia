@@ -35,11 +35,14 @@ export default {
 </script>
 <style lang="scss" scoped>
 .itemWrap {
+  .proItem:nth-of-type(2n){
+    border-top: 1px solid #E1E1E1;
+  }
     .proItem {
       padding: 15px 0;
       display: flex;
       align-items: center;
-      border-bottom: 1px solid #eaeaea;
+      // border-bottom: 1px solid #eaeaea;
       box-sizing: border-box;
       img {
         display: inline-block;
