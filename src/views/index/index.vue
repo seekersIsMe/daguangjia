@@ -10,7 +10,7 @@
       <div class="bgBlue">
         <div class="searchWrap">
           <div class="addressWrap">
-            <van-icon name="location-o" />
+            <van-icon name="location-o" @click="getWXconfig"/>
             <span>{{ address }}</span>
           </div>
           <div class="search">
@@ -89,12 +89,14 @@
 import myTitle from '@/components/myTitle'
 import btn from '@/components/btn'
 import listItem from '@/components/listItem'
+import wx from 'weixin-js-sdk'
 const getImgsUrl = '/sysGoods/getBanner'
 const getFlashSaleUrl = '/sysGoods/getFlashSale'
 const getNewGoodsUrl = '/sysGoods/getNewGoods'
 const addCartUrl = '/sysCart/addCart'
 const getOpenIdUrl = '/sysUser/getOpenId'
 const getIndexCategoryUrl = '/sysGoods/getIndexCategory'
+const getWxConfigUrl = '/sysOrder/getWxConfig'
 export default {
   name: 'index',
   components: {
@@ -163,13 +165,13 @@ export default {
       let autoTime = localStorage.getItem('autoTime')
       if (!isAuto) {
         // window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx4ec269f34598e506&redirect_uri=http%3A%2F%2Fahuibenben.cross.echosite.cn%2F%23%2Findex&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
-        window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx4ec269f34598e506&redirect_uri=http%3A%2F%2Fxdgj.gzdaguanjia.com%2F%23%2Findex&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
-        // window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd991d12dffbcb838&redirect_uri=http%3A%2F%2Fahuibenben.cross.echosite.cn%2F%23%2Findex&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
+        // window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx4ec269f34598e506&redirect_uri=http%3A%2F%2Fxdgj.gzdaguanjia.com%2F%23%2Findex&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
+        window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd991d12dffbcb838&redirect_uri=http%3A%2F%2Fahuibenben.cross.echosite.cn%2F%23%2Findex&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
       } else {
         if ((new Date().getTime() - Number(autoTime)) > 30 * 24 * 60 * 60 * 1000) {
           // window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx4ec269f34598e506&redirect_uri=http%3A%2F%2Fahuibenben.cross.echosite.cn%2F%23%2Findex&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
-          window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx4ec269f34598e506&redirect_uri=http%3A%2F%2Fxdgj.gzdaguanjia.com%2F%23%2Findex&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
-          // window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd991d12dffbcb838&redirect_uri=http%3A%2F%2Fahuibenben.cross.echosite.cn%2F%23%2Findex&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
+          // window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx4ec269f34598e506&redirect_uri=http%3A%2F%2Fxdgj.gzdaguanjia.com%2F%23%2Findex&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
+          window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd991d12dffbcb838&redirect_uri=http%3A%2F%2Fahuibenben.cross.echosite.cn%2F%23%2Findex&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
         }
       }
     },
@@ -264,6 +266,7 @@ export default {
         }
       }, res => {
         if (res.status === 10001) {
+          console.log('openID', res)
           if (!localStorage.getItem('isLogin')) {
             this.$router.push({
               path: '/login',
@@ -292,6 +295,42 @@ export default {
       //   .then(res => {
       //     console.log('授权成功', res)
       //   })
+    },
+    getWXconfig () {
+      this.$axios({
+        url: getWxConfigUrl,
+        params: {
+          url: location.href
+        },
+        method: 'post'
+      }, (res) => {
+        if (res.status === 10001) {
+          this.signObj = res.data.info
+          this.initWXconfig()
+        }
+      })
+    },
+    initWXconfig () {
+      wx.config({
+        debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        appId: this.signObj.appId, // 必填，公众号的唯一标识
+        timestamp: this.signObj.timeStamp, // 必填，生成签名的时间戳
+        nonceStr: this.signObj.nonceStr, // 必填，生成签名的随机串
+        signature: this.signObj.sign, // 必填，签名
+        jsApiList: ['chooseImage'] // 必填，需要使用的JS接口列表
+      })
+      wx.ready(function () {
+        console.log('初始化成功')
+        wx.chooseImage({
+          count: 1, // 默认9
+          sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+          sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+          success: function (res) {
+          let localIds = res.localIds // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+          console.log('照片id', localIds)
+          }
+        })
+      })
     },
     onSearch (val) {
       this.$router.push({
