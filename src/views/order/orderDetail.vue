@@ -96,10 +96,13 @@ export default {
       this.$router.go(-1)
     },
     buyNow () {
-      let order = this.orderData.map(p => {
-        return p.goodsList
+      let order = []
+      this.orderData.forEach(p => {
+        p.goodsList.forEach(p1 => {
+          order.push(p1)
+        })
       })
-      let orderString = JSON.stringify(order.flat())
+      let orderString = JSON.stringify(order)
       localStorage.removeItem('order')
       localStorage.setItem('order', orderString)
       this.$router.push({

@@ -15,7 +15,7 @@ Vue.use(VueRouter)
 Vue.config.productionTip = false
 Vue.prototype.$axios = axiosUtil
 const router = new VueRouter({
-  mode: 'hash',
+  mode: 'history',
   routes
 })
 router.beforeEach((to, from, next) => {

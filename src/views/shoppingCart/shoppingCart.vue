@@ -85,11 +85,14 @@ export default {
         this.$toast('请先选择要兑换的商品')
         return
       }
-      let orderAry = this.shopList.map(p => {
-        return p.goods
+      let orderAry = []
+      this.shopList.forEach(p => {
+        p.goods.forEach(p1 => {
+          orderAry.push(p1)
+        })
       })
-      console.log('商品列表', orderAry.flat())
-      let order = JSON.stringify(orderAry.flat())
+      console.log('商品列表', orderAry)
+      let order = JSON.stringify(orderAry)
       localStorage.removeItem('order')
       localStorage.setItem('order', order)
       this.$router.push({
