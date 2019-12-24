@@ -158,9 +158,15 @@ export default {
       this.$router.go(-1)
     },
     gotoInfo () {
-      this.$router.push({
-        path: '/info'
-      })
+      if (!localStorage.getItem('isLogin')) {
+        this.$router.push({
+          path: '/login'
+        })
+      } else {
+        this.$router.push({
+          path: '/info'
+        })
+      }
     },
     getScoreDetail () {
       this.$router.push({

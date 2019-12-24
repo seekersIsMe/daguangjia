@@ -126,7 +126,7 @@ export default {
     if (!localStorage.getItem('isAuto')) {
       this.getQueryString().then(res => {
         this.getAccess_token()
-      }).catch(err => {
+      }).catch(() => {
         this.getCode()
       })
     } else {

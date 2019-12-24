@@ -73,6 +73,9 @@
 </template>
 <script>
 import areaList from '@/assets/json/area.js'
+import wx from 'weixin-js-sdk'
+const getOpenIdUrl = '/sysUser/getOpenId'
+const getWxConfigUrl = '/sysOrder/getWxConfig'
 export default {
   data () {
     return {
@@ -83,10 +86,96 @@ export default {
       imgSrc: '',
       areaList: Object.freeze(areaList),
       isShowArea: false,
-      isShowPic: false
+      isShowPic: false,
+      code: ''
     }
   },
+  created () {
+    this.getAuto()
+  },
   methods: {
+    getAuto () {
+      if (!localStorage.getItem('isAuto')) {
+        this.getQueryString().then(res => {
+          this.getAccess_token()
+        }).catch(() => {
+          this.getCode()
+        })
+      }
+    },
+    getCode () {
+      let isAuto = localStorage.getItem('isAuto')
+      let autoTime = localStorage.getItem('autoTime')
+      if (!isAuto) {
+        // window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx4ec269f34598e506&redirect_uri=http%3A%2F%2Fahuibenben.cross.echosite.cn%2F%23%2Findex&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
+        // window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx4ec269f34598e506&redirect_uri=http%3A%2F%2Fxdgj.gzdaguanjia.com%2F%23%2Findex&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
+        window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd991d12dffbcb838&redirect_uri=http%3A%2F%2Fahuibenben.cross.echosite.cn%2F%23%2Findex&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
+      } else {
+        if ((new Date().getTime() - Number(autoTime)) > 30 * 24 * 60 * 60 * 1000) {
+          // window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx4ec269f34598e506&redirect_uri=http%3A%2F%2Fahuibenben.cross.echosite.cn%2F%23%2Findex&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
+          // window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx4ec269f34598e506&redirect_uri=http%3A%2F%2Fxdgj.gzdaguanjia.com%2F%23%2Findex&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
+          window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd991d12dffbcb838&redirect_uri=http%3A%2F%2Fahuibenben.cross.echosite.cn%2F%23%2Findex&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
+        }
+      }
+    },
+    getQueryString () {
+      return new Promise((resolve, reject) => {
+        var reg = new RegExp('(^|&)' + 'code' + '=([^&]*)(&|$)', 'i')
+        var r = window.location.search.substr(1).match(reg)
+        if (r != null) {
+          this.code = unescape(r[2])
+          localStorage.setItem('isAuto', 1)
+          localStorage.setItem('autoTime', new Date().getTime())
+          resolve()
+        } else {
+          reject()
+        }
+      })
+    },
+    getAccess_token () {
+      // let url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxd991d12dffbcb838&secret=19db5681405637649e2993678f7fc591'
+      // let url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx4ec269f34598e506&secret=fecdd73d2b088d11dd31cd0fcc5eb76c'
+      if (!this.code) {
+        return
+      }
+      this.$axios({
+        url: getOpenIdUrl,
+        method: 'post',
+        params: {
+          code: this.code
+        }
+      }, res => {
+        if (res.status === 10001) {
+        } else {
+          this.$toast('openId获取失败')
+        }
+      })
+    },
+    getWXconfig () {
+      this.$axios({
+        url: getWxConfigUrl,
+        params: {
+          url: location.href
+        },
+        method: 'post'
+      }, (res) => {
+        if (res.status === 10001) {
+          this.signObj = res.data.info
+          this.initWXconfig()
+        }
+      })
+    },
+    initWXconfig () {
+      console.log('签名信息', this.signObj)
+      wx.config({
+        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        appId: this.signObj.appId, // 必填，公众号的唯一标识
+        timestamp: this.signObj.timestamp, // 必填，生成签名的时间戳
+        nonceStr: this.signObj.nonceStr, // 必填，生成签名的随机串
+        signature: this.signObj.sign, // 必填，签名
+        jsApiList: ['chooseImage'] // 必填，需要使用的JS接口列表
+      })
+    },
     selectArea () {
       if (this.isShowArea) {
         return
@@ -109,15 +198,47 @@ export default {
           return a
         }, [])
         .join('')
-      console.log(val)
-      console.log(this.address)
     },
     save () {},
     selectPic () {
       this.isShowPic = true
     },
-    gotoAlbum () {},
-    takePic () {},
+    // 从本机中选图片
+    gotoAlbum () {
+      this.getAuto()
+      if (localStorage.getItem('isAuto')) {
+        this.getWXconfig()
+        wx.ready(function () {
+          wx.chooseImage({
+            count: 1, // 默认9
+            sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+            sourceType: ['album'], // 可以指定来源是相册还是相机，默认二者都有
+            success: function (res) {
+              let localIds = res.localIds // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+              console.log('照片id', localIds)
+            }
+          })
+        })
+      }
+    },
+    // 拍照
+    takePic () {
+      this.getAuto()
+      if (localStorage.getItem('isAuto')) {
+        this.getWXconfig()
+        wx.ready(function () {
+          wx.chooseImage({
+            count: 1, // 默认9
+            sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+            sourceType: ['camera'], // 可以指定来源是相册还是相机，默认二者都有
+            success: function (res) {
+              let localIds = res.localIds // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+              console.log('照片id', localIds)
+            }
+          })
+        })
+      }
+    },
     goBack () {
       this.$router.go(-1)
     }
