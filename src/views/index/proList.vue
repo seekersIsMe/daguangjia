@@ -102,11 +102,13 @@ export default {
       loading: false,
       finished: true,
       queryParam: {},
-      userId: localStorage.getItem('userId')
+      userId: localStorage.getItem('userId'),
+      subCategoryId: ''
     }
   },
   created () {
     this.searchVal = this.$route.query.goodsName || ''
+    this.subCategoryId = this.$route.query.subCategoryId || ''
     this.getNewGoods()
   },
   methods: {
@@ -121,7 +123,7 @@ export default {
         }
       }, res => {
         if (res.status === 10001) {
-          // this.$toast('')
+          this.$toast('添加成功')
         } else {
           this.$toast(res.msg)
         }
@@ -160,6 +162,7 @@ export default {
         page: this.page,
         brandId: '',
         goodsName: this.searchVal,
+        subCategoryId: this.subCategoryId,
         ...this.queryParam
       }
       this.$axios({

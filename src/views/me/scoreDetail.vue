@@ -2,7 +2,7 @@
   <div class="scoreDetailWrap">
     <div class="header">
        <div class="headerTitle">
-        <van-icon name="arrow-left" @click="goBack" />收货地址
+        <van-icon name="arrow-left" @click="goBack" />积分明细
       </div>
       <div class="p1">
         <span class="scoreIcon"> </span>

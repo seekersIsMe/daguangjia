@@ -28,7 +28,7 @@
         </div>
         <div class="swipeWrap">
           <van-swipe :autoplay="3000">
-            <van-swipe-item v-for="(item, index) in images" :key="index">
+            <van-swipe-item v-for="(item, index) in images" :key="index" @click="goDetail(item)">
               <img class="swipeImg" :src="'http://47.107.110.186:8082'+item.logoPath" />
             </van-swipe-item>
           </van-swipe>
@@ -145,8 +145,21 @@ export default {
     this.getIndexCategory()
   },
   methods: {
+    goDetail (item) {
+      this.$router.push({
+        path: 'proList',
+        query: {
+          subCategoryId: item.subCategoryId
+        }
+      })
+    },
     goType (item) {
-      
+      this.$router.push({
+        path: 'proList',
+        query: {
+          subCategoryId: item.id
+        }
+      })
     },
     getIndexCategory () {
       this.$axios({
@@ -189,7 +202,7 @@ export default {
         }
       }, res => {
         if (res.status === 10001) {
-          // this.$toast('')
+          this.$toast('添加成功')
         } else {
           this.$toast(res.msg)
         }

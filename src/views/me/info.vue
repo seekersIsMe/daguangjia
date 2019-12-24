@@ -28,6 +28,13 @@
     <div class="item company">
       <van-cell title="企业名称" :value="company" />
     </div>
+    <van-row>
+      <van-col span="18" offset="3">
+        <van-button class="w100" type="primary" color="#00AEFF" @click="save"
+          >保存</van-button
+        >
+      </van-col>
+    </van-row>
     <van-area
       :area-list="areaList"
       value="120101"
@@ -36,13 +43,6 @@
       @confirm="select"
       @cancel="cancelArea"
     />
-    <van-row>
-      <van-col span="18" offset="3">
-        <van-button class="w100" type="primary" color="#00AEFF" @click="save"
-          >保存</van-button
-        >
-      </van-col>
-    </van-row>
     <!-- 拍照选择图片 -->
     <van-overlay :show="isShowPic" @click="isShowPic = false">
       <div class="picWrap" @click.stop>

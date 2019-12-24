@@ -199,8 +199,6 @@ export default {
     if (this.shopList.length === 0) {
       return
     }
-    console.log(this.shopList)
-    debugger
     let cartIds = []
     let amounts = []
     this.shopList.forEach(p => {

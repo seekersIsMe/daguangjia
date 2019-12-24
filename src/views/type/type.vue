@@ -134,7 +134,7 @@ export default {
     overflow: hidden;
     img{
       display: inline-block;
-      width: 100%;
+      width: 70%;
     }
     p{
       margin-top: 10px;

@@ -31,7 +31,7 @@
         <van-row type="flex" justify="space-between">
           <van-col span="6" @click="gotoOrder(0)">
             <div class="icon1 icon">
-              <div class="infoCount">
+              <div class="infoCount" v-show="orderStatus.status0>0">
                 {{ orderStatus.status0 > 99 ? '99+' : orderStatus.status0 }}
               </div>
             </div>
@@ -39,7 +39,7 @@
           </van-col>
           <van-col span="6" @click="gotoOrder(1)">
             <div class="icon2 icon">
-              <div class="infoCount">
+              <div class="infoCount" v-show="orderStatus.status0>0">
                 {{ orderStatus.status1 > 99 ? '99+' : orderStatus.status1 }}
               </div>
             </div>
@@ -47,7 +47,7 @@
           </van-col>
           <van-col span="6" @click="gotoOrder(2)">
             <div class="icon3 icon">
-              <div class="infoCount">
+              <div class="infoCount" v-show="orderStatus.status0>0">
                 {{ orderStatus.status2 > 99 ? '99+' : orderStatus.status2 }}
               </div>
             </div>
