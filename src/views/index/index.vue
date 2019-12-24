@@ -39,7 +39,7 @@
         <van-row type="flex" justify="space-between">
           <van-col v-for='(item, index) in categoryList' :key="index" @click="goType(item)">
             <div class="icon1">
-              <img src="item.logo" alt="">
+              <img :src="item.logo" alt="">
             </div>
             <div>{{item.categoryName}}</div>
           </van-col>
@@ -145,6 +145,9 @@ export default {
     this.getIndexCategory()
   },
   methods: {
+    goType (item) {
+      
+    },
     getIndexCategory () {
       this.$axios({
         url: getIndexCategoryUrl,
@@ -449,8 +452,10 @@ export default {
       margin-bottom: 5px;
     }
     .icon1 {
-      background: url(~@/assets/img/index/icon1.png) no-repeat center center;
-      background-size: 100% 100%;
+      img{
+        display: inline-block;
+        width: 100%;
+      }
     }
     .icon2 {
       background: url(~@/assets/img/index/icon2.png) no-repeat center center;

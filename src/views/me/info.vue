@@ -64,7 +64,7 @@
             </div>
           </van-button>
         </div>
-        <div class="cancelPic">
+        <div class="cancelPic" @click="cancel">
           <van-button type="default">取消</van-button>
         </div>
       </div>
@@ -94,6 +94,9 @@ export default {
     this.getAuto()
   },
   methods: {
+    cancel () {
+      this.isShowPic = false
+    },
     getAuto () {
       if (!localStorage.getItem('isAuto')) {
         this.getQueryString().then(res => {
