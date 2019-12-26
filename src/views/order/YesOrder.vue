@@ -117,6 +117,7 @@ export default {
         },
         res => {
           if (res.status === 10001) {
+            this.$toast('下单成功')
             // 调起微信支付
             if (res.data.info.wxPay !== 0) {
 

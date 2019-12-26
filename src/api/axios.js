@@ -41,9 +41,10 @@ export function axiosUtil (axiosParams, callback) {
       .then(function (res) {
         callback(res.data)
       })
-      .catch(err => {
+      .catch(() => {
         // 这里会捕获内部异样，例如语法异常
-        console.log(err.message, axiosParams.url)
+        this.$toast('系统异常，请刷新页面重试')
+        // console.log(err.message, axiosParams.url)
         //   Message.error('请联系系统管理员');
       })
   } else {
@@ -52,8 +53,9 @@ export function axiosUtil (axiosParams, callback) {
       .then(function (res) {
         callback(res.data)
       })
-      .catch(err => {
-        console.log(err.message, axiosParams.url)
+      .catch(() => {
+        this.$toast('系统异常，请刷新页面重试')
+        // console.log(err.message, axiosParams.url)
         //   Message.error('请联系系统管理员');
       })
   }

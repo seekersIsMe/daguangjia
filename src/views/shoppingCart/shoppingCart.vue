@@ -23,9 +23,9 @@
       <div class="settleWrap">
         <div class="left">
           <van-checkbox v-model="isSelectAll" @change="selectAll">全选</van-checkbox>
-          <p v-show="!isManage">
+          <p v-show="!isManage" class="jifenWrap">
             <span class="heji">合计：</span>
-            <span class="jifen">{{ sum }}积分</span>
+            <span class="jifen">{{ changNum(sum) }}积分</span>
           </p>
         </div>
         <van-button round type="primary" v-if="!isManage" color="#00AEFF" @click="settle">结算</van-button>
@@ -67,6 +67,22 @@ export default {
     this.getCartList()
   },
   methods: {
+    changNum (val) {
+      console.log(val)
+      if (val < 10000) {
+        return val
+      }
+      if (val > 10000 && val < 100000) {
+        return Math.round(val / 100) / 100 + '万'
+      }
+      if (val > 100000 && val < 1000000) {
+        return Math.round(val / 1000) / 100 + '十万万'
+      }
+      if (val > 1000000 ) {
+        this.$toast('超出添加限制')
+        return 0
+      }
+    },
     selectAllShop (item, value) {
       item.goods.forEach(p => {
         p.checked = value
@@ -88,10 +104,11 @@ export default {
       let orderAry = []
       this.shopList.forEach(p => {
         p.goods.forEach(p1 => {
-          orderAry.push(p1)
+          if (p1.checked) {
+            orderAry.push(p1)
+          }
         })
       })
-      console.log('商品列表', orderAry)
       let order = JSON.stringify(orderAry)
       localStorage.removeItem('order')
       localStorage.setItem('order', order)
@@ -334,12 +351,15 @@ export default {
     .jifen {
       color: #ff0000;
     }
+    .jifenWrap{
+      line-height: 20px;
+    }
     .van-button {
-      width: 80px;
-      height: 35px;
-      line-height: 35px;
+      width: 60px;
+      height: 30px;
+      line-height: 30px;
       /deep/ .van-button__text {
-        font-size: 16px;
+        font-size: 14px;
       }
     }
     .left {

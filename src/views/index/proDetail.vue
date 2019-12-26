@@ -13,7 +13,7 @@
     </div>
     <div class="describe">
       <p class="price">
-        {{describe.price}}
+        {{describe.activeStatus === 1 ? describe.priceSpike : describe.price}}
         <span class="jf">积分</span>
       </p>
       <p class="describeText">{{describe.describeText}}</p>
@@ -24,7 +24,7 @@
     </div>
     <div class="detailBody">
       <myTitle :titleVal="'商品详情'" />
-      <div class="probablyImg">
+      <!-- <div class="probablyImg">
         <van-grid :column-num="2">
           <van-grid-item v-for="(item,index) in probablyImg" :key="index">
             <img :src="'http://47.107.110.186:8082'+item.src" />
@@ -40,7 +40,10 @@
         >
           <template v-slot:error>加载失败</template>
         </van-image>
-      </div>
+      </div> -->
+      <!-- <div v-html="detail"></div> -->
+      <!-- <iframe :src="detail" frameborder="0"></iframe> -->
+      <iframe name="testFrame" id='testFrame' :src="'http://xdgj.gzdaguanjia.com:8082/integral-web/web/goods/getDetail.htm?id=' + goodId" frameborder="0"></iframe>
     </div>
     <div class="btnGroup">
       <van-row gutter="15">
@@ -94,12 +97,23 @@ export default {
           src:
             'http://img4.imgtn.bdimg.com/it/u=3276179142,1686381254&fm=26&gp=0.jpg'
         }
-      ]
+      ],
+      detail: ''
     }
   },
   created () {
     this.goodId = this.$route.query.id || ''
     this.getGoodsDetail()
+  },
+  mounted () {
+    this.$nextTick(() => {
+      let testFrame = document.getElementById('testFrame')
+      testFrame.addEventListener('load', function () {
+        testFrame.height = testFrame.offsetTop
+      })
+    })
+  },
+  destroyed () {
   },
   methods: {
     goBack () {
@@ -123,9 +137,11 @@ export default {
           this.proId = data.id
           this.describe.price = data.dailyPrice
           this.describe.describeText = data.goodsName
+          this.describe.priceSpike = data.priceSpike
+          this.describe.activeStatus = data.activeStatus
           this.sales = data.saleCount
           this.inventory = data.stock
-          console.log('详情', data.detail)
+          this.detail = data.detail
         } else {
           this.$toast(res.msg)
         }
@@ -285,5 +301,8 @@ export default {
       border-radius: 5px;
       font-size: 14px;
   }
+}
+#testFrame{
+  width: 100%;
 }
 </style>

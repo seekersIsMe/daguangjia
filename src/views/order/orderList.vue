@@ -6,7 +6,7 @@
         <van-tab title="全部"></van-tab>
         <van-tab title="待支付"></van-tab>
         <van-tab title="待发货"></van-tab>
-        <van-tab title="已发货"></van-tab>
+        <van-tab title="待收货"></van-tab>
       </van-tabs>
     </van-sticky>
     <div class="list" v-if="listData.length > 0">
@@ -63,7 +63,10 @@ export default {
     }
   },
   created () {
-    this.active = this.$route.query.hasOwnProperty('type') ? this.$route.query.type + 1 : 0
+    this.active = this.$route.query.hasOwnProperty('type') ? Number(this.$route.query.type) + 1 : 0
+    console.log(this.$route.query.hasOwnProperty('type'))
+    console.log(this.active)
+    // debugger
     this.getOrderList()
   },
   methods: {
@@ -76,8 +79,8 @@ export default {
       let obj = new Map()
       obj.set(-1, '关闭')
       obj.set(0, '待支付')
-      obj.set(1, '已发送')
-      obj.set(2, '已完成')
+      obj.set(1, '待发货')
+      obj.set(2, '待收货')
       return obj.get(key)
     },
     getOrderList () {

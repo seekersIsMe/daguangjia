@@ -28,7 +28,7 @@
         </div>
         <div class="swipeWrap">
           <van-swipe :autoplay="3000">
-            <van-swipe-item v-for="(item, index) in images" :key="index" @click="goDetail(item)">
+            <van-swipe-item v-for="(item, index) in images" :key="index" @click="goProList(item)">
               <img class="swipeImg" :src="'http://47.107.110.186:8082'+item.logoPath" />
             </van-swipe-item>
           </van-swipe>
@@ -62,6 +62,7 @@
               gutter="10"
               v-for="(item, index) in seckillData"
               :key="index"
+              @click="goToDetail(item)"
             >
               <div class="img">
                 <img :src="'http://47.107.110.186:8082'+item.goodsLogo">
@@ -145,11 +146,19 @@ export default {
     this.getIndexCategory()
   },
   methods: {
-    goDetail (item) {
+    goProList (item) {
       this.$router.push({
         path: 'proList',
         query: {
           subCategoryId: item.subCategoryId
+        }
+      })
+    },
+    goToDetail (item) {
+      this.$router.push({
+        path: '/proDetail',
+        query: {
+          id: item.id
         }
       })
     },
@@ -192,6 +201,7 @@ export default {
       }
     },
     addCar (item) {
+      console.log(localStorage.getItem('userId'))
       this.$axios({
         url: addCartUrl,
         method: 'post',
@@ -360,7 +370,7 @@ export default {
     onSearch (val) {
       this.$router.push({
         path: 'proList',
-        queryy: {
+        query: {
           goodsName: val
         }
       })

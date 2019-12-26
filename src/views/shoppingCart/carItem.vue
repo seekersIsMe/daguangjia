@@ -10,8 +10,8 @@
       <div class="carBody">
         <p class="title">{{item.goodsName}}</p>
         <div class="priceCount">
-          <span class="price">{{item.price}}积分</span>
-          <van-stepper v-model="item.amount" @change="changeCount" integer />
+          <span class="price">{{changNum(item.price)}}积分</span>
+          <van-stepper v-model="item.amount" @change="changeCount" integer input-width="22px" button-size="22px"/>
         </div>
       </div>
     </div>
@@ -37,6 +37,21 @@ export default {
     }
   },
   methods: {
+    // 超过一万，一千，十万
+    changNum (val) {
+      if (val < 1000) {
+        return val
+      }
+      if (val > 1000 && val < 10000) {
+        return (val / 1000).toFixed(2) + '千'
+      }
+      if (val > 10000 && val < 100000) {
+        return Math.round(val / 100) / 100 + '万'
+      }
+      if (val > 100000 && val < 1000000) {
+        return Math.round(val / 1000) / 100 + '十万万'
+      }
+    },
     select () {
       this.$emit('change', this.itemDataList_)
     },
@@ -92,7 +107,7 @@ border-top: 1px solid #E1E1E1;
       display: flex;
       justify-content: space-between;
       .price {
-        font-size: 16px;
+        font-size: 14px;
         color: #ff0000;
         line-height: 28px;
       }

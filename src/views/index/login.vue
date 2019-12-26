@@ -73,7 +73,9 @@ export default {
             method: 'post'
           },
           res => {
-            console.log(res)
+            if (res.status !== 10001) {
+              this.$toast('系统异常，请刷新页面重试')
+            }
           }
         )
       }

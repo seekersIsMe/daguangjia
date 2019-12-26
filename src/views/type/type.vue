@@ -71,7 +71,14 @@ export default {
     this.getCategor()
   },
   methods: {
-    selectType () {},
+    selectType (item) {
+      this.$router.push({
+        path: 'proList',
+        query: {
+          subCategoryId: item.subCategoryId
+        }
+      })
+    },
     getCategor () {
       this.$axios({
         url: getCategoryUrl,
@@ -94,7 +101,7 @@ export default {
     onSearch (val) {
       this.$router.push({
         path: 'proList',
-        queryy: {
+        query: {
           goodsName: val
         }
       })

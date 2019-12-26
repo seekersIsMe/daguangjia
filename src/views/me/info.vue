@@ -5,7 +5,7 @@
       <van-cell title="头像">
         <!-- 使用 right-icon 插槽来自定义右侧图标 -->
         <div slot="right-icon" class="right" @click="selectPic">
-          <img class="img" :src="'http://47.107.110.186:8082'+imgSrc" alt="" />
+          <img class="img" :src="imgSrc" alt="" />
           <van-icon name="arrow" />
         </div>
       </van-cell>
@@ -28,16 +28,16 @@
     <div class="item company">
       <van-cell title="企业名称" :value="company" />
     </div>
-    <van-row>
+    <!-- <van-row>
       <van-col span="18" offset="3">
         <van-button class="w100" type="primary" color="#00AEFF" @click="save"
           >保存</van-button
         >
       </van-col>
-    </van-row>
+    </van-row> -->
     <van-area
       :area-list="areaList"
-      value="120101"
+      :value="provinceCode"
       title="选择地址"
       v-show="isShowArea"
       @confirm="select"
@@ -69,31 +69,107 @@
         </div>
       </div>
     </van-overlay>
+    <van-popup v-model="isCropper">
+        <vueCropper
+            ref="cropperPic"
+            :img="imgUrl"
+            :outputSize="option.size"
+            :outputType="option.outputType"
+            :info="true"
+            :full="option.full"
+            :canMove="option.canMove"
+            :canMoveBox="option.canMoveBox"
+            :original="option.original"
+            :autoCrop="option.autoCrop"
+            :fixed="option.fixed"
+            :fixedNumber="option.fixedNumber"
+            :centerBox="option.centerBox"
+            :infoTrue="option.infoTrue"
+            :fixedBox="option.fixedBox"
+          ></vueCropper>
+      <van-button type="primary" @click="cropperPic">确定</van-button>
+      <van-button type="primary" @click="noCropperPic">取消</van-button>
+    </van-popup>
   </div>
 </template>
 <script>
 import areaList from '@/assets/json/area.js'
 import wx from 'weixin-js-sdk'
+import vueCropper from 'vue-cropper'
 const getOpenIdUrl = '/sysUser/getOpenId'
 const getWxConfigUrl = '/sysOrder/getWxConfig'
+const saveInfoUrl = '/sysUser/saveInfo'
+const getUserInfoUrl = '/sysUser/getInfo'
 export default {
+  components: {
+    vueCropper
+  },
   data () {
     return {
-      nickname: '向阳的微笑',
-      telNum: 1534524525,
-      address: '广东省广州市天河区',
-      company: '向阳集团',
+      nickname: '',
+      telNum: '',
+      address: '',
+      company: '',
       imgSrc: '',
       areaList: Object.freeze(areaList),
       isShowArea: false,
       isShowPic: false,
-      code: ''
+      code: '',
+      userId: localStorage.getItem('userId'),
+      provinceCode: '',
+      isCropper: false,
+      imgUrl: '',
+      option: {
+        img: '', // 裁剪图片的地址
+        info: true, // 裁剪框的大小信息
+        outputSize: 0.8, // 裁剪生成图片的质量
+        outputType: 'jpeg', // 裁剪生成图片的格式
+        canScale: false, // 图片是否允许滚轮缩放
+        autoCrop: true, // 是否默认生成截图框
+        // autoCropWidth: 300, // 默认生成截图框宽度
+        // autoCropHeight: 200, // 默认生成截图框高度
+        fixedBox: true, // 固定截图框大小 不允许改变
+        fixed: true, // 是否开启截图框宽高固定比例
+        fixedNumber: [5, 5], // 截图框的宽高比例
+        full: true, // 是否输出原图比例的截图
+        canMoveBox: false, // 截图框能否拖动
+        original: false, // 上传图片按照原始比例渲染
+        centerBox: false, // 截图框是否被限制在图片里面
+        infoTrue: true // true 为展示真实输出图片宽高 false 展示看到的截图框宽高
+      }
     }
   },
   created () {
     this.getAuto()
+    this.getUserInfo()
   },
   methods: {
+    getUserInfo () {
+      this.$axios(
+        {
+          url: getUserInfoUrl,
+          params: {
+            uid: this.userId
+          },
+          method: 'post'
+        },
+        res => {
+          if (res.status === 10001) {
+            let {info} = res.data.info
+            this.info = info
+            this.provinceCode = info.provinceCode
+            this.address = info.province + info.city
+            this.telNum = info.phone
+            this.nickname = info.nickName
+            this.company = info.unitName
+            this.imgSrc = 'http://47.107.110.186:8082/' + info.logoPath
+            // this.info.logoPath = 'http://47.107.110.186:8082/' + this.info.logoPath
+          } else {
+            this.$toast(res.msg)
+          }
+        }
+      )
+    },
     cancel () {
       this.isShowPic = false
     },
@@ -176,9 +252,17 @@ export default {
         timestamp: this.signObj.timestamp, // 必填，生成签名的时间戳
         nonceStr: this.signObj.nonceStr, // 必填，生成签名的随机串
         signature: this.signObj.sign, // 必填，签名
-        jsApiList: ['chooseImage'] // 必填，需要使用的JS接口列表
+        jsApiList: ['chooseImage', 'uploadImage', 'getLocalImgData'] // 必填，需要使用的JS接口列表
       })
     },
+    cropperPic () {
+      debugger
+      this.$refs.cropperPic.getCropData(data => {
+        debugger
+        this.imgSrc = data
+      })
+    },
+    noCropperPic () {},
     selectArea () {
       if (this.isShowArea) {
         return
@@ -202,7 +286,20 @@ export default {
         }, [])
         .join('')
     },
-    save () {},
+    save () {
+      this.$axios({
+        url: saveInfoUrl,
+        method: 'post',
+        params: {
+          id: this.userId,
+          nickName: this.nickname,
+          logoPath: this.logoPath
+
+        }
+      }, res => {
+
+      })
+    },
     selectPic () {
       this.isShowPic = true
     },
@@ -227,6 +324,7 @@ export default {
     // 拍照
     takePic () {
       this.getAuto()
+      let that = this
       if (localStorage.getItem('isAuto')) {
         this.getWXconfig()
         wx.ready(function () {
@@ -236,7 +334,24 @@ export default {
             sourceType: ['camera'], // 可以指定来源是相册还是相机，默认二者都有
             success: function (res) {
               let localIds = res.localIds // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-              console.log('照片id', localIds)
+              console.log('照片id', res)
+              wx.uploadImage({
+                localId: localIds[0], // 需要上传的图片的本地ID，由chooseImage接口获得
+                isShowProgressTips: 1, // 默认为1，显示进度提示
+                success: function (res) {
+                  var serverId = res.serverId; // 返回图片的服务器端ID
+                  console.log('服务器id', res)
+                }
+              })
+              wx.getLocalImgData({
+                localId: localIds[0], // 图片的localID
+                success: function (res) {
+                  var localData = res.localData; // localData是图片的base64数据，可以用img标签显示
+                  that.imgSrc = localData
+                  that.imgUrl = localData
+                  that.isCropper = true
+                }
+              })
             }
           })
         })
@@ -369,6 +484,13 @@ export default {
 .cancelPic{
   .van-button{
     border-radius: 5px;
+  }
+}
+.company{
+  /deep/ .van-cell__value{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   }
 }
 </style>

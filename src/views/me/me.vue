@@ -39,7 +39,7 @@
           </van-col>
           <van-col span="6" @click="gotoOrder(1)">
             <div class="icon2 icon">
-              <div class="infoCount" v-show="orderStatus.status0>0">
+              <div class="infoCount" v-show="orderStatus.status1>0">
                 {{ orderStatus.status1 > 99 ? '99+' : orderStatus.status1 }}
               </div>
             </div>
@@ -47,11 +47,11 @@
           </van-col>
           <van-col span="6" @click="gotoOrder(2)">
             <div class="icon3 icon">
-              <div class="infoCount" v-show="orderStatus.status0>0">
+              <div class="infoCount" v-show="orderStatus.status2>0">
                 {{ orderStatus.status2 > 99 ? '99+' : orderStatus.status2 }}
               </div>
             </div>
-            <p>已发货</p>
+            <p>待收货</p>
           </van-col>
           <van-col span="6" @click="gotoOrder(-1)">
             <div class="icon4 icon">
@@ -173,7 +173,7 @@ export default {
         path: '/scoreDetail',
         query: {
           expired: this.interal.expired,
-          interal: this.interal.interal,
+          integral: this.interal.integral,
           overTime: this.interal.overTime
         }
       })
