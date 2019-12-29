@@ -34,12 +34,11 @@
           </van-swipe>
         </div>
       </div>
-      <div class="addKong"></div>
       <div class="recommendWrap">
         <van-row type="flex" justify="space-between">
           <van-col v-for='(item, index) in categoryList' :key="index" @click="goType(item)">
-            <div class="icon1">
-              <img :src="item.logo" alt="">
+            <div :class="'icon'+ (index + 1)">
+              <!-- <img :src="item.logo" alt=""> -->
             </div>
             <div>{{item.categoryName}}</div>
           </van-col>
@@ -89,7 +88,7 @@
 <script>
 import myTitle from '@/components/myTitle'
 import btn from '@/components/btn'
-import listItem from '@/components/listItem'
+import listItem from '@/components/listItem1'
 import wx from 'weixin-js-sdk'
 const getImgsUrl = '/sysGoods/getBanner'
 const getFlashSaleUrl = '/sysGoods/getFlashSale'
@@ -120,7 +119,23 @@ export default {
       itemCount: [],
       userId: localStorage.getItem('userId'),
       code: '', // 授权code
-      categoryList: []
+      categoryList: [
+        {
+          categoryName: '充值中心'
+        },
+        {
+          categoryName: '汽车用品'
+        },
+        {
+          categoryName: '跨境购'
+        },
+        {
+          categoryName: '医疗保健'
+        },
+        {
+          categoryName: '食品酒水'
+        }
+      ]
     }
   },
   created () {
@@ -143,7 +158,7 @@ export default {
     this.getImgs()
     this.getFlashSale()
     this.getNewGoods()
-    this.getIndexCategory()
+    // this.getIndexCategory()
   },
   methods: {
     goProList (item) {
@@ -406,15 +421,20 @@ export default {
     padding-bottom: 70px;
   }
   .bgBlue {
-    height: rem(110);
-    background: linear-gradient(#0078ff, #00aeff);
-    background-size: 100% 100%;
-    padding: 0 10px 0 10px;
+    position: relative;
+    // background: linear-gradient(#0078ff, #00aeff);
+    // background-size: 100% 100%;
+    // padding: 0 10px 0 10px;
   }
   .searchWrap {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 2;
     display: flex;
     justify-content: start;
     align-items: center;
+    padding: 0 10px;
     .addressWrap {
       font-size: 14px;
       color: white;
@@ -432,18 +452,12 @@ export default {
       }
     }
   }
-  .addKong {
-    height: rem(55);
-    padding-bottom: 27px;
-  }
   .swipeWrap {
-    height: calc(200% - 108px);
-    border-radius: rem(10);
+    height: 43.5vw;
     .van-swipe-item,
     .van-swipe,
     .swipeImg,
     .van-swipe__track {
-      border-radius: rem(10);
     }
     .van-swipe {
       height: 100%;
@@ -475,10 +489,8 @@ export default {
       margin-bottom: 5px;
     }
     .icon1 {
-      img{
-        display: inline-block;
-        width: 100%;
-      }
+      background: url(~@/assets/img/index/icon1.png) no-repeat center center;
+      background-size: 100% 100%;
     }
     .icon2 {
       background: url(~@/assets/img/index/icon2.png) no-repeat center center;
@@ -533,8 +545,11 @@ export default {
       .itemWrap {
         display: flex;
         flex-wrap: wrap;
-        .item:nth-of-type(2n) {
+        .item{
           margin-left: 10px;
+        }
+        .item:nth-of-type(3n+1) {
+          margin-left: 0;
         }
       }
     }

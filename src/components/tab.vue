@@ -16,13 +16,13 @@
         <span>分类</span>
       </div>
     </router-link>
-    <router-link class="tab-link" tag="div" to="/conversion">
+    <!-- <router-link class="tab-link" tag="div" to="/conversion">
       <div class="linkWrap">
         <div class="duihuan">
         </div>
         <span>兑换</span>
       </div>
-    </router-link>
+    </router-link> -->
     <router-link class="tab-link" tag="div" to="/shoppingCart">
       <div class="linkWrap">
         <div>
@@ -87,7 +87,7 @@
       font-size: 20px;
     }
     &.router-link-active {
-      color: #00AEFF
+      color: #E40D0D
     }
   }
 }
