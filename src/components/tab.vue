@@ -16,13 +16,14 @@
         <span>分类</span>
       </div>
     </router-link>
-    <!-- <router-link class="tab-link" tag="div" to="/conversion">
+    <router-link class="tab-link" tag="div" to="/conversion">
       <div class="linkWrap">
-        <div class="duihuan">
+        <div>
+          <van-icon name="coupon-o" />
         </div>
-        <span>兑换</span>
+        <span>卡券</span>
       </div>
-    </router-link> -->
+    </router-link>
     <router-link class="tab-link" tag="div" to="/shoppingCart">
       <div class="linkWrap">
         <div>
@@ -73,9 +74,7 @@
   .duihuan {
     width: 50px;
     height: 50px;
-    background: url(~@/assets/img/duihuan.png) no-repeat center center;
-    background-size: 100% 100%;
-    margin-top: -26px;
+    // margin-top: -26px;
   }
   .tab-link {
       flex: 1;
