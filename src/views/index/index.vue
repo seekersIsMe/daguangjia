@@ -121,19 +121,19 @@ export default {
       code: '', // 授权code
       categoryList: [
         {
-          categoryName: '充值中心'
-        },
-        {
           categoryName: '汽车用品'
-        },
-        {
-          categoryName: '跨境购'
         },
         {
           categoryName: '医疗保健'
         },
         {
+          categoryName: '跨境购'
+        },
+        {
           categoryName: '食品酒水'
+        },
+        {
+          categoryName: '充值中心'
         }
       ]
     }
@@ -489,23 +489,23 @@ export default {
       margin-bottom: 5px;
     }
     .icon1 {
-      background: url(~@/assets/img/index/icon1.png) no-repeat center center;
+      background: url(~@/assets/img/index/icon1.jpg) no-repeat center center;
       background-size: 100% 100%;
     }
     .icon2 {
-      background: url(~@/assets/img/index/icon2.png) no-repeat center center;
+      background: url(~@/assets/img/index/icon2.jpg) no-repeat center center;
       background-size: 100% 100%;
     }
     .icon3 {
-      background: url(~@/assets/img/index/icon3.png) no-repeat center center;
+      background: url(~@/assets/img/index/icon3.jpg) no-repeat center center;
       background-size: 100% 100%;
     }
     .icon4 {
-      background: url(~@/assets/img/index/icon4.png) no-repeat center center;
+      background: url(~@/assets/img/index/icon4.jpg) no-repeat center center;
       background-size: 100% 100%;
     }
     .icon5 {
-      background: url(~@/assets/img/index/icon5.png) no-repeat center center;
+      background: url(~@/assets/img/index/icon5.jpg) no-repeat center center;
       background-size: 100% 100%;
     }
   }
