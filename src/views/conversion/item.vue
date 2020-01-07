@@ -42,17 +42,21 @@ export default {
 </script>
 <style lang="scss" scoped>
   .item {
-    background: #ffffff;
+    background: #BFBAA7;
     padding: 10px;
     border-radius: 5px;
+    color: #ffffff;
+    margin-top: 10px;
     .title{
       display: flex;
       justify-content: space-between;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
     }
     .itemBody{
       display: flex;
       justify-content: space-between;
+      align-items: center;
+      line-height: 20px;
     }
   }
 </style>

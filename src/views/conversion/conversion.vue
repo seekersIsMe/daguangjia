@@ -13,7 +13,7 @@
      <van-tabs v-model="active" @change='changeType'>
   <van-tab title="全部">
   </van-tab>
-  <van-tab title="使用记录">内容 2</van-tab>
+  <van-tab title="使用记录"></van-tab>
 </van-tabs>
  <van-list
       v-model="loading"
@@ -43,7 +43,37 @@ export default {
       active: 1,
       loading: false,
       finished: false,
-      itemData: [],
+      itemData: [
+        {
+          name: '星巴克星享卡',
+          count: 1,
+          price: 5000,
+          date: '2019-10-6',
+          code: 'dsds120120',
+          status: 1
+        }, {
+          name: '星巴克星享卡',
+          count: 1,
+          price: 5000,
+          date: '2019-10-6',
+          code: 'dsds120120',
+          status: 1
+        }, {
+          name: '星巴克星享卡',
+          count: 1,
+          price: 5000,
+          date: '2019-10-6',
+          code: 'dsds120120',
+          status: 1
+        }, {
+          name: '星巴克星享卡',
+          count: 1,
+          price: 5000,
+          date: '2019-10-6',
+          code: 'dsds120120',
+          status: 1
+        }
+      ],
       page: 1
     }
   },
@@ -54,7 +84,7 @@ export default {
     changeType () {
       this.page = 1
       this.itemData = []
-      this.getJYB()
+      // this.getJYB()
     },
     getJYB () {
       this.$axios({
@@ -102,8 +132,8 @@ export default {
   height: 100vh;
   box-sizing: border-box;
   overflow-y: auto;
-  background: url(~@/assets/img/bg.png) no-repeat center center;
-  background-size: 100% 100%;
+  // background: url(~@/assets/img/bg.png) no-repeat center center;
+  // background-size: 100% 100%;
   .scrollWrap {
     height: 100%;
     overflow: auto;
@@ -135,6 +165,9 @@ export default {
   }
   .itemWrap {
     padding: 0 15px;
+  }
+  .van-list{
+    padding: 10px;
   }
 }
 </style>
