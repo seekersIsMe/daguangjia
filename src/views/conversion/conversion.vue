@@ -4,65 +4,80 @@
       <div class="goBack" @click="goBack">
         <van-icon name="arrow-left" />
       </div>
-      <div class="title">积分兑换卡券享更多优惠</div>
-      <div class="line"></div>
-      <div class="itemWrap">
-        <item v-for="(item, index) in itemData" :key="index" :itemData="item" />
-      </div>
+      <van-cell is-link >
+        <template slot="title">
+    <span class="custom-title">使用e券积分卡充值</span>
+    <van-icon name="question-o" />
+  </template>
+      </van-cell>
+     <van-tabs v-model="active" @change='changeType'>
+  <van-tab title="全部">
+  </van-tab>
+  <van-tab title="使用记录">内容 2</van-tab>
+</van-tabs>
+ <van-list
+      v-model="loading"
+      :finished="finished"
+      finished-text="没有更多了"
+      :immediate-check="false"
+      @load="scrollToEnd"
+    >
+    <item
+        v-for='(item,index) in itemData'
+        :itemData = 'item'
+        :key='index'
+    />
+      </van-list>
     </div>
   </div>
 </template>
 <script>
 import item from './item'
+const getJYBUrl = ''
 export default {
   components: {
     item
   },
-  data() {
+  data () {
     return {
-      itemData: [
-        {
-          name: '星巴克星享卡',
-          price: 5000
-        },
-        {
-          name: '星巴克星享卡',
-          price: 5000
-        },
-        {
-          name: '星巴克星享卡',
-          price: 5000
-        },
-        {
-          name: '星巴克星享卡',
-          price: 5000
-        },
-        {
-          name: '星巴克星享卡',
-          price: 5000
-        },
-        {
-          name: '星巴克星享卡',
-          price: 5000
-        },
-        {
-          name: '星巴克星享卡',
-          price: 5000
-        },
-        {
-          name: '星巴克星享卡',
-          price: 5000
-        },
-        {
-          name: '星巴克星享卡',
-          price: 5000
-        }
-      ]
+      active: 1,
+      loading: false,
+      finished: false,
+      itemData: [],
+      page: 1
     }
   },
   methods: {
-    goBack() {
+    goBack () {
       this.$router.go(-1)
+    },
+    changeType () {
+      this.page = 1
+      this.itemData = []
+      this.getJYB()
+    },
+    getJYB () {
+      this.$axios({
+        url: getJYBUrl,
+        method: 'post',
+        params: {
+          page: this.page
+        }
+      }, res => {
+        if (res.status === 10001) {
+          this.itemData = [...this.itemData, ...res.data.info]
+          this.loading = false
+          if (res.data.info && res.data.info.length < 10) {
+            this.finished = true
+          }
+        } else {
+          this.$toast(res.msg)
+        }
+      })
+    },
+    scrollToEnd () {
+      !this.finished && this.page++
+      !this.finished && this.getJYB()
     }
   }
 }
