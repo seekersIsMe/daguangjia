@@ -7,6 +7,15 @@ const conversion = [
       title: '兑换',
       keepAlive: false
     }
+  },
+  {
+    path: '/recharge',
+    name: 'recharge',
+    component: () => import(/* webpackChunkName: "recharge" */'@/views/conversion/recharge'),
+    meta: {
+      title: '积分卡充值',
+      keepAlive: false
+    }
   }
 ]
 export default conversion

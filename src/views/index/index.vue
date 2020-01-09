@@ -44,6 +44,18 @@
           </van-col>
         </van-row>
       </div>
+      <div class="noticeBar">
+        <div class="hotText">
+          热点
+        </div>
+        <van-swipe :autoplay="3000"  vertical :height="30">
+          <van-swipe-item v-for="(item, index) in hotData" :key="index">
+            <div class="text">
+            {{ item.text }}
+            </div>
+          </van-swipe-item>
+        </van-swipe>
+      </div>
       <div class="hotWrap">
         <div class="seckillWrap" v-if="seckillData.length > 0">
           <myTitle :titleVal="seckillTitle" class="myTitle">
@@ -134,6 +146,17 @@ export default {
         },
         {
           categoryName: '充值中心'
+        }
+      ],
+      hotData: [
+        {
+          text: '热点111111'
+        },
+        {
+          text: '热点22222'
+        },
+        {
+          text: '热点333333'
         }
       ]
     }
@@ -553,6 +576,30 @@ export default {
         }
       }
     }
+  }
+}
+.noticeBar{
+  position: relative;
+  .hotText{
+    color: #e36209;
+    margin-right: 10px;
+    line-height: 30px;
+    position: absolute;
+    left: 10px;
+    width: 50px;
+  }
+  overflow: hidden;
+  height: 30px;
+  .van-swipe{
+    padding-left:60px;
+    position: relative;
+  }
+  .text{
+    line-height: 30px;
+    height: 30px;
+  }
+  /deep/ .van-swipe__indicators{
+    display: none;
   }
 }
 </style>

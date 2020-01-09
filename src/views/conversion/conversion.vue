@@ -4,7 +4,7 @@
       <div class="goBack" @click="goBack">
         <van-icon name="arrow-left" />
       </div>
-      <van-cell is-link >
+      <van-cell is-link @click="gotoRecharge" >
         <template slot="title">
     <span class="custom-title">使用e券积分卡充值</span>
     <van-icon name="question-o" />
@@ -78,6 +78,11 @@ export default {
     }
   },
   methods: {
+    gotoRecharge () {
+      this.$router.push({
+        path: '/recharge'
+      })
+    },
     goBack () {
       this.$router.go(-1)
     },
@@ -168,6 +173,15 @@ export default {
   }
   .van-list{
     padding: 10px;
+  }
+  .custom-title{
+    padding-left: 10px;
+    color: #FF0000;
+    vertical-align: middle;
+  }
+  .van-icon-question-o{
+    color: #FF0000;
+    vertical-align: middle;
   }
 }
 </style>
