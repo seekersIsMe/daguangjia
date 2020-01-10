@@ -44,14 +44,14 @@
           </van-col>
         </van-row>
       </div>
-      <div class="noticeBar">
+      <div class="noticeBar" v-show='hotData.length > 0'>
         <div class="hotText">
           热点
         </div>
         <van-swipe :autoplay="3000"  vertical :height="30">
           <van-swipe-item v-for="(item, index) in hotData" :key="index">
             <div class="text">
-            {{ item.text }}
+            {{ item.title }}
             </div>
           </van-swipe-item>
         </van-swipe>
@@ -109,6 +109,7 @@ const addCartUrl = '/sysCart/addCart'
 const getOpenIdUrl = '/sysUser/getOpenId'
 const getIndexCategoryUrl = '/sysGoods/getIndexCategory'
 const getWxConfigUrl = '/sysOrder/getWxConfig'
+const getHotUrl = '/sysGoods/getHot'
 export default {
   name: 'index',
   components: {
@@ -148,17 +149,7 @@ export default {
           categoryName: '充值中心'
         }
       ],
-      hotData: [
-        {
-          text: '热点111111'
-        },
-        {
-          text: '热点22222'
-        },
-        {
-          text: '热点333333'
-        }
-      ]
+      hotData: []
     }
   },
   created () {
@@ -181,9 +172,22 @@ export default {
     this.getImgs()
     this.getFlashSale()
     this.getNewGoods()
+    this.getHot()
     // this.getIndexCategory()
   },
   methods: {
+    getHot () {
+      this.$axios({
+        url: getHotUrl,
+        method: 'post'
+      }, res => {
+        if (res.status === 10001) {
+          this.hotData = res.data.info || []
+        } else {
+          this.$toast(res.msg)
+        }
+      })
+    },
     goProList (item) {
       this.$router.push({
         path: 'proList',
@@ -511,23 +515,23 @@ export default {
       margin-bottom: 5px;
     }
     .icon1 {
-      background: url(~@/assets/img/index/icon1.jpg) no-repeat center center;
+      background: url(~@/assets/img/index/icon1.png) no-repeat center center;
       background-size: 100% 100%;
     }
     .icon2 {
-      background: url(~@/assets/img/index/icon2.jpg) no-repeat center center;
+      background: url(~@/assets/img/index/icon2.png) no-repeat center center;
       background-size: 100% 100%;
     }
     .icon3 {
-      background: url(~@/assets/img/index/icon3.jpg) no-repeat center center;
+      background: url(~@/assets/img/index/icon3.png) no-repeat center center;
       background-size: 100% 100%;
     }
     .icon4 {
-      background: url(~@/assets/img/index/icon4.jpg) no-repeat center center;
+      background: url(~@/assets/img/index/icon4.png) no-repeat center center;
       background-size: 100% 100%;
     }
     .icon5 {
-      background: url(~@/assets/img/index/icon5.jpg) no-repeat center center;
+      background: url(~@/assets/img/index/icon5.png) no-repeat center center;
       background-size: 100% 100%;
     }
   }
