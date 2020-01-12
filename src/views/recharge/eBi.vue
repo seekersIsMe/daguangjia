@@ -179,7 +179,7 @@ export default {
         timestamp: this.signObj.timestamp, // 必填，生成签名的时间戳
         nonceStr: this.signObj.nonceStr, // 必填，生成签名的随机串
         signature: this.signObj.sign, // 必填，签名
-        jsApiList: ['getLocation'] // 必填，需要使用的JS接口列表
+        jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表
       })
       wx.ready(function () {
         console.log('初始化成功')
