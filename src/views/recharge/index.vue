@@ -76,22 +76,6 @@ export default {
     }
   },
   created () {
-    if (!localStorage.getItem('isAuto')) {
-      this.getQueryString().then(res => {
-        this.getAccess_token()
-      }).catch(() => {
-        this.getCode()
-      })
-    } else {
-      if (!localStorage.getItem('isLogin')) {
-        var reg = new RegExp('(^|&)' + 'code' + '=([^&]*)(&|$)', 'i')
-        var r = window.location.search.substr(1).match(reg)
-        if (r != null) {
-          this.code = unescape(r[2])
-          this.getAccess_token()
-        }
-      }
-    }
     this.getImgs()
     this.getNewGoods()
   },

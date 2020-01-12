@@ -27,31 +27,23 @@ router.beforeEach((to, from, next) => {
     window.localStorage.removeItem('isLogin')
   }
   if ((!window.localStorage.getItem('isLogin') && to.path !== '/login' && to.path !== '/index')) {
-    // if (toURL === to.path) {
-    //   next()
-    // }
-    // if (to.path !== from.path) {
-    //   toURL = to.path
-    //   router.replace(to.path)
-    //   next()
-    // }
     next({
       path: '/login',
       query: {redirect: to.fullPath} // 将跳转的路由path作为参数，登录成功后跳转到该路由
     })
   } else {
-    if (toURL === to.path) {
-      next()
-    }
-    if (to.path !== from.path && toURL !== to.path && ['/', '/index', '/me', '/shoppingCart', '/type', '/conversion'].includes(to.path)) {
-      toURL = to.path
-      router.replace(to.path)
-      next()
-    } else {
-      toURL = to.path
-      next()
-    }
-    // next()
+    // if (toURL === to.path) {
+    //   next()
+    // }
+    // if (to.path !== from.path && toURL !== to.path && ['/', '/index', '/me', '/shoppingCart', '/type', '/conversion'].includes(to.path)) {
+    //   toURL = to.path
+    //   router.replace(to.path)
+    //   next()
+    // } else {
+    //   toURL = to.path
+    //   next()
+    // }
+    next()
   }
   // 动态标题
   document.title = to.meta.title || '大积分管家'
