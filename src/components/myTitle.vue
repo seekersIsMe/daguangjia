@@ -32,7 +32,7 @@ export default {
       height: 100%;
       .strip{
         height: 30px;
-        width: 6px;
+        width: 4px;
         background-color: #00AEFF;
         border-radius: 3px;
       }

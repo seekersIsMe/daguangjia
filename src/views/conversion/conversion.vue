@@ -26,6 +26,8 @@
         v-for='(item,index) in itemData'
         :itemData = 'item'
         :key='index'
+        :active='active'
+        @use='use'
     />
       </van-list>
     </div>
@@ -33,51 +35,45 @@
 </template>
 <script>
 import item from './item'
-const getJYBUrl = ''
+const getJYBUrl = '/sysUser/getTicket'
+const chargeTicketUrl = '/sysUser/chargeTicket'
 export default {
   components: {
     item
   },
   data () {
     return {
-      active: 1,
+      active: 0,
       loading: false,
       finished: false,
-      itemData: [
-        {
-          name: '星巴克星享卡',
-          count: 1,
-          price: 5000,
-          date: '2019-10-6',
-          code: 'dsds120120',
-          status: 1
-        }, {
-          name: '星巴克星享卡',
-          count: 1,
-          price: 5000,
-          date: '2019-10-6',
-          code: 'dsds120120',
-          status: 1
-        }, {
-          name: '星巴克星享卡',
-          count: 1,
-          price: 5000,
-          date: '2019-10-6',
-          code: 'dsds120120',
-          status: 1
-        }, {
-          name: '星巴克星享卡',
-          count: 1,
-          price: 5000,
-          date: '2019-10-6',
-          code: 'dsds120120',
-          status: 1
-        }
-      ],
-      page: 1
+      itemData: [],
+      page: 1,
+      userId: localStorage.getItem('userId')
     }
   },
+  created () {
+    this.getJYB()
+  },
   methods: {
+    chargeTicket (params) {
+      this.$axios({
+        url: chargeTicketUrl,
+        method: 'post',
+        params: {
+          ticketId: params.id,
+          uid: this.userId
+        }
+      }, res => {
+        if (res.status === 10001) {
+          this.$toast('充值成功')
+        } else {
+          this.$toast(res.msg)
+        }
+      })
+    },
+    use (item) {
+      this.chargeTicket(item)
+    },
     gotoRecharge () {
       this.$router.push({
         path: '/recharge'
@@ -89,30 +85,32 @@ export default {
     changeType () {
       this.page = 1
       this.itemData = []
-      // this.getJYB()
+      this.getJYB()
     },
     getJYB () {
       this.$axios({
         url: getJYBUrl,
         method: 'post',
         params: {
-          page: this.page
+          type: this.active,
+          uid: this.userId
         }
       }, res => {
         if (res.status === 10001) {
-          this.itemData = [...this.itemData, ...res.data.info]
+          // this.itemData = [...this.itemData, ...res.data.info]
+          this.itemData = res.data.info || []
           this.loading = false
-          if (res.data.info && res.data.info.length < 10) {
-            this.finished = true
-          }
+          // if (res.data.info && res.data.info.length < 10) {
+          //   this.finished = true
+          // }
         } else {
           this.$toast(res.msg)
         }
       })
     },
     scrollToEnd () {
-      !this.finished && this.page++
-      !this.finished && this.getJYB()
+      // !this.finished && this.page++
+      // !this.finished && this.getJYB()
     }
   }
 }

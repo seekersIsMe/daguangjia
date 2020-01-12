@@ -112,6 +112,7 @@ export default {
           if (res.status === 10001) {
             localStorage.setItem('isLogin', true)
             localStorage.setItem('userId', res.data.info.uid)
+            localStorage.setItem('userTel', this.telNum)
             this.$router.push({
               path: '/index'
             })

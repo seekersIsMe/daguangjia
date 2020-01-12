@@ -1,22 +1,23 @@
 <template>
-  <div class="item">
+  <div class="item" :class="bgClass">
     <div class="title">
-      <p>{{ itemData.name }}</p>
+      <p>{{ itemData.productName }} （￥{{itemData.amount}}）</p>
       <p>
-        {{ itemData.count }}
+        <!-- {{ itemData.count }} -->
+        x 1
       </p>
     </div>
     <div class="itemBody">
       <div class="left">
         <p>
-          {{ itemData.code }}
+          {{ itemData.id }}
         </p>
         <p>
-          {{ itemData.date }}
+          {{ itemData.overTime }}
         </p>
       </div>
-      <div class="right">
-        {{ itemData.status === 1 ? '已使用' : '立即兑换' }}
+      <div class="right" @click="use">
+        {{ active === 1 ? '已使用' : '充值' }}
       </div>
     </div>
   </div>
@@ -28,24 +29,46 @@ export default {
       type: Object,
       default: () => {
         return {
-          name: '星巴克星享卡',
-          count: 1,
-          price: 5000,
-          date: '2019-10-6',
-          code: 'dsds120120',
-          status: 1
         }
       }
+    },
+    active: {
+      type: Number,
+      default: 1
+    }
+  },
+  computed: {
+    bgClass () {
+      return this.active === 0 ? 'bgn' : 'bgo'
+    }
+  },
+  methods: {
+    use () {
+      if (this.active === 1) {
+        return
+      }
+      this.$emit('use', this.itemData)
     }
   }
 }
 </script>
 <style lang="scss" scoped>
+.bgo{
+   background: #BFBAA7;
+   color: #ffffff;
+   .right{
+     color: #BFBAA7;
+   }
+}
+.bgn{
+   background: #ffba23;
+   color: #333333;
+   .right{
+   }
+}
   .item {
-    background: #BFBAA7;
     padding: 10px;
     border-radius: 5px;
-    color: #ffffff;
     margin-top: 10px;
     .title{
       display: flex;
@@ -58,5 +81,10 @@ export default {
       align-items: center;
       line-height: 20px;
     }
+  }
+  .right{
+    padding: 6px 10px;
+    border-radius:  5px;
+    background: white;
   }
 </style>

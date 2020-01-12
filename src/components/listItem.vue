@@ -5,7 +5,7 @@
     </div>
     <p class="productTitle">{{itemData.goodsName}}</p>
     <div class="priceWrap">
-      <span>{{ changNum(itemData.price) }}积分</span>
+      <span>{{ changNum(itemData.price) }}</span>
       <div class="shoppingWrap" @click.stop="addCar">
       <!-- <van-icon name="shopping-cart-o" /> -->
       </div>

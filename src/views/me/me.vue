@@ -125,6 +125,7 @@ export default {
       localStorage.removeItem('autoTime')
       localStorage.removeItem('userId')
       localStorage.removeItem('order')
+      localStorage.removeItem('userTel')
       window.location.href = window.location.origin + '/#/index'
       // this.$router.push(
       //   {

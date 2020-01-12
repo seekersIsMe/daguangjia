@@ -1,21 +1,19 @@
 <template>
 <div class="rechargeWrap">
   <van-field
-    :value="code"
+    v-model="code"
     required
-    clearable
     label="券码"
-    icon="question-o"
+    type='number'
     placeholder="请输入16位券码"
   />
 
   <van-field
-    :value="password"
+    v-model="password"
     type="password"
     label="密码"
     placeholder="请输入安全码（在卡片背面右下方）"
     required
-    clearable
   />
 <p class="tip">提示：请输入e券积分上的密码以及卡片背面右下方4位数字的安全码进行充值</p>
 <van-button color="#ff343d" @click="chargeIntegralUrl">充值</van-button>

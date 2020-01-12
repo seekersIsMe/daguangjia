@@ -51,7 +51,7 @@
           <van-button color="#23A85E" @click="addCar">加入购物车</van-button>
         </van-col>
         <van-col span="12">
-          <van-button color="#00AEFF" @click="buyNow">立即兑换</van-button>
+          <van-button color="#FF0000" @click="buyNow">立即兑换</van-button>
         </van-col>
       </van-row>
       <!-- <van-button color="#23A85E">加入购物车</van-button>

@@ -6,18 +6,19 @@
         <!-- 使用 right-icon 插槽来自定义右侧图标 -->
         <div slot="right-icon" class="right" @click="selectPic">
           <img class="img" :src="imgSrc" alt="" />
-          <van-icon name="arrow" />
+          <!-- <van-icon name="arrow" /> -->
         </div>
       </van-cell>
     </div>
     <div class="item nickname">
-      <van-cell title="昵称" is-link>
+      <!-- <van-cell title="昵称" is-link>
         <van-field
           slot="right-icon"
           v-model="nickname"
           placeholder="请输入用户名"
         />
-      </van-cell>
+      </van-cell> -->
+      <van-cell title="昵称" :value="nickname" />
     </div>
     <div class="item telNum">
       <van-cell title="手机号" :value="telNum" />
@@ -140,7 +141,7 @@ export default {
     }
   },
   created () {
-    this.getAuto()
+    // this.getAuto()
     this.getUserInfo()
   },
   methods: {
@@ -264,8 +265,9 @@ export default {
     },
     noCropperPic () {},
     selectArea () {
+      return
       if (this.isShowArea) {
-        return
+
       }
       this.isShowArea = true
     },
@@ -300,7 +302,9 @@ export default {
 
       })
     },
+    // 暂时不做
     selectPic () {
+      return
       this.isShowPic = true
     },
     // 从本机中选图片
@@ -339,14 +343,14 @@ export default {
                 localId: localIds[0], // 需要上传的图片的本地ID，由chooseImage接口获得
                 isShowProgressTips: 1, // 默认为1，显示进度提示
                 success: function (res) {
-                  var serverId = res.serverId; // 返回图片的服务器端ID
+                  var serverId = res.serverId // 返回图片的服务器端ID
                   console.log('服务器id', res)
                 }
               })
               wx.getLocalImgData({
                 localId: localIds[0], // 图片的localID
                 success: function (res) {
-                  var localData = res.localData; // localData是图片的base64数据，可以用img标签显示
+                  var localData = res.localData // localData是图片的base64数据，可以用img标签显示
                   that.imgSrc = localData
                   that.imgUrl = localData
                   that.isCropper = true

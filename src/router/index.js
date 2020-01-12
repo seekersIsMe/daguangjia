@@ -3,5 +3,6 @@ import me from './me'
 import shoppingCart from './shoppingCart'
 import type from './type'
 import conversion from './conversion'
-const routes = [...index, ...me, ...shoppingCart, ...type, ...conversion]
+import recharge from './recharge'
+const routes = [...index, ...me, ...shoppingCart, ...type, ...conversion, ...recharge]
 export default routes

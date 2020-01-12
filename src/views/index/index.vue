@@ -36,7 +36,7 @@
       </div>
       <div class="recommendWrap">
         <van-row type="flex" justify="space-between">
-          <van-col v-for='(item, index) in categoryList' :key="index" @click="goType(item)">
+          <van-col v-for='(item, index) in categoryList' :key="index" @click="goType(item,index)">
             <div :class="'icon'+ (index + 1)">
               <!-- <img :src="item.logo" alt=""> -->
             </div>
@@ -67,21 +67,36 @@
               </btn>
             </template>
           </myTitle>
-          <van-row>
-            <van-col
-              span="6"
-              gutter="10"
+          <swiper :options="swiperOption">
+            <swiper-slide
+              v-for="(item, index) in seckillData"
+              :key="index"
+              class="flex1">
+              <div @click="goToDetail(item)">
+                <div class="img">
+                  <img :src="'http://47.107.110.186:8082'+item.goodsLogo">
+                </div>
+                <div class="killText">秒杀价{{ item.priceSpike }}</div>
+                <div class="originPrice">原价：{{ item.dailyPrice }}</div>
+            </div>
+            </swiper-slide>
+          <!-- <div class="swiper-pagination" slot="pagination"></div> -->
+        </swiper>
+           <!-- <van-swipe :width="90" :show-indicators='false'>
+            <van-swipe-item
               v-for="(item, index) in seckillData"
               :key="index"
               @click="goToDetail(item)"
-            >
-              <div class="img">
-                <img :src="'http://47.107.110.186:8082'+item.goodsLogo">
-              </div>
-              <div class="killText">秒杀价{{ item.priceSpike }}积分</div>
-              <div class="originPrice">原价：{{ item.dailyPrice }}积分</div>
-            </van-col>
-          </van-row>
+              class="flex1">
+              <div>
+                <div class="img">
+                  <img :src="'http://47.107.110.186:8082'+item.goodsLogo">
+                </div>
+                <div class="killText">秒杀价{{ item.priceSpike }}</div>
+                <div class="originPrice">原价：{{ item.dailyPrice }}</div>
+            </div>
+            </van-swipe-item>
+          </van-swipe> -->
         </div>
         <div class="newProduct">
           <div class="newWrap">
@@ -149,26 +164,35 @@ export default {
           categoryName: '充值中心'
         }
       ],
-      hotData: []
-    }
-  },
-  created () {
-    if (!localStorage.getItem('isAuto')) {
-      this.getQueryString().then(res => {
-        this.getAccess_token()
-      }).catch(() => {
-        this.getCode()
-      })
-    } else {
-      if (!localStorage.getItem('isLogin')) {
-        var reg = new RegExp('(^|&)' + 'code' + '=([^&]*)(&|$)', 'i')
-        var r = window.location.search.substr(1).match(reg)
-        if (r != null) {
-          this.code = unescape(r[2])
-          this.getAccess_token()
+      hotData: [],
+      swiperOption: {
+        slidesPerView: 4,
+        spaceBetween: 10,
+        freeMode: true,
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true
         }
       }
     }
+  },
+  created () {
+    // if (!localStorage.getItem('isAuto')) {
+    //   this.getQueryString().then(res => {
+    //     this.getAccess_token()
+    //   }).catch(() => {
+    //     this.getCode()
+    //   })
+    // } else {
+    //   if (!localStorage.getItem('isLogin')) {
+    //     var reg = new RegExp('(^|&)' + 'code' + '=([^&]*)(&|$)', 'i')
+    //     var r = window.location.search.substr(1).match(reg)
+    //     if (r != null) {
+    //       this.code = unescape(r[2])
+    //       this.getAccess_token()
+    //     }
+    //   }
+    // }
     this.getImgs()
     this.getFlashSale()
     this.getNewGoods()
@@ -204,13 +228,25 @@ export default {
         }
       })
     },
-    goType (item) {
-      this.$router.push({
-        path: 'proList',
-        query: {
-          subCategoryId: item.id
+    goType (item, index) {
+      if (index < 4) {
+        // this.$router.push({
+        //   path: 'proList',
+        //   query: {
+        //     subCategoryId: item.id
+        //   }
+        // })
+      } else {
+        if (!localStorage.getItem('isLogin')) {
+          this.$router.push({
+            path: '/login'
+          })
+        } else {
+          this.$router.push({
+            path: 'rechargeIndex'
+          })
         }
-      })
+      }
     },
     getIndexCategory () {
       this.$axios({
@@ -278,6 +314,15 @@ export default {
       }, res => {
         if (res.status === 10001) {
           this.seckillData = res.data.info || []
+          this.seckillData.push(
+            {
+              dailyPrice: 999,
+              goodsLogo: '/uploadIMG/goods/20191217/2019121712502471987615.png',
+              goodsName: '电动剃须刀',
+              priceSpike: 99,
+              id: 5
+            }
+          )
           this.time = res.data.time && (res.data.time - new Date().getTime() || 0)
         } else {
           this.$toast(res.msg)
@@ -385,7 +430,7 @@ export default {
         timestamp: this.signObj.timestamp, // 必填，生成签名的时间戳
         nonceStr: this.signObj.nonceStr, // 必填，生成签名的随机串
         signature: this.signObj.sign, // 必填，签名
-        jsApiList: ['chooseImage'] // 必填，需要使用的JS接口列表
+        jsApiList: ['getLocation'] // 必填，需要使用的JS接口列表
       })
       wx.ready(function () {
         console.log('初始化成功')
@@ -397,15 +442,15 @@ export default {
         //     // 如：{"checkResult":{"chooseImage":true},"errMsg":"checkJsApi:ok"}
         //   }
         // })
-        wx.chooseImage({
-          count: 1, // 默认9
-          sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-          sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-          success: function (res) {
-            let localIds = res.localIds // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-            console.log('照片id', localIds)
-          }
-        })
+        // wx.chooseImage({
+        //   count: 1, // 默认9
+        //   sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+        //   sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+        //   success: function (res) {
+        //     let localIds = res.localIds // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+        //     console.log('照片id', localIds)
+        //   }
+        // })
       })
     },
     onSearch (val) {
@@ -440,9 +485,9 @@ export default {
   @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
     height: calc(100vh - 34px);
   }
-  height: 100vh;
-  box-sizing: border-box;
-  overflow-y: auto;
+  // height: 100vh;
+  // box-sizing: border-box;
+  // overflow-y: auto;
   .van-list {
     padding-bottom: 70px;
   }
@@ -538,6 +583,9 @@ export default {
   .hotWrap {
     background-color: #f7f7f7;
     padding: 0 10px;
+    // /deep/ .van-swipe__indicators{
+    //   display: none;
+    // }
     .seckillWrap {
       .myTitle {
         padding: 10px 0;

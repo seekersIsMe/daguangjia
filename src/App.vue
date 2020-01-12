@@ -9,7 +9,7 @@
 </template>
 <script>
 import tab from './components/tab'
-const showTabRoute = ['/', '/index', '/me', '/shoppingCart', '/type']
+const showTabRoute = ['/', '/index', '/me', '/shoppingCart', '/type', '/conversion']
 export default {
   name: 'App',
   components: {

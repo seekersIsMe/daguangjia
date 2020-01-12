@@ -28,7 +28,7 @@
             <span class="jifen">{{ changNum(sum) }}积分</span>
           </p>
         </div>
-        <van-button round type="primary" v-if="!isManage" color="#00AEFF" @click="settle">结算</van-button>
+        <van-button round type="primary" v-if="!isManage" color="#FF0000" @click="settle">结算</van-button>
         <van-button round type="primary" v-else color="#FF0000" @click="del">删除</van-button>
       </div>
     </div>
@@ -78,7 +78,7 @@ export default {
       if (val > 100000 && val < 1000000) {
         return Math.round(val / 1000) / 100 + '十万万'
       }
-      if (val > 1000000 ) {
+      if (val > 1000000) {
         this.$toast('超出添加限制')
         return 0
       }
@@ -355,7 +355,7 @@ export default {
       line-height: 20px;
     }
     .van-button {
-      width: 60px;
+      width: 66px;
       height: 30px;
       line-height: 30px;
       /deep/ .van-button__text {
