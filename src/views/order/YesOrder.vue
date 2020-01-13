@@ -50,9 +50,12 @@
 <script>
 import item from './item'
 import selectAddress from '@/components/selectAddress'
+import wx from 'weixin-js-sdk'
 const getDefaultAddressUrl = '/sysUser/getDefaultAddress'
 const saveOrderUrl = '/sysOrder/saveOrder'
 const getUserInfoUrl = '/sysUser/getInfo'
+const getWxConfigUrl = '/sysOrder/getWxConfig'
+const getChargePayParamUrl = '/sysOrder/getWxPayParams'
 export default {
   components: {
     item,
@@ -69,7 +72,11 @@ export default {
       proList: [],
       isSelectAddress: false,
       show: false,
-      integral: 0 // 剩余积分
+      integral: 0, // 剩余积分
+      signData: {},
+      signObj: {},
+      orderNum: ''
+
     }
   },
   computed: {
@@ -118,14 +125,89 @@ export default {
         res => {
           if (res.status === 10001) {
             this.$toast('下单成功')
+            this.orderNum = res.data.info.orderNo
             // 调起微信支付
             if (res.data.info.wxPay !== 0) {
-
+              this.getChargePayParam()
             }
           } else {
           }
         }
       )
+    },
+    getChargePayParam () {
+      this.$axios({
+        url: getChargePayParamUrl,
+        method: 'post',
+        params: {
+          orderNo: this.orderNum
+        }
+      }, res => {
+        if (res.status === 10001) {
+          this.signData = res.data.info
+          this.getWXconfig()
+        }
+      })
+    },
+    getWXconfig () {
+      this.$axios({
+        url: getWxConfigUrl,
+        params: {
+          url: location.href
+        },
+        method: 'post'
+      }, (res) => {
+        if (res.status === 10001) {
+          this.signObj = res.data.info
+          this.initWXconfig()
+        }
+      })
+    },
+    initWXconfig () {
+      let that = this
+      console.log('签名信息', this.signObj)
+      wx.config({
+        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        appId: this.signObj.appId, // 必填，公众号的唯一标识
+        timestamp: this.signObj.timestamp, // 必填，生成签名的时间戳
+        nonceStr: this.signObj.nonceStr, // 必填，生成签名的随机串
+        signature: this.signObj.sign, // 必填，签名
+        jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表
+      })
+      wx.ready(function () {
+        console.log('初始化成功')
+        // wx.checkJsApi({
+        //   jsApiList: ['chooseImage'], // 需要检测的JS接口列表，所有JS接口列表见附录2,
+        //   success: function (res) {
+        //     console.log('是否可用', res)
+        //     // 以键值对的形式返回，可用的api值true，不可用为false
+        //     // 如：{"checkResult":{"chooseImage":true},"errMsg":"checkJsApi:ok"}
+        //   }
+        // })
+        // wx.chooseImage({
+        //   count: 1, // 默认9
+        //   sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+        //   sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+        //   success: function (res) {
+        //     let localIds = res.localIds // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+        //     console.log('照片id', localIds)
+        //   }
+        // })
+        wx.chooseWXPay({
+          timestamp: that.signData.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+          nonceStr: that.signData.nonceStr, // 支付签名随机串，不长于 32 位
+          package: that.signData.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=\*\*\*）
+          signType: that.signData.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+          paySign: that.signData.sign, // 支付签名
+          success: function (res) {
+            that.$toast('支付成功')
+            that.$router.push({
+              path: '/index'
+            })
+            // 支付成功后的回调函数
+          }
+        })
+      })
     },
     getUserInfo () {
       this.$axios(

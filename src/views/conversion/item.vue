@@ -10,10 +10,10 @@
     <div class="itemBody">
       <div class="left">
         <p>
-          {{ itemData.id }}
+          券码：{{ itemData.ticketNo }}
         </p>
         <p>
-          {{ itemData.overTime }}
+          有效期：{{ itemData.overTime }}
         </p>
       </div>
       <div class="right" @click="use">

@@ -45,7 +45,7 @@ export default {
       cardNum: '',
       cardNum1: '',
       money: '',
-      radio: 1,
+      radio: '1',
       denomination: ['50元', '100元', '200元', '300元', '500元', '1000元'],
       selectIndex: 0,
       cardNum2: localStorage.getItem('userTel'),
@@ -70,8 +70,7 @@ export default {
       this.parmaDenomination = this.otherDenomination
     },
     recharge () {
-      console.log(this.radio)
-      if (this.radio == 3) {
+      if (this.radio === '3') {
         this.$axios({
           url: chargeSinopecTicketUrl,
           method: 'post',

@@ -83,7 +83,7 @@
                 元
               </span>
             </div>
-            <van-button type="default" color='#00AEFF'>确认支付</van-button>
+            <van-button type="default" color='#00AEFF' @click="yesChange">确认支付</van-button>
             </div>
           </van-tab>
       </van-tabs>
@@ -123,6 +123,9 @@ export default {
     }
   },
   methods: {
+    yesChange () {
+      this.$toast('开发中')
+    },
     saveChargeOrder () {
       if (!localStorage.getItem('isAuto')) {
         this.$router.push({
@@ -177,6 +180,7 @@ export default {
       })
     },
     initWXconfig () {
+      let that = this
       console.log('签名信息', this.signObj)
       wx.config({
         debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -206,13 +210,13 @@ export default {
         //   }
         // })
         wx.chooseWXPay({
-          timestamp: this.signData.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
-          nonceStr: this.signData.nonceStr, // 支付签名随机串，不长于 32 位
-          package: this.signData.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=\*\*\*）
-          signType: this.signData.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
-          paySign: this.signData.sign, // 支付签名
+          timestamp: that.signData.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+          nonceStr: that.signData.nonceStr, // 支付签名随机串，不长于 32 位
+          package: that.signData.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=\*\*\*）
+          signType: that.signData.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+          paySign: that.signData.sign, // 支付签名
           success: function (res) {
-            this.$toast('支付成功')
+            that.$toast('支付成功')
             // 支付成功后的回调函数
           }
         })
@@ -320,12 +324,17 @@ export default {
   margin-left: 5%;
 }
 .bg{
-  height: 150px;
+  margin: 0 10px;
+  height: 37.6vw;
+  background: url(~@/assets/img/chongzhi/bg.png) no-repeat center center;
+  background-size: 100% 100%;
   display: flex;
   align-items: center;
   text-align: center;
+  color: #FFFFFF;
   .title{
-    font-size: 16px;
+    font-size: 14px;
+    margin-bottom: 20px;
     // color: white;
   }
   .sumE,.expire{
@@ -338,7 +347,7 @@ export default {
     }
   }
   .expireNum,.sumNum{
-    font-size: 20px;
+    font-size: 24px;
     // color: white;
   }
 }
@@ -346,7 +355,7 @@ export default {
   display: flex;
   align-items: center;
   padding: 0 5%;
-  margin-bottom: 10px;
+  margin: 20px 0;
   font-size: 12px;
 }
 input{
@@ -358,12 +367,12 @@ input{
     box-sizing: border-box;
 }
 .inputWrap{
-  width: 80px;
+  width: 100px;
   line-height: 40px;
   background: #f8f8f8;
   border-radius: 3px;
   padding: 0 4px;
-  margin: 0 20px 0 10px;
+  margin: 0 10px;
   .input2{
     background: #f8f8f8;
     font-size: 12px;
@@ -377,6 +386,8 @@ input{
   margin: 0 20px;
   width: 40px;
   height: 40px;
+  background: url(~@/assets/img/chongzhi/aw.png) no-repeat center center;
+  background-size: 80% 80%;
 }
 /deep/ .van-checkbox__icon--disabled .van-icon{
     background-color: #E40D0D;

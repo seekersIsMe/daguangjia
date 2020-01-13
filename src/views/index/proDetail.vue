@@ -109,11 +109,14 @@ export default {
     this.$nextTick(() => {
       let testFrame = document.getElementById('testFrame')
       testFrame.addEventListener('load', function () {
+        console.log(window.frames["testFrame"])
         testFrame.height = testFrame.offsetTop
       })
     })
   },
   destroyed () {
+    let testFrame = document.getElementById('testFrame')
+    testFrame.removeEventListener('load')
   },
   methods: {
     goBack () {
@@ -199,22 +202,34 @@ export default {
 .proDetailWrap{
 /*iphone XR*/
   @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) {
-    height: calc(100vh - 34px);
+    .btnGroup{
+      margin-bottom: 34px;
+    }
+    // height: calc(100vh - 34px);
   }
   @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 2) {
-    height: calc(100vh - 34px);
+    // height: calc(100vh - 34px);
+    .btnGroup{
+      margin-bottom: 34px;
+    }
   }
   /*iphone XMAX*/
   @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) {
-     height: calc(100vh - 34px);
+    //  height: calc(100vh - 34px);
+    .btnGroup{
+      margin-bottom: 34px;
+    }
   }
   /* iphone X/XS */
   @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
-     height: calc(100vh - 34px);
+    //  height: calc(100vh - 34px);
+    .btnGroup{
+      margin-bottom: 34px;
+    }
   }
-  height: 100vh;
-  box-sizing: border-box;
-  overflow-y: auto;
+  // height: 100vh;
+  // box-sizing: border-box;
+  // overflow-y: auto;
 }
 .proDetail {
   background: #f7f7f7;

@@ -61,7 +61,8 @@ export default {
         method: 'post',
         params: {
           ticketId: params.id,
-          uid: this.userId
+          uid: this.userId,
+          ticketNo: this.ticketNo
         }
       }, res => {
         if (res.status === 10001) {
