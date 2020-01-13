@@ -39,32 +39,7 @@ export default {
       searchVal: '',
       activeKey: 0,
       typeList: [],
-      sideData: [
-        // {
-        //   name: '家用电器'
-        // },
-        // {
-        //   name: '美妆护肤'
-        // },
-        // {
-        //   name: '家居生活'
-        // },
-        // {
-        //   name: '手机数码'
-        // },
-        // {
-        //   name: '箱包手袋'
-        // },
-        // {
-        //   name: '母婴玩具'
-        // },
-        // {
-        //   name: '服装服饰'
-        // },
-        // {
-        //   name: '食品酒类'
-        // }
-      ]
+      sideData: []
     }
   },
   created () {
@@ -119,7 +94,7 @@ export default {
 .sidebarWrap {
   display: flex;
   justify-content: flex-start;
-  margin-top: 15px;
+  margin: 15px 0 50px 0;
   .van-sidebar-item {
     width: 85px;
     height: 44px;
