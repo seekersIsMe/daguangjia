@@ -130,6 +130,10 @@ export default {
         })
         return
       }
+      if (this.other === '') {
+        this.$toast('请选择充值数额')
+        return
+      }
       this.$axios({
         url: saveChargeOrderUrl,
         method: 'post',
@@ -140,6 +144,7 @@ export default {
       }, res => {
         if (res.status === 10001) {
           this.orderNum = res.data.info || ''
+          this.getChargePayParam()
         }
       })
     },

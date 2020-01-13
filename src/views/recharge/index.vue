@@ -244,14 +244,20 @@ export default {
     .icon1{
         width: 31px;
         height: 40px;
+        background: url(~@/assets/img/chongzhi/icon1.png) no-repeat center center;
+        background-size: 100% 100%;
     }
     .icon2{
         width: 38px;
         height: 37px;
+        background: url(~@/assets/img/chongzhi/icon2.png) no-repeat center center;
+        background-size: 100% 100%;
     }
     .icon3{
         width: 43px;
         height: 35px;
+        background: url(~@/assets/img/chongzhi/icon3.png) no-repeat center center;
+        background-size: 100% 100%;
     }
 
 }

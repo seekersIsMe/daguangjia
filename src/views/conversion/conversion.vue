@@ -66,6 +66,7 @@ export default {
       }, res => {
         if (res.status === 10001) {
           this.$toast('充值成功')
+          this.getJYB()
         } else {
           this.$toast(res.msg)
         }

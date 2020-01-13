@@ -9,6 +9,8 @@ import routes from './router'
 import VueJsonp from 'vue-jsonp'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css'
+import Vconsole from 'vconsole'
+new Vconsole()
 Vue.use(VueAwesomeSwiper)
 Vue.use(VueJsonp)
 Vue.use(Vant)
