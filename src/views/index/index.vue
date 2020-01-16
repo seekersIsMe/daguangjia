@@ -314,15 +314,6 @@ export default {
       }, res => {
         if (res.status === 10001) {
           this.seckillData = res.data.info || []
-          this.seckillData.push(
-            {
-              dailyPrice: 999,
-              goodsLogo: '/uploadIMG/goods/20191217/2019121712502471987615.png',
-              goodsName: '电动剃须刀',
-              priceSpike: 99,
-              id: 5
-            }
-          )
           this.time = res.data.time && (res.data.time - new Date().getTime() || 0)
         } else {
           this.$toast(res.msg)
