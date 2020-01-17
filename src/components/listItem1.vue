@@ -65,7 +65,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .listItem{
-     overflow: hidden;
+      overflow: hidden;
+      box-sizing: border-box;
       width: calc(33.3vw - 15px);
       margin-bottom: 10px;
       background: white;

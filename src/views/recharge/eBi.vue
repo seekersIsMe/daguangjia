@@ -308,7 +308,7 @@ export default {
   flex-wrap: nowrap;
   margin: 15px 0;
   p:first-child{
-    width: 60px;
+    width: 70px;
   }
 }
 .displayFlex{

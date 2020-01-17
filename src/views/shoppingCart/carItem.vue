@@ -82,6 +82,7 @@ border-top: 1px solid #E1E1E1;
     width: 90px;
     height: 90px;
     margin-right: 10px;
+    overflow: hidden;
     img {
       display: inline-block;
       width: 100%;

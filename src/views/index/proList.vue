@@ -181,7 +181,12 @@ export default {
         }
       })
     },
-    onSearch () {},
+    onSearch () {
+      this.page = 1
+      this.queryParam = {}
+      this.itemCount = []
+      this.getNewGoods()
+    },
     changeSalesSort () {
       if (this.active !== 1) {
         return
