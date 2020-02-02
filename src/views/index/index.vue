@@ -177,22 +177,22 @@ export default {
     }
   },
   created () {
-    if (!localStorage.getItem('isAuto')) {
-      this.getQueryString().then(res => {
-        this.getAccess_token()
-      }).catch(() => {
-        this.getCode()
-      })
-    } else {
-      if (!localStorage.getItem('isLogin')) {
-        var reg = new RegExp('(^|&)' + 'code' + '=([^&]*)(&|$)', 'i')
-        var r = window.location.search.substr(1).match(reg)
-        if (r != null) {
-          this.code = unescape(r[2])
-          this.getAccess_token()
-        }
-      }
-    }
+    // if (!localStorage.getItem('isAuto')) {
+    //   this.getQueryString().then(res => {
+    //     this.getAccess_token()
+    //   }).catch(() => {
+    //     this.getCode()
+    //   })
+    // } else {
+    //   if (!localStorage.getItem('isLogin')) {
+    //     var reg = new RegExp('(^|&)' + 'code' + '=([^&]*)(&|$)', 'i')
+    //     var r = window.location.search.substr(1).match(reg)
+    //     if (r != null) {
+    //       this.code = unescape(r[2])
+    //       this.getAccess_token()
+    //     }
+    //   }
+    // }
     this.getImgs()
     this.getFlashSale()
     this.getNewGoods()
@@ -461,7 +461,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .indexWrap {
-  /*iphone XR*/
+  // /*iphone XR*/
   // @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) {
   //   height: calc(100vh - 34px);
   // }

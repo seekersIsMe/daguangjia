@@ -56,21 +56,21 @@
   height: 50px;
   background: #FFFFFF;
   border-top: 1px solid #e8e8e7;
-  /*iphone XR*/
-  @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) {
-    bottom: 34px;
-  }
-  @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 2) {
-    bottom: 34px;
-  }
-  /*iphone XMAX*/
-  @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) {
-    bottom: 34px;
-  }
-  /* iphone X/XS */
-  @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
-    bottom: 34px;
-  }
+  // /*iphone XR*/
+  // @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) {
+  //   bottom: 34px;
+  // }
+  // @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 2) {
+  //   bottom: 34px;
+  // }
+  // /*iphone XMAX*/
+  // @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) {
+  //   bottom: 34px;
+  // }
+  // /* iphone X/XS */
+  // @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
+  //   bottom: 34px;
+  // }
   .duihuan {
     width: 50px;
     height: 50px;

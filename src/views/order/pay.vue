@@ -43,7 +43,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .payWrap{
-  
    background: #f7f7f7;
    height: 100vh;
    .header{

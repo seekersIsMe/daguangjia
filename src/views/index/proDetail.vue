@@ -109,7 +109,7 @@ export default {
     this.$nextTick(() => {
       let testFrame = document.getElementById('testFrame')
       testFrame.addEventListener('load', function () {
-        console.log(window.frames["testFrame"])
+        console.log(window.frames['testFrame'])
         testFrame.height = testFrame.offsetTop
       })
     })
@@ -308,6 +308,10 @@ export default {
   text-align: center;
 }
 .btnGroup {
+  position: fixed;
+  bottom: 10px;
+  left: 0;
+  right: 0;
   padding: 0 20px;
   .van-button {
       width: 100%;

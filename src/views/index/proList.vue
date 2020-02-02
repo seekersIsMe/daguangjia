@@ -65,10 +65,13 @@
             :immediate-check="false"
             @load="scrollToEnd"
           >
-            <div class="proListWrap">
+            <div class="proListWrap" v-if='itemCount.length > 0'>
               <div v-for="(item,index) in itemCount" :key="index" class="item">
                 <listItem :itemData="item" @addCar="addCar"/>
               </div>
+            </div>
+            <div class="noData" v-else>
+              没有查询到结果
             </div>
           </van-list>
       </div>
@@ -234,22 +237,22 @@ export default {
 </script>
 <style lang="scss" scoped>
 .proList{
-  /*iphone XR*/
-  @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) {
-    height: calc(100vh - 34px);
-  }
-  @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 2) {
-    height: calc(100vh - 34px);
-  }
-  /*iphone XMAX*/
-  @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) {
-     height: calc(100vh - 34px);
-  }
-  /* iphone X/XS */
-  @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
-     height: calc(100vh - 34px);
-  }
-  height: 100vh;
+  // /*iphone XR*/
+  // @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) {
+  //   height: calc(100vh - 34px);
+  // }
+  // @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 2) {
+  //   height: calc(100vh - 34px);
+  // }
+  // /*iphone XMAX*/
+  // @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) {
+  //    height: calc(100vh - 34px);
+  // }
+  // /* iphone X/XS */
+  // @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
+  //    height: calc(100vh - 34px);
+  // }
+  // height: 100vh;
   box-sizing: border-box;
   overflow-y: auto;
 }

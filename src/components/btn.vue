@@ -17,18 +17,17 @@ export default {
 </script>
 <style lang="scss" scoped>
   .btnWrap{
-    width: 122px;
     height: 26px;
     display: flex;
     justify-content: flex-start;
     font-size: 14px;
     .right,.title{
-      flex: 1;
       height: 100%;
+      padding: 0 4px;
       border-radius: 3px;
     }
     .title{
-      background-color: #E40D0D; 
+      background-color: #E40D0D;
       color:white;
       line-height: 26px;
       text-align: center;
@@ -45,7 +44,6 @@ export default {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 62px;
       padding-left: 2px;
     }
   }
