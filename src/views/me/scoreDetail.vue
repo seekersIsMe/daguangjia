@@ -82,7 +82,10 @@ export default {
         }
       }, res => {
         if (res.status === 10001) {
-          this.scoreList = [...this.scoreList, ...res.data.info]
+          console.log(this.scoreList)
+          // debugger
+          this.scoreList.push(...res.data.info)
+          // this.scoreList = [...this.scoreList, ...res.data.info]
           this.loading = false
           if (res.data.info && res.data.info.length < 10) {
             this.finished = true
@@ -119,7 +122,7 @@ export default {
   // @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
   //    height: calc(100vh - 34px);
   // }
-  // height: 100vh;
+  height: 100vh;
   box-sizing: border-box;
   overflow-y: auto;
   position: relative;
@@ -187,7 +190,6 @@ export default {
       }
     }
     .scoreList {
-      overflow-y: auto;
       .item {
         padding: 20px;
         box-sizing: border-box;

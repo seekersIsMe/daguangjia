@@ -75,7 +75,8 @@ export default {
       integral: 0, // 剩余积分
       signData: {},
       signObj: {},
-      orderNum: ''
+      orderNum: '',
+      isHasAddress: true
 
     }
   },
@@ -98,6 +99,10 @@ export default {
   },
   methods: {
     exchange () {
+      if (!this.isHasAddress) {
+        this.$toast('请选择收货地址')
+        return
+      }
       let goods = this.proList.map(p => {
         return p.goodsId
       })
@@ -231,6 +236,7 @@ export default {
       this.show = false
     },
     choiceAddress (data) {
+      this.isHasAddress = true
       this.name = data.nickName
       this.tel = data.phone
       this.addressId = data.id
@@ -255,16 +261,21 @@ export default {
         },
         res => {
           if (res.status === 10001) {
-            let data = res.data.info[0]
-            this.name = data.nickName
-            this.tel = data.phone
-            this.addressId = data.id
-            let areaList = ['北京市', '天津市', '上海市', '重庆市']
-            if (areaList.includes(data.province)) {
-              this.address = data.city + data.district + data.address
-            } else {
-              this.address =
+            if (res.data.info.length > 0) {
+              let data = res.data.info[0]
+              this.name = data.nickName
+              this.tel = data.phone
+              this.addressId = data.id
+              let areaList = ['北京市', '天津市', '上海市', '重庆市']
+              if (areaList.includes(data.province)) {
+                this.address = data.city + data.district + data.address
+              } else {
+                this.address =
                 data.province + data.city + data.district + data.address
+              }
+            } else {
+              this.$toast('请选择收货地址')
+              this.isHasAddress = false
             }
           } else {
             this.$toast(res.msg)

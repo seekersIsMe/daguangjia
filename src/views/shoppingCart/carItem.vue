@@ -1,6 +1,6 @@
 <template>
   <div class="bgW">
-    <div class="carItem" v-for="(item,index) in itemDataList_" :key="index">
+    <div class="carItem" v-for="(item,index) in itemDataList_" :key="index" @click="goToDetail(item)">
       <div class="checkbox">
         <van-checkbox v-model="item.checked" @change="select"></van-checkbox>
       </div>
@@ -57,6 +57,15 @@ export default {
     },
     changeCount () {
       this.$emit('change', this.itemDataList_)
+    },
+    // 跳转到产品的详情页面
+    goToDetail (item) {
+      this.$router.push({
+        path: '/proDetail',
+        query: {
+          id: item.goodsId
+        }
+      })
     }
   }
 }

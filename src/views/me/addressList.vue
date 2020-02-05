@@ -134,46 +134,52 @@ export default {
           county: item.district,
           addressDetail: item.address,
           areaCode: String(item.provinceCode),
-          isDefault: item.isDefault
+          isDefault: item.isDefault,
+          isEdit: 1
         }
       })
       console.log(item)
     },
     goBack () {
-      if (!this.isSelect) {
-        this.$router.go(-1)
-      } else {
-        this.$router.push(
-          {
-            path: '/YesOrder',
-            query: {
-              selectAddress: true
-            }
-          }
-        )
-      }
+      this.$router.push(
+        {
+          path: '/me'
+        }
+      )
+    //   if (!this.isSelect) {
+    //     this.$router.go(-1)
+    //   } else {
+    //     this.$router.push(
+    //       {
+    //         path: '/YesOrder',
+    //         query: {
+    //           selectAddress: true
+    //         }
+    //       }
+    //     )
+    //   }
     }
   }
 }
 </script>
 <style lang="scss" scoped>
 .addressListWrap {
-  // /*iphone XR*/
-  // @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) {
-  //   height: calc(100vh - 34px);
-  // }
-  // @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 2) {
-  //   height: calc(100vh - 34px);
-  // }
-  // /*iphone XMAX*/
-  // @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) {
-  //   height: calc(100vh - 34px);
-  // }
-  // /* iphone X/XS */
-  // @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
-  //   height: calc(100vh - 34px);
-  // }
-  // height: 100vh;
+  /*iphone XR*/
+  @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) {
+    height: calc(100vh - 34px);
+  }
+  @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 2) {
+    height: calc(100vh - 34px);
+  }
+  /*iphone XMAX*/
+  @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) {
+    height: calc(100vh - 34px);
+  }
+  /* iphone X/XS */
+  @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
+    height: calc(100vh - 34px);
+  }
+  height: 100vh;
   box-sizing: border-box;
   overflow-y: auto;
   position: relative;

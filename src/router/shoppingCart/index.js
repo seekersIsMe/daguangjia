@@ -25,6 +25,15 @@ const shoppingCart = [
       title: '订单确认',
       keepAlive: false
     }
+  },
+  {
+    path: '/addAddress1',
+    name: 'addAddress1',
+    component: () => import(/* webpackChunkName: "addAddress1" */'@/views/order/addAddress'),
+    meta: {
+      title: '添加地址',
+      keepAlive: false
+    }
   }
 ]
 export default shoppingCart

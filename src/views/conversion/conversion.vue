@@ -15,7 +15,14 @@
   </van-tab>
   <van-tab title="使用记录"></van-tab>
 </van-tabs>
- <van-list
+<item
+        v-for='(item,index) in itemData'
+        :itemData = 'item'
+        :key='index'
+        :active='active'
+        @use='use'
+    />
+ <!-- <van-list
       v-model="loading"
       :finished="finished"
       finished-text="没有更多了"
@@ -29,7 +36,7 @@
         :active='active'
         @use='use'
     />
-      </van-list>
+      </van-list> -->
     </div>
   </div>
 </template>
@@ -134,9 +141,10 @@ export default {
   // @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
   //   padding-bottom: 34px;
   // }
-  // height: 100vh;
+  height: 100vh;
   box-sizing: border-box;
   overflow-y: auto;
+  padding-bottom: 50px;
   // background: url(~@/assets/img/bg.png) no-repeat center center;
   // background-size: 100% 100%;
   .scrollWrap {

@@ -8,13 +8,11 @@
       :show-postal="false"
       :is-saving="isSaving"
       :address-info="addressInfo"
-      :show-delete="isEdit"
       show-set-default
       show-search-result
       :search-result="searchResult"
       :area-columns-placeholder="['请选择', '请选择', '请选择']"
       @save="onSave"
-      @delete="onDelete"
       @change-detail="onChangeDetail"
       :tel-validator="telValidator"
     />
@@ -32,14 +30,13 @@ export default {
       isSaving: false,
       addressId: '',
       params: {},
-      addressInfo: {},
-      isEdit: false
+      addressInfo: {}
+
     }
   },
   created () {
     this.addressInfo = this.$route.query || {}
     this.addressId = this.addressInfo.id || ''
-    this.isEdit = this.addressInfo && this.addressInfo.isEdit === 1
     console.log(this.$route.query)
   },
   methods: {
@@ -56,9 +53,10 @@ export default {
       }, res => {
         if (res.status === 10001) {
           this.isSaving = false
-          this.$router.push({
-            path: '/addressList'
-          })
+          this.$toast('添加成功')
+          // this.$router.push({
+          //   path: '/addressList'
+          // })
         } else {
           this.isSaving = true
           this.$toast(res.msg)
@@ -83,25 +81,6 @@ export default {
         })
       }
       this.params = obj
-    },
-    onDelete () {
-      this.$axios({
-        url: deleteAddressUrl,
-        params: {
-          uid: localStorage.getItem('userId'),
-          addressId: this.addressId
-        },
-        method: 'post'
-      }, res => {
-        if (res.status === 10001) {
-          this.$toast('删除成功')
-          this.$router.push({
-            path: '/addressList'
-          })
-        } else {
-          this.$toast(res.msg)
-        }
-      })
     },
     onChangeDetail (val) {
       // if (val) {

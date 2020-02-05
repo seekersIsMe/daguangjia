@@ -286,7 +286,7 @@ export default {
   // @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
   //   height: calc(100vh - 34px);
   // }
-  // height: 100vh;
+  height: 100vh;
   box-sizing: border-box;
   // overflow-y: auto;
   background: #f7f7f7;

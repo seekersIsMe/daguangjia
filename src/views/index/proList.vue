@@ -290,4 +290,8 @@ export default {
  .van-list{
     padding-bottom: 70px;
   }
+  .noData{
+    padding: 10px;
+    text-align: center;
+  }
 </style>

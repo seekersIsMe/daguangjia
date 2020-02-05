@@ -29,8 +29,9 @@
         </van-radio-group>
       </div>
     </div>
-    <div class="addBtn" @click="saveAddress">
-      <van-button type="primary" color="#00AEFF">确定</van-button>
+    <div class="addBtn">
+      <van-button v-if="addressList.length > 0" type="primary" color="#00AEFF" @click="saveAddress">确定</van-button>
+      <van-button v-else type="primary" color="#00AEFF" @click="addAddress">添加地址</van-button>
     </div>
   </div>
 </template>
@@ -92,9 +93,14 @@ export default {
         return item.province + item.city + item.district + item.address
       }
     },
+    addAddress () {
+      this.$router.push({
+        path: '/addAddress1'
+      })
+    },
     editAddress (item) {
       this.$router.push({
-        path: '/addAddress',
+        path: '/addAddress1',
         query: {
           id: item.id,
           name: item.nickName,

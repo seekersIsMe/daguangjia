@@ -46,7 +46,7 @@
       </div>
       <div class="noticeBar" v-show='hotData.length > 0'>
         <div class="hotText">
-          热点
+         <van-icon name="fire" /> 热点
         </div>
         <van-swipe :autoplay="3000"  vertical :height="30">
           <van-swipe-item v-for="(item, index) in hotData" :key="index">
@@ -177,22 +177,22 @@ export default {
     }
   },
   created () {
-    // if (!localStorage.getItem('isAuto')) {
-    //   this.getQueryString().then(res => {
-    //     this.getAccess_token()
-    //   }).catch(() => {
-    //     this.getCode()
-    //   })
-    // } else {
-    //   if (!localStorage.getItem('isLogin')) {
-    //     var reg = new RegExp('(^|&)' + 'code' + '=([^&]*)(&|$)', 'i')
-    //     var r = window.location.search.substr(1).match(reg)
-    //     if (r != null) {
-    //       this.code = unescape(r[2])
-    //       this.getAccess_token()
-    //     }
-    //   }
-    // }
+    if (!localStorage.getItem('isAuto')) {
+      this.getQueryString().then(res => {
+        this.getAccess_token()
+      }).catch(() => {
+        this.getCode()
+      })
+    } else {
+      if (!localStorage.getItem('isLogin')) {
+        var reg = new RegExp('(^|&)' + 'code' + '=([^&]*)(&|$)', 'i')
+        var r = window.location.search.substr(1).match(reg)
+        if (r != null) {
+          this.code = unescape(r[2])
+          this.getAccess_token()
+        }
+      }
+    }
     this.getImgs()
     this.getFlashSale()
     this.getNewGoods()
@@ -628,12 +628,15 @@ export default {
     line-height: 30px;
     position: absolute;
     left: 10px;
-    width: 50px;
+    width: 65px;
+    height: 30px;
+    display: flex;
+    align-items: center;
   }
   overflow: hidden;
   height: 30px;
   .van-swipe{
-    padding-left:60px;
+    padding-left:75px;
     position: relative;
   }
   .text{

@@ -29,18 +29,19 @@ export default {
   methods: {
     // 超过一万，一千，十万
     changNum (val) {
-      if (val < 1000) {
-        return val
-      }
-      if (val > 1000 && val < 10000) {
-        return (val / 1000).toFixed(2) + '千'
-      }
-      if (val > 10000 && val < 100000) {
-        return Math.round(val / 100) / 100 + '万'
-      }
-      if (val > 100000 && val < 1000000) {
-        return Math.round(val / 1000) / 100 + '十万万'
-      }
+      // if (val < 1000) {
+      //   return val
+      // }
+      // if (val > 1000 && val < 10000) {
+      //   return (val / 1000).toFixed(2) + '千'
+      // }
+      // if (val > 10000 && val < 100000) {
+      //   return Math.round(val / 100) / 100 + '万'
+      // }
+      // if (val > 100000 && val < 1000000) {
+      //   return Math.round(val / 1000) / 100 + '十万万'
+      // }
+      return val
     },
     // 跳转到产品的详情页面
     goToDetail () {
