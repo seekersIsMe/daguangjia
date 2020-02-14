@@ -54,7 +54,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .bgo{
-   background: #BFBAA7;
+   background: #f0f0c8;
    color: #ffffff;
    .right{
      color: #BFBAA7;
@@ -80,6 +80,7 @@ export default {
       justify-content: space-between;
       align-items: center;
       line-height: 20px;
+      font-size: 12px;
     }
   }
   .right{

@@ -57,7 +57,7 @@
         </van-swipe>
       </div>
       <div class="hotWrap">
-        <div class="seckillWrap" v-if="seckillData.length > 0">
+        <div class="seckillWrap" v-if="seckillData.length > 0 && time > 0">
           <myTitle :titleVal="seckillTitle" class="myTitle">
             <template v-slot:right>
               <btn :myTitle="'剩余时间'">
@@ -76,8 +76,8 @@
                 <div class="img">
                   <img :src="'http://47.107.110.186:8082'+item.goodsLogo">
                 </div>
-                <div class="killText">秒杀价{{ item.priceSpike }}</div>
-                <div class="originPrice">原价：{{ item.dailyPrice }}</div>
+                <div class="killText">秒杀价￥{{ item.priceSpike }}</div>
+                <div class="originPrice">原价￥{{ item.dailyPrice }}</div>
             </div>
             </swiper-slide>
           <!-- <div class="swiper-pagination" slot="pagination"></div> -->
@@ -103,9 +103,16 @@
             <myTitle :titleVal="'新品精选'" class="myTitle"></myTitle>
           </div>
           <div class="itemWrap">
-            <div v-for="(item, index) in itemCount" :key="index" class="item">
+            <van-grid :gutter="5" :column-num="3">
+              <van-grid-item
+                v-for="(item, index) in itemCount" :key="index" class="item"
+              >
+               <listItem :itemData="item" @addCar="addCar(item)" />
+              </van-grid-item>
+            </van-grid>
+            <!-- <div v-for="(item, index) in itemCount" :key="index" class="item">
               <listItem :itemData="item" @addCar="addCar(item)" />
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -371,6 +378,7 @@ export default {
         if (res.status === 10001) {
           console.log('openID', res)
           if (!localStorage.getItem('isLogin')) {
+            localStorage.setItem('openId', res.data.info)
             this.$router.push({
               path: '/login',
               query: {
@@ -546,8 +554,9 @@ export default {
     .icon3,
     .icon4,
     .icon5 {
-      width: 45px;
-      height: 45px;
+      width: 60%;
+      padding-bottom: 60%;
+      // height: 45px;
       margin-bottom: 5px;
     }
     .icon1 {
@@ -582,10 +591,15 @@ export default {
         padding: 10px 0;
       }
       .img {
-        width: 80px;
-        height: 80px;
+        width: 90%;
+        padding-top: 90%;
+        height: 0;
+        position: relative;
         margin: auto;
+        margin-bottom: 10px;
         img{
+          position: absolute;
+          top: 0;
           display: inline-block;
           width: 100%;
           height: 100%;
@@ -608,20 +622,23 @@ export default {
         padding: 10px 0;
       }
       .itemWrap {
-        display: flex;
-        flex-wrap: wrap;
-        .item{
-          margin-left: 10px;
-        }
-        .item:nth-of-type(3n+1) {
-          margin-left: 0;
-        }
+        // display: flex;
+        // flex-wrap: wrap;
+        // overflow: hidden;
+        // .item{
+        //   margin-left: 10px;
+        // }
+        // .item:nth-of-type(3n+1) {
+        //   margin-left: 0;
+        // }
       }
     }
   }
 }
 .noticeBar{
   position: relative;
+  margin-top: 5px;
+  padding-bottom: 5px;
   .hotText{
     color: #e36209;
     margin-right: 10px;

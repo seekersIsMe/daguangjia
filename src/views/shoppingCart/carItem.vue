@@ -1,16 +1,16 @@
 <template>
   <div class="bgW">
-    <div class="carItem" v-for="(item,index) in itemDataList_" :key="index" @click="goToDetail(item)">
+    <div class="carItem" v-for="(item,index) in itemDataList_" :key="index">
       <div class="checkbox">
         <van-checkbox v-model="item.checked" @change="select"></van-checkbox>
       </div>
-      <div class="img">
+      <div class="img" @click="goToDetail(item)">
         <img :src="'http://47.107.110.186:8082'+item.goodsLogo" alt />
       </div>
       <div class="carBody">
         <p class="title">{{item.goodsName}}</p>
         <div class="priceCount">
-          <span class="price">{{changNum(item.price)}}积分</span>
+          <span class="price">{{changNum(item.price)}}</span>
           <van-stepper v-model="item.amount" @change="changeCount" integer input-width="22px" button-size="22px"/>
         </div>
       </div>
@@ -39,18 +39,19 @@ export default {
   methods: {
     // 超过一万，一千，十万
     changNum (val) {
-      if (val < 1000) {
-        return val
-      }
-      if (val > 1000 && val < 10000) {
-        return (val / 1000).toFixed(2) + '千'
-      }
-      if (val > 10000 && val < 100000) {
-        return Math.round(val / 100) / 100 + '万'
-      }
-      if (val > 100000 && val < 1000000) {
-        return Math.round(val / 1000) / 100 + '十万万'
-      }
+      return '￥' + val
+      // if (val < 1000) {
+      //   return val
+      // }
+      // if (val > 1000 && val < 10000) {
+      //   return (val / 1000).toFixed(2) + '千'
+      // }
+      // if (val > 10000 && val < 100000) {
+      //   return Math.round(val / 100) / 100 + '万'
+      // }
+      // if (val > 100000 && val < 1000000) {
+      //   return Math.round(val / 1000) / 100 + '十万万'
+      // }
     },
     select () {
       this.$emit('change', this.itemDataList_)
@@ -78,7 +79,7 @@ export default {
 border-top: 1px solid #E1E1E1;
 }
 .carItem {
-  padding: 20px 0;
+  padding: 15px 0;
   margin: 0 15px;
   background: white;
   display: flex;

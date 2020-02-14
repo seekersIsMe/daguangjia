@@ -25,7 +25,7 @@
           <van-checkbox v-model="isSelectAll" @change="selectAll">全选</van-checkbox>
           <p v-show="!isManage" class="jifenWrap">
             <span class="heji">合计：</span>
-            <span class="jifen">{{ changNum(sum) }}积分</span>
+            <span class="jifen">{{ changNum(sum) }}</span>
           </p>
         </div>
         <van-button round type="primary" v-if="!isManage" color="#FF0000" @click="settle">结算</van-button>
@@ -68,20 +68,21 @@ export default {
   },
   methods: {
     changNum (val) {
-      console.log(val)
-      if (val < 10000) {
-        return val
-      }
-      if (val > 10000 && val < 100000) {
-        return Math.round(val / 100) / 100 + '万'
-      }
-      if (val > 100000 && val < 1000000) {
-        return Math.round(val / 1000) / 100 + '十万万'
-      }
-      if (val > 1000000) {
-        this.$toast('超出添加限制')
-        return 0
-      }
+      return '￥' + val
+      // console.log(val)
+      // if (val < 10000) {
+      //   return val
+      // }
+      // if (val > 10000 && val < 100000) {
+      //   return Math.round(val / 100) / 100 + '万'
+      // }
+      // if (val > 100000 && val < 1000000) {
+      //   return Math.round(val / 1000) / 100 + '十万万'
+      // }
+      // if (val > 1000000) {
+      //   this.$toast('超出添加限制')
+      //   return 0
+      // }
     },
     selectAllShop (item, value) {
       item.goods.forEach(p => {
@@ -318,7 +319,7 @@ export default {
       margin-bottom: 10px;
     }
     .shopTitle{
-      padding: 15px;
+      padding:15px 15px 5px 15px;
       background: white;
       display: flex;
       align-items: center;

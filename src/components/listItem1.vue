@@ -41,7 +41,7 @@ export default {
       // if (val > 100000 && val < 1000000) {
       //   return Math.round(val / 1000) / 100 + '十万万'
       // }
-      return val
+      return '￥' + val
     },
     // 跳转到产品的详情页面
     goToDetail () {
@@ -68,24 +68,28 @@ export default {
 .listItem{
       overflow: hidden;
       box-sizing: border-box;
-      width: calc(33.3vw - 15px);
-      margin-bottom: 10px;
+      // width: calc(33.3vw - 15px);
+      width: 100%;
       background: white;
       border-radius: 5px;
-      padding-bottom: 15px;
     .imgWrap{
-        // width: 100%;
+        width: 100%;
         display: inline-block;
-        height: calc(33.3vw - 15px);
-        width: calc(33.3vw - 15px);
+        padding-top: 100%;
+        position: relative;
+        overflow: hidden;
+        // height: calc(33.3vw - 15px);
+        // width: calc(33.3vw - 15px);
         img{
+          position: absolute;
+          top: 0;
           display: inline-block;
           width: 100%;
           height: 100%;
         }
     }
     .productTitle{
-      width: calc(33.3vw - 15px);
+      width: calc(33.3vw - 60px);
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
@@ -100,7 +104,8 @@ export default {
       padding: 0 9px;
     }
     .priceWrap{
-       width: calc(33.3vw - 15px);
+      //  width: calc(33.3vw - 15px);
+       width: 100%;
        display: flex;
        justify-content: space-between;
        color: #FF0000;

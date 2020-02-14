@@ -7,7 +7,7 @@
         <div class="ProDatail">
           <p class="detail">{{ itemPro.goodsName }}</p>
           <p class="priceCount">
-            <span>{{ itemPro.price }}积分</span>
+            <span>￥{{ itemPro.price }}</span>
             <span> x{{ itemPro.amount }} </span>
           </p>
         </div>

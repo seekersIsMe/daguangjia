@@ -67,7 +67,7 @@
           >
             <div class="proListWrap" v-if='itemCount.length > 0'>
               <div v-for="(item,index) in itemCount" :key="index" class="item">
-                <listItem :itemData="item" @addCar="addCar"/>
+                <listItem :itemData="item" @addCar="addCar(item)"/>
               </div>
             </div>
             <div class="noData" v-else>

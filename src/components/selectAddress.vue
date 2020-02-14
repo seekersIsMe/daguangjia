@@ -10,7 +10,7 @@
         <van-radio-group v-model="radio" @change='changeAddress'>
           <van-swipe-cell v-for="(item,index) in addressList" :key="index">
             <div class="item">
-              <div class="body">
+              <div class="body" @click="selectAds(item)">
                 <div class="p1">
                   <span class="name w100">{{ item.nickName }}</span>
                   <span class="tel">{{item.tel}}</span>
@@ -30,14 +30,17 @@
       </div>
     </div>
     <div class="addBtn">
-      <van-button v-if="addressList.length > 0" type="primary" color="#00AEFF" @click="saveAddress">确定</van-button>
-      <van-button v-else type="primary" color="#00AEFF" @click="addAddress">添加地址</van-button>
+      <van-button class="addAds" type="primary" color="#00AEFF" @click="addAddress">添加地址</van-button>
+      <van-button class="comfi" type="primary" color="#00AEFF" @click="saveAddress">确定</van-button>
     </div>
   </div>
 </template>
 <script>
 const getAddressListUrl = '/sysUser/getAddress'
 export default {
+  props: {
+    show: Boolean
+  },
   data () {
     return {
       radio: '',
@@ -94,9 +97,13 @@ export default {
       }
     },
     addAddress () {
-      this.$router.push({
-        path: '/addAddress1'
-      })
+      this.$emit('addAds')
+      // this.$router.push({
+      //   path: '/addAddress1'
+      // })
+    },
+    selectAds (item) {
+      this.$emit('select', item)
     },
     editAddress (item) {
       this.$router.push({
@@ -113,6 +120,11 @@ export default {
           isDefault: item.isDefault
         }
       })
+    }
+  },
+  watch: {
+    show () {
+      this.getAddressList()
     }
   }
 }
@@ -216,7 +228,7 @@ export default {
   }
   .addBtn {
     padding: 0 20px;
-    position: absolute;
+    position: fixed;
     bottom: 15px;
     left: 0;
     right: 0;
@@ -229,5 +241,8 @@ export default {
       border-radius: 5px;
     }
   }
+}
+.comfi{
+  margin-top: 20px;
 }
 </style>

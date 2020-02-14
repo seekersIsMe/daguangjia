@@ -13,8 +13,8 @@
     </div>
     <div class="describe">
       <p class="price">
-        {{describe.activeStatus === 1 ? describe.priceSpike : describe.price}}
-        <span class="jf">积分</span>
+        ￥{{describe.activeStatus === 1 ? describe.priceSpike : describe.price}}
+        <!-- <span class="jf">积分</span> -->
       </p>
       <p class="describeText">{{describe.describeText}}</p>
     </div>
@@ -43,7 +43,8 @@
       </div> -->
       <!-- <div v-html="detail"></div> -->
       <!-- <iframe :src="detail" frameborder="0"></iframe> -->
-      <iframe name="testFrame" id='testFrame' :src="'http://xdgj.gzdaguanjia.com:8082/integral-web/web/goods/getDetail.htm?id=' + goodId" frameborder="0"></iframe>
+      <!-- <iframe name="testFrame" id='testFrame' :src="'http://xdgj.gzdaguanjia.com:8082/integral-web/web/goods/getDetail.htm?id=' + goodId" frameborder="0"></iframe> -->
+      <div v-html='detail' class="detail"></div>
     </div>
     <div class="btnGroup">
       <van-row gutter="15">
@@ -106,17 +107,17 @@ export default {
     this.getGoodsDetail()
   },
   mounted () {
-    this.$nextTick(() => {
-      let testFrame = document.getElementById('testFrame')
-      testFrame.addEventListener('load', function () {
-        console.log(window.frames['testFrame'])
-        testFrame.height = testFrame.offsetTop
-      })
-    })
+    // this.$nextTick(() => {
+    //   let testFrame = document.getElementById('testFrame')
+    //   testFrame.addEventListener('load', function () {
+    //     console.log(window.frames['testFrame'])
+    //     testFrame.height = testFrame.offsetTop
+    //   })
+    // })
   },
   destroyed () {
-    let testFrame = document.getElementById('testFrame')
-    testFrame.removeEventListener('load')
+    // let testFrame = document.getElementById('testFrame')
+    // testFrame.removeEventListener('load')
   },
   methods: {
     goBack () {
@@ -201,35 +202,36 @@ export default {
 <style lang="scss" scoped>
 .proDetailWrap{
 /*iphone XR*/
-  @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) {
-    .btnGroup{
-      margin-bottom: 34px;
-    }
-    // height: calc(100vh - 34px);
-  }
-  @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 2) {
-    // height: calc(100vh - 34px);
-    .btnGroup{
-      margin-bottom: 34px;
-    }
-  }
-  /*iphone XMAX*/
-  @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) {
-    //  height: calc(100vh - 34px);
-    .btnGroup{
-      margin-bottom: 34px;
-    }
-  }
-  /* iphone X/XS */
-  @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
-    //  height: calc(100vh - 34px);
-    .btnGroup{
-      margin-bottom: 34px;
-    }
-  }
-  // height: 100vh;
-  // box-sizing: border-box;
-  // overflow-y: auto;
+  // @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) {
+  //   .btnGroup{
+  //     margin-bottom: 34px;
+  //   }
+  //   // height: calc(100vh - 34px);
+  // }
+  // @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 2) {
+  //   // height: calc(100vh - 34px);
+  //   .btnGroup{
+  //     margin-bottom: 34px;
+  //   }
+  // }
+  // /*iphone XMAX*/
+  // @media only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) {
+  //   //  height: calc(100vh - 34px);
+  //   .btnGroup{
+  //     margin-bottom: 34px;
+  //   }
+  // }
+  // /* iphone X/XS */
+  // @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
+  //   //  height: calc(100vh - 34px);
+  //   .btnGroup{
+  //     margin-bottom: 34px;
+  //   }
+  // }
+  height: 100vh;
+  box-sizing: border-box;
+  overflow-y: auto;
+  padding-bottom: 50px;
 }
 .proDetail {
   background: #f7f7f7;
@@ -323,5 +325,16 @@ export default {
 }
 #testFrame{
   width: 100%;
+}
+.detail{
+  padding: 0 10px;
+  font-size: 14px;
+  line-height: 20px;
+  /deep/ p{
+    overflow: hidden;
+  }
+  /deep/ img{
+    max-width: calc(100vw - 20px);
+  }
 }
 </style>

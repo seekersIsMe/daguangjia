@@ -41,7 +41,7 @@ export default {
       // if (val > 100000 && val < 1000000) {
       //   return Math.round(val / 1000) / 100 + '十万万'
       // }
-      return val
+      return '￥' + val
     },
     // 跳转到产品的详情页面
     goToDetail () {

@@ -14,7 +14,7 @@
         <item :itemData="item.goodsList" />
       </div>
       <div class="sumDetail bgW">
-        <span>公{{ count }}件</span>
+        <span>共{{ count }}件</span>
         <span>合计：</span>
         <span class="score">{{ score }}积分</span>
       </div>
@@ -39,6 +39,7 @@
 import item from './item'
 const getOrderDetailUrl = '/sysOrder/getOrderDetail'
 const cancelOrderUrl = '/sysOrder/cancelOrder'
+const min15 = 15 * 60 * 1000
 export default {
   components: {
     item
@@ -52,11 +53,18 @@ export default {
       orderCode: '432156321365413',
       // 订单状态(-1,取消,0：待支付，1：待发货，2：待收货，3：已完成)
       stateName: ['订单关闭', '待支付', '待发货', '待收货', '已完成'],
-      lastTime: '29分59秒',
       count: 0,
       score: 0,
       itemData: [],
-      orderData: []
+      orderData: [],
+      time: ''
+    }
+  },
+  computed: {
+    lastTime () {
+      let mins = parseInt(this.time / 60)
+      let sec = this.time - mins * 60
+      return mins + '分' + sec + '秒'
     }
   },
   created () {
@@ -86,11 +94,28 @@ export default {
             this.orderCode = this.orderData[0].orderNo
             this.count = this.orderData[0].totalAmount
             this.score = this.orderData[0].totalPrice
+            this.time = parseInt((new Date().getTime() - Number(this.orderData[0].systemTime)) / 1000)
+            if (this.time > 15 * 60) {
+              this.$toast('订单超过15分钟，已取消')
+            } else {
+              this.reduceinT()
+            }
           } else {
             this.$toast(res.msg)
           }
         }
       )
+    },
+    reduceinT () {
+      if (this.time === 0) {
+        // this.time = 60
+      } else {
+        setTimeout(() => {
+          this.time--
+          // this.isCanGetCode = false
+          this.reduceinT()
+        }, 1000)
+      }
     },
     goBack () {
       this.$router.go(-1)
@@ -164,7 +189,7 @@ export default {
   // @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
   //   padding-bottom: 34px;
   // }
-  // height: 100vh;
+  height: 100vh;
   box-sizing: border-box;
   overflow-y: auto;
   background: #f7f7f7;

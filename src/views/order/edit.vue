@@ -1,14 +1,14 @@
 <template>
   <div class="addAddress">
       <div class="header">
-        <van-icon name="arrow-left" @click="goBack" />收货地址新增
+        <van-icon name="arrow-left" @click="goBack" />修改收货地址
       </div>
     <van-address-edit
       :area-list="areaList"
       :show-postal="false"
       :is-saving="isSaving"
       :address-info="addressInfo"
-      :show-delete="isEdit"
+      show-delete
       show-set-default
       show-search-result
       :search-result="searchResult"
@@ -25,22 +25,24 @@ import areaList from '@/assets/json/area.js'
 const updateAddressUrl = '/sysUser/saveOrUpdateAddress'
 const deleteAddressUrl = '/sysUser/deleteAddress'
 export default {
+  props: {
+    // name=dsds&tel=15236542585&province=北京市&city=北京市&county=东城区&addressDetail=dsds&areaCode=110101&isDefault=0&isEdit=1
+    addressInfo: {}
+  },
   data () {
     return {
       areaList: Object.freeze(areaList),
       searchResult: [],
       isSaving: false,
-      addressId: '',
-      params: {},
-      addressInfo: {},
-      isEdit: false
+      params: {}
+    }
+  },
+  computed: {
+    addressId () {
+      return this.addressInfo.id || ''
     }
   },
   created () {
-    this.addressInfo = this.$route.query || {}
-    this.addressId = this.addressInfo.id || ''
-    this.isEdit = this.addressInfo && this.addressInfo.isEdit === 1
-    console.log(this.$route.query)
   },
   methods: {
     onSave (val) {
@@ -56,6 +58,8 @@ export default {
       }, res => {
         if (res.status === 10001) {
           this.isSaving = false
+          this.$toast('添加成功')
+          this.$emit('close')
           // this.$router.push({
           //   path: '/addressList'
           // })
@@ -95,9 +99,7 @@ export default {
       }, res => {
         if (res.status === 10001) {
           this.$toast('删除成功')
-          this.$router.push({
-            path: '/addressList'
-          })
+          this.$emit('del')
         } else {
           this.$toast(res.msg)
         }
@@ -119,7 +121,7 @@ export default {
       return /^1[3456789]\d{9}$/.test(val)
     },
     goBack () {
-      this.$router.go(-1)
+      this.$emit('close')
     }
   }
 }

@@ -52,7 +52,7 @@ export default {
     }
   },
   created () {
-    this.openId = this.$route.query.openId
+    this.openId = this.$route.query.openId || localStorage.getItem('openId')
   },
   methods: {
     blur (val) {},

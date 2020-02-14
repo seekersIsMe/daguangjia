@@ -261,7 +261,7 @@ export default {
   }
   .addBtn {
     padding: 0 20px;
-    position: absolute;
+    position: fixed;
     bottom: 15px;
     left: 0;
     right: 0;

@@ -18,14 +18,20 @@
         <span v-else class="defaultAiv"></span>
         <div class="info">
           <p class="name">{{ info.nickName }}</p>
-          <p class="company">
+          <!-- <p class="company">
             <span>{{ info.city }}</span>
             <span>{{ info.unitName }}</span>
-          </p>
+          </p> -->
         </div>
       </div>
     </div>
-    <div class="orderWrap">
+    <div class="addressWrap">
+      <van-cell title="我的订单" is-link @click="gotoOrder(-1)" />
+    </div>
+    <div class="addressWrap">
+      <van-cell title="我的积分" is-link @click="getScoreDetail" />
+    </div>
+    <!-- <div class="orderWrap">
       <div class="title" @click="gotoOrder(-1)">我的订单</div>
       <div class="orderIcon">
         <van-row type="flex" justify="space-between">
@@ -79,7 +85,7 @@
           </van-col>
         </van-row>
       </div>
-    </div>
+    </div> -->
     <div class="addressWrap">
       <van-cell title="我的地址" is-link @click="goAddressList" />
     </div>
@@ -88,6 +94,7 @@
 </template>
 <script>
 const getUserInfoUrl = '/sysUser/getInfo'
+const setUnlockUrl = '/sysUser/unlock'
 export default {
   data () {
     return {
@@ -120,18 +127,29 @@ export default {
   },
   methods: {
     unbind () {
-      localStorage.removeItem('isLogin')
-      localStorage.removeItem('isAuto')
-      localStorage.removeItem('autoTime')
-      localStorage.removeItem('userId')
-      localStorage.removeItem('order')
-      localStorage.removeItem('userTel')
-      window.location.href = window.location.origin + '/#/index'
-      // this.$router.push(
-      //   {
-      //     path: '/index'
-      //   }
-      // )
+      this.$axios(
+        {
+          url: setUnlockUrl,
+          params: {
+            uid: this.userId
+          },
+          method: 'post'
+        },
+        res => {
+          if (res.status === 10001) {
+            localStorage.removeItem('isLogin')
+            localStorage.removeItem('isAuto')
+            localStorage.removeItem('autoTime')
+            localStorage.removeItem('userId')
+            localStorage.removeItem('order')
+            localStorage.removeItem('userTel')
+            this.$toast('解绑成功')
+            window.location.href = window.location.origin + '/#/index'
+          } else {
+            this.$toast(res.msg)
+          }
+        }
+      )
     },
     getUserInfo () {
       this.$axios(
@@ -148,7 +166,8 @@ export default {
             this.interal = interal
             this.orderStatus = orderStatus
             this.info = info
-            this.info.logoPath = 'http://47.107.110.186:8082/' + this.info.logoPath
+            // this.info.logoPath = 'http://47.107.110.186:8082/' + this.info.logoPath
+            this.info.logoPath = this.info.logoPath
           } else {
             this.$toast(res.msg)
           }
@@ -200,9 +219,11 @@ export default {
   background: #f7f7f7;
   padding-bottom: 50px;
   overflow: auto;
+  height: 100vh;
+  box-sizing: border-box;
   .header {
     height: 180px;
-    background: #00aeff;
+    background: white;
     position: relative;
     margin-bottom: 10px;
     .title {

@@ -27,8 +27,12 @@
     <div class="footer">
       <div>
         <p>
-          <span>合计积分：</span>
+          <span>合计支付：</span>
           <span class="price">{{ sumScore }}</span>
+        </p>
+        <p>
+          <span>豆币支付：</span>
+          <span class="price">{{ sumScore - wxPay }}</span>
         </p>
         <p>
           <span>微信支付：</span>
@@ -43,13 +47,31 @@
       position="right"
       :style="{ height: '100%',width: '100%' }"
     >
-      <selectAddress @selectAddress="choiceAddress" @close="close" />
+      <selectAddress @selectAddress="choiceAddress" @close="close" @select='select' @addAds='addAds' :show='show' />
+    </van-popup>
+     <van-popup
+      v-model="showOp"
+      :overlay="false"
+      position="right"
+      :style="{ height: '100%',width: '100%' }"
+    >
+      <addAddress @close="closeAddAds"/>
+    </van-popup>
+    <van-popup
+      v-model="showEdit"
+      :overlay="false"
+      position="right"
+      :style="{ height: '100%',width: '100%' }"
+    >
+      <edit @close="closeEdit" @del='del' :addressInfo='addressInfo' />
     </van-popup>
   </div>
 </template>
 <script>
 import item from './item'
 import selectAddress from '@/components/selectAddress'
+import addAddress from './addAddress'
+import edit from './edit'
 import wx from 'weixin-js-sdk'
 const getDefaultAddressUrl = '/sysUser/getDefaultAddress'
 const saveOrderUrl = '/sysOrder/saveOrder'
@@ -59,7 +81,9 @@ const getChargePayParamUrl = '/sysOrder/getWxPayParams'
 export default {
   components: {
     item,
-    selectAddress
+    selectAddress,
+    addAddress,
+    edit
   },
   data () {
     return {
@@ -72,12 +96,14 @@ export default {
       proList: [],
       isSelectAddress: false,
       show: false,
+      showOp: false,
+      showEdit: false,
       integral: 0, // 剩余积分
       signData: {},
       signObj: {},
       orderNum: '',
-      isHasAddress: true
-
+      isHasAddress: true,
+      addressInfo: {}
     }
   },
   computed: {
@@ -286,6 +312,36 @@ export default {
     goBack () {
       // console.log('路由', this.$router)
       this.$router.go(-1)
+    },
+    closeAddAds () {
+      this.showOp = false
+      this.show = true
+    },
+    closeEdit () {
+      this.showEdit = false
+      this.show = true
+    },
+    addAds () {
+      this.showOp = true
+    },
+    select (item) {
+      let addressInfo = {}
+      addressInfo.name = item.nickName
+      addressInfo.tel = item.phone
+      addressInfo.province = item.province
+      addressInfo.city = item.city
+      addressInfo.county = item.district
+      addressInfo.addressDetail = item.address
+      addressInfo.areaCode = String(item.provinceCode)
+      addressInfo.id = item.id
+      addressInfo.isDefault = item.isDefault === 1
+      this.addressInfo = addressInfo
+      this.showEdit = true
+      this.show = false
+    },
+    del () {
+      this.showOp = false
+      this.show = true
     }
     // lookOrder () {
     //   this.$router.push({
@@ -420,7 +476,7 @@ export default {
     background: white;
     font-size: 15px;
     color: #333333;
-    height: 50px;
+    height: 80px;
     box-sizing: border-box;
     .price {
       color: #ff0000;

@@ -20,6 +20,9 @@
         >{{ item.categoryName }}</van-sidebar-item>
       </van-sidebar>
       <div class="typeListWrap">
+        <div class="topImg">
+           <img :src="'http://47.107.110.186:8082'+ sideData[activeKey].categoryPic" />
+        </div>
         <van-grid :column-num="3">
           <van-grid-item v-for="(item,index) in typeList[activeKey]" :key="index" @click="selectType(item)">
             <img :src="'http://47.107.110.186:8082'+item.logo" />
@@ -64,7 +67,8 @@ export default {
             this.typeList.push(p.subList)
             return {
               categoryName: p.categoryName,
-              categoryId: p.categoryId
+              categoryId: p.categoryId,
+              categoryPic: p.categoryLogo
             }
           })
           this.sideData = sideData
@@ -86,7 +90,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .searchWrap {
-  background: #00aeff;
+  // background: #00aeff;
   /deep/ .van-search {
     background: transparent !important;
   }
@@ -109,7 +113,7 @@ export default {
     }
   }
   /deep/ .van-sidebar-item--select {
-      border-color: #00aeff;
+      // border-color: #00aeff;
     }
   .typeListWrap {
     flex: 1;
@@ -122,6 +126,15 @@ export default {
       margin-top: 10px;
       font-size: 12px;
     }
+    .topImg{
+      text-align: center;
+      img{
+        width: 90%
+      }
+    }
   }
+}
+.van-grid-item{
+  max-width: 120px;
 }
 </style>

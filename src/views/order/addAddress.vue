@@ -54,6 +54,7 @@ export default {
         if (res.status === 10001) {
           this.isSaving = false
           this.$toast('添加成功')
+          this.$emit('close')
           // this.$router.push({
           //   path: '/addressList'
           // })
@@ -82,6 +83,23 @@ export default {
       }
       this.params = obj
     },
+    onDelete () {
+      this.$axios({
+        url: deleteAddressUrl,
+        params: {
+          uid: localStorage.getItem('userId'),
+          addressId: this.addressId
+        },
+        method: 'post'
+      }, res => {
+        if (res.status === 10001) {
+          this.$toast('删除成功')
+          this.$emit('del')
+        } else {
+          this.$toast(res.msg)
+        }
+      })
+    },
     onChangeDetail (val) {
       // if (val) {
       //   this.searchResult = [
@@ -98,7 +116,7 @@ export default {
       return /^1[3456789]\d{9}$/.test(val)
     },
     goBack () {
-      this.$router.go(-1)
+      this.$emit('close')
     }
   }
 }
